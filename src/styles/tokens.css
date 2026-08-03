@@ -1,0 +1,81 @@
+/* =========================================================================
+   TOKENS — Prefabbricati Moioli
+   Estratti da moioli-site/index.html. Documentazione: DESIGN-TOKENS.md
+   Nessun valore va scritto letterale nei componenti: si usa sempre un token.
+   ========================================================================= */
+
+:root {
+  /* --- Navy: struttura ------------------------------------------------ */
+  --navy: #1d2a44;
+  --navy-deep: #16203a;
+  --navy-ink: #11192e;
+
+  /* --- Rosso: accento -------------------------------------------------
+     --red-logo appartiene SOLO al marchio: mai in UI, testo o bordi.
+     --red-soft serve dove --red su navy scenderebbe sotto 3:1.          */
+  --red-logo: #e42829;
+  --red: #b13733;
+  --red-deep: #963029;
+  --red-soft: #d98581;
+
+  /* --- Neutri ---------------------------------------------------------- */
+  --bg1: #f5f6f7;
+  --bg2: #e1e3e5;
+  --white: #ffffff;
+  --text: #3b3f45;
+
+  /* Testo secondario. Aggiunto in fase di verifica accessibilità: --ui su
+     bianco dà 2.54:1, sotto la soglia AA di 4.5:1, e nell'index era usato
+     per le etichette dei campi. Questo valore dà 5.07:1 su bianco e 4.69:1
+     su --bg1 restando nettamente più chiaro di --text (9.79:1), così la
+     gerarchia visiva regge. Vedi DESIGN-TOKENS.md §9. */
+  --text-2: #686f79;
+
+  /* Resta nel sistema per usi NON testuali (frecce, glifi decorativi):
+     non va applicato a testo. */
+  --ui: #9ca3af;
+
+  /* --- Placeholder dato tecnico (aggiunta demo) ------------------------ */
+  --ph-bg: #eef0f2;
+  --ph-border: #d3d7dc;
+  --ph-text: #5a6472;
+
+  /* --- Tipografia ------------------------------------------------------
+     Display: Space Grotesk, la scelta già presente nel marchio.
+     Corpo: IBM Plex Sans. Ha un impianto tecnico e disegnato — nato per una
+     società di ingegneria — e regge il tono di un costruttore meglio di una
+     grottesca neutra. I ripieghi replicano le metriche per limitare lo
+     scarto durante il caricamento.
+     Monospazio: IBM Plex Mono, stessa famiglia, per i segnaposto tecnici:
+     così il trattamento dei dati mancanti appartiene al sistema invece di
+     essere il monospazio di sistema.                                       */
+  --brand: 'Space Grotesk', 'Arial Narrow', sans-serif;
+  --ui-font: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  /* --- Griglia --------------------------------------------------------- */
+  --maxw: 1280px;
+  --pad: 32px;
+
+  /* --- Raggi ----------------------------------------------------------- */
+  --r-sm: 3px;
+  --r-md: 4px;
+
+  /* --- Ombre ----------------------------------------------------------- */
+  --sh-card: 0 28px 56px -28px rgba(29, 42, 68, 0.45);
+  --sh-lift: 0 18px 36px -22px rgba(29, 42, 68, 0.35);
+  --sh-float: 0 14px 30px -12px rgba(0, 0, 0, 0.45);
+
+  /* --- Movimento ------------------------------------------------------- */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* --- Focus ----------------------------------------------------------- */
+  --focus: var(--red);
+}
+
+@media (max-width: 600px) {
+  :root {
+    --pad: 20px;
+  }
+}

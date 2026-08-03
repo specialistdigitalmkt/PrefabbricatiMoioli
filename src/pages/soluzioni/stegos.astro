@@ -1,0 +1,926 @@
+---
+/**
+ * /soluzioni/stegos — scheda tecnica.
+ *
+ * IMPOSTAZIONE
+ * Il baricentro della pagina è la sezione interattiva, in posizione 02:
+ * arriva subito dopo l'introduzione, occupa una fascia intera e ha lo spazio
+ * più generoso. Tutto quello che viene dopo — dati, sistema, copertura — la
+ * commenta: sono le voci che nella sezione si toccano solo con un titolo.
+ *
+ * FONTI
+ * I dati tecnici vengono dal catalogo ufficiale (vedi src/data/stegos.ts).
+ * Dal catalogo si prendono SOLO LE INFORMAZIONI: nessun disegno del PDF è
+ * riprodotto in pagina. Il disegno della sezione è un segnaposto dichiarato,
+ * costruito a partire dalla descrizione testuale del sistema.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Picture from '../../components/Picture.astro';
+import Icon from '../../components/Icon.astro';
+import HotspotExplainer from '../../components/HotspotExplainer.astro';
+import StegosSection from '../../components/StegosSection.astro';
+import { pagina, hotspots } from '../../data/stegos';
+import { soluzioni } from '../../data/soluzioni';
+
+const altre = soluzioni.filter((s) => s.slug !== 'stegos').slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.prefabbricatimoioli.it/' },
+    { '@type': 'ListItem', position: 2, name: 'Soluzioni', item: 'https://www.prefabbricatimoioli.it/soluzioni' },
+    { '@type': 'ListItem', position: 3, name: 'Stegos' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Stegos — Solaio e copertura in c.a. precompresso | Prefabbricati Moioli"
+  description="Stegos: elemento di copertura e solaio in cemento armato precompresso sviluppato esclusivamente da Prefabbricati Moioli. Lucernario continuo centrale, altezza da 30 a 85 cm, modulo 250 cm."
+  preloadImage="stegos-hero"
+  jsonLd={jsonLd}
+>
+  <!-- ==================== 1. APERTURA ==================== -->
+  <section class="sg-hero on-dark">
+    <div class="sg-hero-img">
+      <img
+        src="/img/stegos-hero-1800.webp"
+        srcset="/img/stegos-hero-480.webp 480w, /img/stegos-hero-768.webp 768w, /img/stegos-hero-1200.webp 1200w, /img/stegos-hero-1800.webp 1800w"
+        sizes="100vw"
+        alt="Struttura prefabbricata Moioli con solai piani, travi e pilastri a vista"
+        fetchpriority="high"
+        decoding="sync"
+      />
+    </div>
+    <div class="sg-hero-grad" aria-hidden="true"></div>
+
+    <div class="wrap sg-hero-body">
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Soluzioni', href: '/soluzioni' },
+          { label: 'Stegos' },
+        ]}
+      />
+      <p class="eyebrow sg-eyebrow">{pagina.eyebrow}</p>
+      <h1>{pagina.titolo}</h1>
+      <p class="sg-claim">{pagina.claim}</p>
+      <p class="lead sg-lead">{pagina.lead}</p>
+
+      <div class="sg-hero-cta">
+        <a href="#sezione" class="btn btn-red">
+          Esplora la sezione
+          <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
+        </a>
+        <a href="/contatti" class="btn btn-light">Chiedi se è adatto al tuo progetto</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. DI COSA SI TRATTA ==================== -->
+  <section class="block sg-id">
+    <div class="sec-num" aria-hidden="true">01</div>
+    <div class="wrap">
+      <div class="sg-id-grid">
+        <div class="reveal">
+          <p class="eyebrow">{pagina.identita.eyebrow}</p>
+          <h2>{pagina.identita.titolo}</h2>
+        </div>
+        <div class="sg-id-text reveal">
+          {pagina.identita.paragrafi.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+
+      <ul class="sg-car stagger">
+        {
+          pagina.caratteristiche.map((c) => (
+            <li>
+              <h3>{c.titolo}</h3>
+              <p>{c.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 3. SEZIONE INTERATTIVA — il blocco centrale ====
+       Fascia intera, spaziature più larghe del resto della pagina: è qui che
+       il prodotto si spiega. -->
+  <section class="sg-sez on-dark" id="sezione">
+    <div class="sec-num" aria-hidden="true">02</div>
+    <div class="wrap">
+      <div class="sg-sez-head reveal">
+        <p class="eyebrow">{pagina.sezione.eyebrow}</p>
+        <h2>{pagina.sezione.titolo}</h2>
+      </div>
+
+      <HotspotExplainer hotspots={hotspots} intro={pagina.sezione.intro}>
+        <StegosSection />
+      </HotspotExplainer>
+    </div>
+  </section>
+
+  <!-- ==================== 4. DATI TECNICI ==================== -->
+  <section class="block sg-dati-s">
+    <div class="sec-num" aria-hidden="true">03</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.dati.eyebrow}</p>
+        <h2>{pagina.dati.titolo}</h2>
+      </div>
+
+      <dl class="sg-dati stagger">
+        {
+          pagina.dati.voci.map((v) => (
+            <div>
+              <dt>{v.label}</dt>
+              <dd>
+                <span class="v">{v.valore}</span>
+                {'unita' in v && v.unita && <span class="u">{v.unita}</span>}
+                {'nota' in v && v.nota && <span class="nt">{v.nota}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="sg-dati-n">{pagina.dati.nota}</p>
+    </div>
+  </section>
+
+  <!-- ==================== 5. IL SISTEMA ==================== -->
+  <section class="block sg-sis on-dark">
+    <div class="sec-num" aria-hidden="true">04</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.sistema.eyebrow}</p>
+        <h2>{pagina.sistema.titolo}</h2>
+        <p>{pagina.sistema.intro}</p>
+      </div>
+
+      <ul class="sg-comp stagger">
+        {
+          pagina.sistema.componenti.map((c, i) => (
+            <li>
+              <span class="n">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3 set:html={c.nome} />
+                <p>{c.testo}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 6. IN COPERTURA ==================== -->
+  <section class="block sg-cop">
+    <div class="sec-num" aria-hidden="true">05</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.copertura.eyebrow}</p>
+        <h2>{pagina.copertura.titolo}</h2>
+        <p>{pagina.copertura.intro}</p>
+      </div>
+
+      <div class="sg-cop-grid">
+        <div class="reveal">
+          <p class="sg-t">Gli strati, dall'alto</p>
+          <ol class="sg-str">
+            {pagina.copertura.strati.map((s) => <li>{s}</li>)}
+          </ol>
+        </div>
+
+        <div class="reveal">
+          <p class="sg-t">Varianti di impiego</p>
+          <ul class="sg-var">
+            {
+              pagina.copertura.varianti.map((v) => (
+                <li>
+                  <h3>{v.nome}</h3>
+                  <p>{v.testo}</p>
+                </li>
+              ))
+            }
+          </ul>
+
+          {/* Le tavole del catalogo non vengono riprodotte: qui andranno i
+              disegni ridisegnati nella grafica del sito. */}
+          <div class="sg-slot">
+            <span class="spec">DISEGNI DELLE VARIANTI — da produrre</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="sg-compat">{pagina.copertura.compatibilita}</p>
+    </div>
+  </section>
+
+  <!-- ==================== 7. APPLICAZIONI ==================== -->
+  <section class="block sg-app">
+    <div class="sec-num" aria-hidden="true">06</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.applicazioni.eyebrow}</p>
+        <h2>{pagina.applicazioni.titolo}</h2>
+      </div>
+
+      <ul class="adv-grid stagger">
+        {
+          pagina.applicazioni.voci.map((v) => (
+            <li>
+              <span class="adv-n">{v.num}</span>
+              <h3>{v.titolo}</h3>
+              <p>{v.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 8. GALLERY ==================== -->
+  <section class="block sg-gal on-dark">
+    <div class="sec-num" aria-hidden="true">07</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.gallery.eyebrow}</p>
+        <h2>{pagina.gallery.titolo}</h2>
+      </div>
+
+      <div class="gal-grid stagger">
+        {
+          pagina.gallery.immagini.map((img, i) => (
+            <figure class:list={['gal-item', { wide: i === 0 }]}>
+              <Picture
+                id={img.id}
+                alt={img.alt}
+                ratio={i === 0 ? '21/9' : '4/3'}
+                sizes="(max-width: 700px) 100vw, 50vw"
+              />
+            </figure>
+          ))
+        }
+      </div>
+
+      <p class="ph-note gal-note">
+        Nota per la revisione: fotografie dall'archivio Moioli. L'abbinamento
+        immagine ↔ tipologia è da confermare dall'ufficio tecnico.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== 9. ALTRE SOLUZIONI ==================== -->
+  <section class="block sg-other">
+    <div class="wrap">
+      <div class="other-head reveal">
+        <div>
+          <p class="eyebrow">Altre soluzioni</p>
+          <h2>Non è l'unica strada.</h2>
+        </div>
+        <a href="/soluzioni" class="btn btn-ghost">
+          Tutte le soluzioni <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+
+      <ul class="other-grid stagger">
+        {
+          altre.map((s) => (
+            <li>
+              <a href={s.href ?? '/soluzioni'}>
+                {s.img ? (
+                  <Picture id={s.img} alt={s.alt} ratio="4/3" sizes="(max-width: 700px) 100vw, 33vw" />
+                ) : (
+                  <div class="other-noimg">
+                    <span class="spec">FOTO — da servizio fotografico</span>
+                  </div>
+                )}
+                <h3>{s.nome}</h3>
+                <p>{s.claim}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 10. CTA ==================== -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Il passo successivo</p>
+          <h2>Verifichiamo se Stegos è adatto al tuo edificio.</h2>
+          <p class="cta-p">
+            Destinazione d'uso, superficie e numero di piani: con questi tre dati
+            possiamo già dirti se ha senso.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Richiedi una valutazione <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ==================== 1. APERTURA ==================== */
+  .sg-hero {
+    position: relative;
+    min-height: 88svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--navy);
+    color: #fff;
+  }
+  .sg-hero-img {
+    position: absolute;
+    inset: 0;
+  }
+  .sg-hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 55%;
+  }
+  .sg-hero-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.76) 0%,
+      rgba(29, 42, 68, 0.42) 34%,
+      rgba(22, 32, 58, 0.9) 82%,
+      var(--navy) 100%
+    );
+  }
+  .sg-hero-body {
+    position: relative;
+    z-index: 2;
+    padding-top: 150px;
+    padding-bottom: 64px;
+    width: 100%;
+  }
+  .sg-eyebrow {
+    margin-top: 24px;
+    color: var(--red-soft);
+  }
+  .sg-hero h1 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(48px, 8vw, 104px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 16px 0 14px;
+    color: #fff;
+  }
+  .sg-claim {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(19px, 2.4vw, 28px);
+    color: #fff;
+    line-height: 1.25;
+    max-width: 24ch;
+  }
+  .sg-lead {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 58ch;
+  }
+  .sg-hero-cta {
+    display: flex;
+    gap: 14px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+  }
+
+  /* ==================== 2. DI COSA SI TRATTA ==================== */
+  .sg-id {
+    background: var(--white);
+    padding-top: 96px;
+    padding-bottom: 104px;
+  }
+  .sg-id-grid {
+    display: grid;
+    grid-template-columns: 0.72fr 1.28fr;
+    gap: 52px;
+    align-items: start;
+    margin-bottom: 52px;
+  }
+  .sg-id-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .sg-id-text p {
+    font-size: 17px;
+    margin-bottom: 18px;
+    max-width: 62ch;
+  }
+  .sg-id-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sg-car {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--bg2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .sg-car li {
+    background: #fff;
+    padding: 28px 24px 30px;
+  }
+  .sg-car h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .sg-car p {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 3. SEZIONE INTERATTIVA ====================
+     Spaziature più larghe del resto: è il blocco su cui la pagina si regge. */
+  .sg-sez {
+    background: var(--navy-deep);
+    padding: 152px 0;
+    position: relative;
+  }
+  .sg-sez-head {
+    max-width: 680px;
+    margin-bottom: 64px;
+  }
+  .sg-sez-head h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(34px, 4.8vw, 62px);
+    margin-top: 18px;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  /* ==================== 4. DATI TECNICI ==================== */
+  .sg-dati-s {
+    background: var(--bg1);
+  }
+  .sg-dati {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--bg2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .sg-dati > div {
+    background: #fff;
+    padding: 26px 22px 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  .sg-dati dt {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .sg-dati dd {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+  .sg-dati .v {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .sg-dati .u {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .sg-dati .nt {
+    flex-basis: 100%;
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin-top: 6px;
+  }
+  .sg-dati-n {
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 5. IL SISTEMA ==================== */
+  .sg-sis {
+    background: var(--navy);
+  }
+  .sg-comp {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 52px;
+  }
+  .sg-comp li {
+    display: flex;
+    gap: 18px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .sg-comp .n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red-soft);
+    flex: none;
+    padding-top: 4px;
+  }
+  .sg-comp h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .sg-comp p {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  /* ==================== 6. IN COPERTURA ==================== */
+  .sg-cop {
+    background: var(--white);
+  }
+  .sg-cop-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .sg-t {
+    font-family: var(--brand);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 18px;
+  }
+  .sg-str {
+    list-style: none;
+    counter-reset: s;
+    border-top: 1px solid var(--bg2);
+  }
+  .sg-str li {
+    counter-increment: s;
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--bg2);
+    font-size: 15px;
+    color: var(--navy);
+  }
+  .sg-str li::before {
+    content: counter(s, decimal-leading-zero);
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-2);
+    flex: none;
+  }
+
+  .sg-var {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .sg-var li {
+    border-top: 1px solid var(--bg2);
+    padding-top: 16px;
+  }
+  .sg-var h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 6px;
+    line-height: 1.25;
+  }
+  .sg-var p {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+
+  .sg-slot {
+    margin-top: 26px;
+    border: 1px dashed var(--ph-border);
+    background: var(--ph-bg);
+    border-radius: var(--r-md);
+    padding: 44px 24px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+
+  .sg-compat {
+    margin-top: 48px;
+    padding: 18px 22px;
+    border-left: 3px solid var(--red);
+    background: var(--bg1);
+    font-size: 14.5px;
+    color: var(--text);
+    max-width: 76ch;
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  }
+
+  /* ==================== 7. APPLICAZIONI ==================== */
+  .sg-app {
+    background: var(--bg1);
+  }
+  .adv-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+  .adv-grid li {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 30px 26px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.4s var(--ease), border-color 0.4s, transform 0.4s var(--ease);
+  }
+  .adv-grid li::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 3px;
+    width: 0;
+    background: var(--red);
+    transition: width 0.45s var(--ease);
+  }
+  .adv-grid li:hover {
+    box-shadow: var(--sh-card);
+    border-color: #fff;
+    transform: translateY(-3px);
+  }
+  .adv-grid li:hover::after {
+    width: 100%;
+  }
+  .adv-n {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--red);
+  }
+  .adv-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 19px;
+    margin: 14px 0 10px;
+    line-height: 1.25;
+  }
+  .adv-grid p {
+    font-size: 14.5px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 8. GALLERY ==================== */
+  .sg-gal {
+    background: var(--navy-ink);
+  }
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .gal-item {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--r-md);
+  }
+  .gal-item.wide {
+    grid-column: span 2;
+  }
+  .gal-item :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+  }
+  .gal-item:hover :global(.frame img) {
+    transform: scale(1.04);
+  }
+  .gal-note {
+    margin-top: 32px;
+  }
+
+  /* ==================== 9. ALTRE SOLUZIONI ==================== */
+  .sg-other {
+    background: var(--white);
+  }
+  .other-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .other-head h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(28px, 3.4vw, 42px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .other-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .other-grid a {
+    display: block;
+  }
+  .other-grid :global(.frame) {
+    transition: transform 0.4s var(--ease);
+  }
+  .other-grid a:hover :global(.frame) {
+    transform: translateY(-4px);
+  }
+  .other-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 20px;
+    margin: 16px 0 6px;
+  }
+  .other-grid p {
+    font-size: 14px;
+  }
+  .other-noimg {
+    aspect-ratio: 4 / 3;
+    background: var(--ph-bg);
+    border: 1px dashed var(--ph-border);
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+  }
+
+  /* ==================== 10. CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==================== RESPONSIVE ==================== */
+  @media (max-width: 1100px) {
+    .sg-dati {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .adv-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .sg-car {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 920px) {
+    .sg-id-grid,
+    .sg-cop-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .sg-comp {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .other-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .sg-sez {
+      padding: 104px 0;
+    }
+    .sg-sez-head {
+      margin-bottom: 44px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .sg-hero {
+      min-height: auto;
+    }
+    .sg-hero-body {
+      padding-top: 122px;
+      padding-bottom: 48px;
+    }
+    .sg-hero-cta {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .sg-car,
+    .adv-grid,
+    .gal-grid,
+    .other-grid,
+    .sg-var {
+      grid-template-columns: 1fr;
+    }
+    /* La tabella dati non si comprime in cinque colonne: diventa un elenco. */
+    .sg-dati {
+      grid-template-columns: 1fr;
+    }
+    .sg-dati > div {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+    }
+    .sg-dati dt {
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .sg-dati dd {
+      margin-top: 0;
+      justify-content: flex-end;
+      text-align: right;
+      flex: none;
+      max-width: 52%;
+    }
+    .sg-dati .nt {
+      text-align: right;
+    }
+    .gal-item.wide {
+      grid-column: span 1;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+    .sg-sez {
+      padding: 80px 0;
+    }
+    .sg-id {
+      padding-top: 64px;
+      padding-bottom: 72px;
+    }
+    .sg-id-grid {
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .sg-id-text p {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+  }
+</style>

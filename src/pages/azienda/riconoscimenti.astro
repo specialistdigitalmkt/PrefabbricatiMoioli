@@ -1,0 +1,262 @@
+---
+/**
+ * /azienda/riconoscimenti — certificazioni, riconoscimenti, network.
+ *
+ * ATTENZIONE: è la pagina più scoperta del sito.
+ * Di Moioli non è stato fornito nessun riconoscimento, nessuna certificazione
+ * e nessuna appartenenza associativa. La struttura è quella giusta — ricalcata
+ * su "Riconoscimenti & Network" di Baraclit — ma i contenuti vanno raccolti.
+ *
+ * Scelta di impaginazione: invece di riempire con voci verosimili, la pagina
+ * si dichiara apertamente incompleta e ogni riquadro indica esattamente il
+ * documento che serve. In presentazione diventa una lista della spesa, che è
+ * più utile di una pagina finta.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SezioneNav from '../../components/SezioneNav.astro';
+import Icon from '../../components/Icon.astro';
+import { riconoscimenti } from '../../data/azienda';
+
+const totale = riconoscimenti.gruppi.reduce((n, g) => n + g.voci.length, 0);
+---
+
+<BaseLayout
+  title="Riconoscimenti e network — Prefabbricati Moioli"
+  description="Certificazioni di prodotto, qualifiche aziendali e appartenenze associative di Prefabbricati Moioli."
+>
+  <PageHero
+    eyebrow={riconoscimenti.eyebrow}
+    title={riconoscimenti.titolo}
+    lead={riconoscimenti.lead}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Azienda', href: '/azienda' },
+      { label: 'Riconoscimenti e network' },
+    ]}
+  />
+
+  <SezioneNav sezione="/azienda" />
+
+  <section class="block ric">
+    <div class="wrap">
+      <!-- Avviso in testa: chi guarda deve capire subito che questa pagina
+           è un elenco di cose da raccogliere, non un contenuto finito. -->
+      <div class="avviso reveal">
+        <div class="av-h">
+          <span class="av-tag">Da compilare</span>
+          <p class="av-n">{totale} voci in attesa di contenuto</p>
+        </div>
+        <p>{riconoscimenti.avviso}</p>
+      </div>
+
+      <div class="ric-grid">
+        {
+          riconoscimenti.gruppi.map((g, i) => (
+            <section class="grp reveal">
+              <div class="grp-h">
+                <span class="grp-n">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h2>{g.titolo}</h2>
+                  <p class="grp-t">{g.testo}</p>
+                </div>
+              </div>
+
+              <ul class="grp-l">
+                {g.voci.map((v) => (
+                  <li>
+                    <span class="v-l">{v.label}</span>
+                    <span class="spec">{v.spec}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+      </div>
+
+      <p class="ph-note ric-nota">
+        Nota per la revisione: l'unico riferimento documentato negli archivi è il
+        «Materiale DOP» citato fra i download del sito precedente — le Dichiarazioni di
+        Prestazione quindi esistono, ma vanno recuperate e verificate. Tutto il resto è
+        da raccogliere: quello che arriva riempie il riquadro corrispondente, quello che
+        non arriva fa sparire il riquadro. Nessuna voce resterà scritta senza fonte.
+      </p>
+    </div>
+  </section>
+
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Documentazione</p>
+          <h2>Ti serve un documento per il progetto?</h2>
+          <p class="cta-p">
+            Schede tecniche, dichiarazioni di prestazione e certificazioni si richiedono
+            all'ufficio tecnico.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Richiedi documentazione <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ric {
+    background: var(--bg1);
+  }
+
+  /* ==================== AVVISO ==================== */
+  .avviso {
+    border: 1px dashed var(--ph-border);
+    background: var(--ph-bg);
+    border-radius: var(--r-md);
+    padding: 26px 28px 28px;
+    margin-bottom: 56px;
+    max-width: 78ch;
+  }
+  .av-h {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .av-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--red);
+    padding: 4px 9px;
+    border-radius: 2px;
+  }
+  .av-n {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ph-text);
+  }
+  .avviso > p {
+    font-size: 15px;
+    color: var(--ph-text);
+  }
+
+  /* ==================== GRUPPI ==================== */
+  .ric-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  .grp {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 30px 30px 26px;
+  }
+
+  .grp-h {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--bg2);
+    margin-bottom: 6px;
+  }
+  .grp-n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red);
+    flex: none;
+    padding-top: 5px;
+  }
+  .grp h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .grp-t {
+    font-size: 14px;
+    color: var(--text-2);
+    max-width: 44ch;
+  }
+
+  .grp-l {
+    list-style: none;
+  }
+  .grp-l li {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .grp-l li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .v-l {
+    font-size: 15px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  .ric-nota {
+    margin-top: 48px;
+  }
+
+  /* ==================== CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 920px) {
+    .ric-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .avviso {
+      padding: 22px 20px 24px;
+      margin-bottom: 40px;
+    }
+    .grp {
+      padding: 24px 22px 22px;
+    }
+    /* Voce e segnaposto vanno su righe diverse: affiancati a 360px si
+       spezzano male entrambi. */
+    .grp-l li {
+      flex-direction: column;
+      gap: 8px;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

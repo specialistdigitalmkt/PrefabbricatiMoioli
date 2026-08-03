@@ -1,0 +1,1032 @@
+---
+/**
+ * ANTEPRIMA — variante editoriale della home.
+ *
+ * NON è una route del sito. Serve solo al confronto con la home attuale e va
+ * rimossa quando la direzione è decisa. Fuori dal menu, fuori dalla sitemap,
+ * marcata noindex.
+ *
+ * Cosa cambia rispetto alla home attuale:
+ *  - griglia di colonne visibile invece che implicita
+ *  - tipografia da display molto più grande e stretta (Archivo al posto di
+ *    Space Grotesk, solo su questa pagina)
+ *  - i numeri d'impresa trattati come una tabella, non come contatori animati
+ *  - le soluzioni sono un indice, non sette schede uguali
+ *  - il disegno costruttivo diventa una tavola a piena pagina
+ *  - i progetti sono una sequenza fotografica a piena larghezza
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Picture from '../components/Picture.astro';
+import Icon from '../components/Icon.astro';
+import ShedSection from '../components/ShedSection.astro';
+import { azienda, clienti, timeline } from '../data/site';
+import { soluzioni } from '../data/soluzioni';
+import { progetti } from '../data/progetti';
+
+const primiProgetti = progetti.slice(0, 3);
+---
+
+<BaseLayout
+  title="Anteprima editoriale — Prefabbricati Moioli"
+  description="Variante editoriale della home, in valutazione. Non è una pagina del sito."
+  preloadImage="hero-home"
+  noindex={true}
+  headerSuChiaro={true}
+>
+  <!-- Griglia di riferimento, visibile: è il telaio su cui è composta la
+       pagina, non una decorazione. -->
+  <div class="telaio" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <div class="ed">
+    <!-- ============================================================
+         1. APERTURA — impostata come una testata di rivista
+         ============================================================ -->
+    <header class="ap">
+      <div class="wrap">
+        <p class="kick">
+          <span>Prefabbricati Moioli</span>
+          <span class="kick-sep"></span>
+          <span>Bagnatica, Bergamo</span>
+          <span class="kick-sep"></span>
+          <span>Dal {azienda.fondazione}</span>
+        </p>
+
+        <h1 class="ap-t">
+          Costruiamo<br />
+          il volume<br />
+          <em>che manca.</em>
+        </h1>
+
+        <div class="ap-b">
+          <p class="ap-lead">
+            Strutture industriali, commerciali e civili in cemento armato
+            precompresso. Progettazione, produzione e montaggio con un solo
+            interlocutore.
+          </p>
+          <div class="ap-cta">
+            <a href="/contatti" class="btn btn-navy">
+              Parliamo del tuo progetto <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+            </a>
+            <a href="/progetti" class="lnk">
+              Vedi le realizzazioni <span class="arr"><Icon nome="freccia-dx" dim={15} /></span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fotografia a piena larghezza, con didascalia come in una tavola -->
+      <figure class="ap-fig">
+        <Picture
+          id="hero-home"
+          alt="Struttura industriale prefabbricata realizzata da Prefabbricati Moioli"
+          ratio="21/9"
+          sizes="100vw"
+          priority
+        />
+        <figcaption>
+          <span class="fc-n">Fig. 01</span>
+          <span>Struttura industriale a campata unica — <span class="spec">LOCALITÀ — da archivio</span></span>
+        </figcaption>
+      </figure>
+    </header>
+
+    <!-- ============================================================
+         2. I NUMERI — come una tabella, non come contatori
+         ============================================================ -->
+    <section class="dati">
+      <div class="wrap">
+        <table class="tab">
+          <caption class="sr-only">Dati sintetici dell'impresa</caption>
+          <tbody>
+            <tr>
+              <th scope="row">Anno di fondazione</th>
+              <td class="num">1972</td>
+              <td class="note">Bagnatica, provincia di Bergamo</td>
+            </tr>
+            <tr>
+              <th scope="row">Superficie realizzata</th>
+              <td class="num">700.000<span class="u">m²</span></td>
+              <td class="note">Dato complessivo a oggi</td>
+            </tr>
+            <tr>
+              <th scope="row">Committenti serviti</th>
+              <td class="num">100<span class="u">+</span></td>
+              <td class="note">Industria, logistica, commercio</td>
+            </tr>
+            <tr>
+              <th scope="row">Produzione</th>
+              <td class="num">100<span class="u">%</span></td>
+              <td class="note">Stabilimento di proprietà, Italia</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         3. AZIENDA — colonna di testo + colonna di note a margine
+         ============================================================ -->
+    <section class="az" id="azienda">
+      <div class="wrap">
+        <p class="sez">01 — L'azienda</p>
+
+        <div class="az-g">
+          <div class="az-txt">
+            <h2 class="tit">Un know-how che costruisce dal 1972.</h2>
+            <p class="occhiello">
+              Prefabbricati Moioli nasce alla fine del 1972 dalla volontà e dalle
+              esperienze combinate dei fratelli Moioli con alcuni progettisti.
+            </p>
+            <p>
+              Fin dall'inizio un'azienda ad alto profilo tecnologico, capace di
+              realizzare progetti unici e innovativi. In un settore che richiede
+              qualità, competitività e sicurezza, offriamo la consulenza più
+              completa sul progetto, unita a un supporto di tecnologia globale e a
+              un continuo investimento nello staff tecnico.
+            </p>
+            <p>
+              Dall'ideazione al coordinamento di fornitori e maestranze, fino alla
+              consegna: il nostro è un supporto a 360° in ogni fase del lavoro.
+            </p>
+          </div>
+
+          <aside class="az-note" aria-label="Tappe principali">
+            {
+              timeline.map((t) => (
+                <div class="nt">
+                  <span class="nt-a">{t.anno}</span>
+                  <p>{t.testo}</p>
+                </div>
+              ))
+            }
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         4. SOLUZIONI — un indice, non sette schede uguali
+         ============================================================ -->
+    <section class="sol" id="soluzioni">
+      <div class="wrap">
+        <p class="sez">02 — Soluzioni</p>
+        <h2 class="tit tit-sez">Sette modi<br />di coprire uno spazio.</h2>
+
+        <div class="sol-g">
+          <ol class="idx" id="idx">
+            {
+              soluzioni.map((s, i) => {
+                const Tag = s.href ? 'a' : 'div';
+                return (
+                  <li>
+                    <Tag
+                      {...(s.href ? { href: s.href } : {})}
+                      class="idx-r"
+                      data-img={s.img ?? ''}
+                      data-i={i}
+                    >
+                      <span class="idx-n">{String(i + 1).padStart(2, '0')}</span>
+                      <span class="idx-c">
+                        <span class="idx-t">{s.nome}</span>
+                        <span class="idx-d">{s.claim}</span>
+                      </span>
+                      {s.href && (
+                        <span class="idx-a"><Icon nome="freccia-dx" dim={18} /></span>
+                      )}
+                    </Tag>
+
+                    {/* Su schermo stretto l'immagine sta dentro la riga:
+                        il pannello laterale non esiste. */}
+                    <div class="idx-mob">
+                      {s.img ? (
+                        <Picture id={s.img} alt={s.alt} ratio="16/9" sizes="100vw" />
+                      ) : (
+                        <div class="vuoto"><span class="spec">FOTO — da servizio fotografico</span></div>
+                      )}
+                    </div>
+                  </li>
+                );
+              })
+            }
+          </ol>
+
+          {/* Pannello decorativo: l'informazione sta tutta nell'indice. */}
+          <div class="sol-v" aria-hidden="true">
+            {
+              soluzioni.map((s, i) => (
+                <div class="v-i" data-i={i} data-on={i === 0 ? '' : undefined}>
+                  {s.img ? (
+                    <Picture id={s.img} alt="" ratio="4/5" sizes="42vw" />
+                  ) : (
+                    <div class="vuoto vuoto-alto">
+                      <span class="spec">FOTO — da servizio fotografico</span>
+                    </div>
+                  )}
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         5. TAVOLA — il disegno come materiale grafico portante
+         ============================================================ -->
+    <section class="tav on-dark">
+      <div class="wrap">
+        <div class="tav-h">
+          <p class="sez sez-chiaro">03 — Sezione costruttiva</p>
+          <h2 class="tit tit-sez">Il capannone,<br />in sezione.</h2>
+          <p class="tav-p">
+            Ogni copertura Moioli si spiega meglio in sezione che in prospetto: è
+            lì che si vede come entra la luce e dove passano i carichi.
+          </p>
+          <a href="/soluzioni/tecnoshed" class="btn btn-light">
+            Esplora la sezione Tecnoshed <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+          </a>
+        </div>
+
+        <figure class="tav-f">
+          <ShedSection />
+          <figcaption>
+            <span class="fc-n">Tav. 01</span>
+            <span>Copertura a shed, sezione trasversale — <span class="spec spec-dark">DISEGNO SEGNAPOSTO</span></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         6. PROGETTI — sequenza a piena larghezza
+         ============================================================ -->
+    <section class="prg">
+      <div class="wrap">
+        <p class="sez">04 — Realizzazioni</p>
+        <h2 class="tit tit-sez">Oltre 700.000 m²<br />costruiti.</h2>
+      </div>
+
+      {
+        primiProgetti.map((p, i) => (
+          <figure class="prg-f">
+            <Picture
+              id={p.img}
+              alt={p.alt}
+              ratio={i === 1 ? '3/2' : '21/9'}
+              sizes="100vw"
+            />
+            <figcaption class="wrap">
+              <span class="fc-n">Fig. {String(i + 2).padStart(2, '0')}</span>
+              <span class="pf-c">{p.cliente}</span>
+              <span class="pf-s">{p.settore}</span>
+              <span class="pf-m">{p.superficie}</span>
+              <span class="pf-l">{p.localita}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+
+      <div class="wrap">
+        <a href="/progetti" class="lnk lnk-g">
+          Tutti i progetti <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         7. COMMITTENTI — riga di testo, non carosello
+         ============================================================ -->
+    <section class="cli">
+      <div class="wrap">
+        <p class="sez">05 — Committenti</p>
+        <p class="cli-l">
+          {
+            clienti.map((c, i) => (
+              <>
+                <span>{c}</span>
+                {i < clienti.length - 1 && <span class="cli-p" aria-hidden="true">·</span>}
+              </>
+            ))
+          }
+        </p>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         8. CHIUSURA
+         ============================================================ -->
+    <section class="fin on-dark">
+      <div class="wrap">
+        <h2 class="fin-t">Raccontaci<br />cosa devi costruire.</h2>
+        <div class="fin-b">
+          <p>
+            Destinazione d'uso, superficie e vincoli del lotto: con questi tre dati
+            possiamo già dirti che tipo di struttura ha senso.
+          </p>
+          <div class="fin-c">
+            <a href="/contatti" class="btn btn-red">
+              Richiedi un preventivo <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+            </a>
+            <a href={`tel:${azienda.telefonoHref}`} class="fin-tel">{azienda.telefono}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Il carattere da display cambia solo su questa pagina: è la variabile
+     principale del confronto. Agisce anche su testata e piè di pagina, così
+     l'impressione è quella di un sito intero e non di una pagina isolata. */
+  :root {
+    --brand: 'Archivo', 'Arial Narrow', sans-serif;
+  }
+</style>
+
+<style>
+  /* ============================================================
+     TELAIO — la griglia si vede
+     ============================================================ */
+  .telaio {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 var(--pad);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .telaio span {
+    border-left: 1px solid rgba(29, 42, 68, 0.07);
+  }
+  .telaio span:last-child {
+    border-right: 1px solid rgba(29, 42, 68, 0.07);
+  }
+
+  .ed {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ============================================================
+     TIPOGRAFIA DELLA VARIANTE
+     ============================================================ */
+
+  /* Occhiello di sezione: mono, come una segnatura di stampa */
+  .sez {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--red);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--navy);
+    margin-bottom: 40px;
+  }
+  .sez-chiaro {
+    color: var(--red-soft);
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Titoli: molto grandi, molto stretti. È qui che si sente il cambio. */
+  .tit {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: clamp(34px, 5.6vw, 76px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    color: var(--navy);
+  }
+  .on-dark .tit {
+    color: #fff;
+  }
+  .tit-sez {
+    margin-bottom: 56px;
+  }
+
+  /* ============================================================
+     1. APERTURA
+     ============================================================ */
+  .ap {
+    padding-top: 148px;
+    background: var(--bg1);
+  }
+
+  .kick {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--navy);
+  }
+  .kick-sep {
+    width: 16px;
+    height: 1px;
+    background: var(--ph-border);
+  }
+
+  .ap-t {
+    font-family: var(--brand);
+    font-weight: 700;
+    /* Fino a 168px: la scala è il primo segnale di una pagina composta */
+    font-size: clamp(52px, 11.5vw, 168px);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    color: var(--navy);
+    margin: 44px 0 0;
+  }
+  .ap-t em {
+    font-style: normal;
+    color: var(--red);
+  }
+
+  .ap-b {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+    margin: 56px 0 64px;
+  }
+  .ap-lead {
+    font-size: 19px;
+    line-height: 1.5;
+    max-width: 46ch;
+    color: var(--text);
+  }
+  .ap-cta {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-self: end;
+  }
+
+  .lnk {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+    border-bottom: 1px solid var(--ph-border);
+    padding-bottom: 3px;
+    min-height: 44px;
+    transition: border-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .lnk:hover {
+    color: var(--red);
+    border-bottom-color: var(--red);
+  }
+  .lnk .arr {
+    display: inline-flex;
+    transition: transform 0.3s var(--ease);
+  }
+  .lnk:hover .arr {
+    transform: translateX(4px);
+  }
+
+  .ap-fig {
+    margin: 0;
+  }
+  .ap-fig :global(.frame) {
+    border-radius: 0;
+  }
+
+  figcaption {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text-2);
+    padding: 14px var(--pad) 0;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .fc-n {
+    color: var(--red);
+    flex: none;
+  }
+  /* Su fondo navy il rosso UI scende a 2.36:1 */
+  .on-dark .fc-n {
+    color: var(--red-soft);
+  }
+
+  /* ============================================================
+     2. DATI — impaginati come una tabella tecnica
+     ============================================================ */
+  .dati {
+    background: var(--bg1);
+    padding: 96px 0 120px;
+  }
+
+  .tab {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .tab tr {
+    border-top: 1px solid var(--bg2);
+  }
+  .tab tr:last-child {
+    border-bottom: 1px solid var(--bg2);
+  }
+  .tab th,
+  .tab td {
+    padding: 26px 0;
+    text-align: left;
+    vertical-align: baseline;
+  }
+  .tab th {
+    font-family: var(--mono);
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    width: 26%;
+  }
+  .tab .num {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: clamp(30px, 4.4vw, 58px);
+    letter-spacing: -0.03em;
+    color: var(--navy);
+    line-height: 1;
+    /* Cifre a larghezza fissa: le colonne restano allineate */
+    font-variant-numeric: tabular-nums;
+    width: 34%;
+  }
+  .tab .u {
+    font-size: 0.44em;
+    color: var(--red);
+    margin-left: 4px;
+    letter-spacing: 0;
+  }
+  .tab .note {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+
+  /* ============================================================
+     3. AZIENDA
+     ============================================================ */
+  .az {
+    background: var(--white);
+    padding: 120px 0;
+  }
+  .az-g {
+    display: grid;
+    grid-template-columns: 1.35fr 0.65fr;
+    gap: 72px;
+  }
+  .az-txt .tit {
+    margin-bottom: 36px;
+  }
+  .occhiello {
+    font-size: 21px;
+    line-height: 1.45;
+    color: var(--navy);
+    margin-bottom: 22px;
+    max-width: 40ch;
+  }
+  .az-txt p {
+    font-size: 16.5px;
+    margin-bottom: 18px;
+    max-width: 58ch;
+    color: var(--text);
+  }
+
+  .az-note {
+    border-left: 1px solid var(--bg2);
+    padding-left: 28px;
+  }
+  .nt {
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .nt:last-child {
+    border-bottom: none;
+  }
+  .nt-a {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--red);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .nt p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  /* ============================================================
+     4. SOLUZIONI — indice
+     ============================================================ */
+  .sol {
+    background: var(--bg1);
+    padding: 120px 0;
+  }
+  .sol-g {
+    display: grid;
+    grid-template-columns: 1fr 0.72fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .idx {
+    list-style: none;
+    border-top: 1px solid var(--navy);
+  }
+  .idx li {
+    border-bottom: 1px solid var(--bg2);
+  }
+
+  .idx-r {
+    display: flex;
+    align-items: baseline;
+    gap: 22px;
+    padding: 26px 8px 26px 0;
+    transition: padding-left 0.35s var(--ease), background 0.35s var(--ease);
+  }
+  .idx-r:hover {
+    padding-left: 14px;
+    background: #fff;
+  }
+
+  .idx-n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red);
+    flex: none;
+    width: 26px;
+  }
+  .idx-c {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+  }
+  .idx-t {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(24px, 3vw, 38px);
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: var(--navy);
+  }
+  .idx-d {
+    font-size: 14.5px;
+    color: var(--text-2);
+  }
+  .idx-a {
+    flex: none;
+    color: var(--red);
+    align-self: center;
+    transition: transform 0.3s var(--ease);
+  }
+  .idx-r:hover .idx-a {
+    transform: translateX(4px);
+  }
+
+  /* Pannello: le immagini sono impilate e si scambiano in dissolvenza,
+     così al passaggio del mouse non parte nessuna richiesta. */
+  .sol-v {
+    position: sticky;
+    top: 120px;
+    aspect-ratio: 4 / 5;
+  }
+  .v-i {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+  .v-i[data-on] {
+    opacity: 1;
+  }
+  .v-i :global(.frame) {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .vuoto {
+    aspect-ratio: 16 / 9;
+    background: var(--ph-bg);
+    border: 1px dashed var(--ph-border);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+  }
+  .vuoto-alto {
+    aspect-ratio: 4 / 5;
+    height: 100%;
+  }
+
+  /* L'immagine dentro la riga serve solo sotto i 900px */
+  .idx-mob {
+    display: none;
+  }
+
+  /* ============================================================
+     5. TAVOLA
+     ============================================================ */
+  .tav {
+    background: var(--navy);
+    padding: 120px 0;
+  }
+  .tav-h {
+    max-width: 620px;
+    margin-bottom: 64px;
+  }
+  .tav-p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 17px;
+    margin-bottom: 32px;
+    max-width: 48ch;
+  }
+  .tav-f {
+    margin: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 40px 32px 24px;
+  }
+  .tav-f figcaption {
+    padding: 24px 0 0;
+    margin-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.6);
+    max-width: none;
+  }
+
+  /* ============================================================
+     6. PROGETTI — sequenza
+     ============================================================ */
+  .prg {
+    background: var(--white);
+    padding: 120px 0 0;
+  }
+  .prg-f {
+    margin: 0 0 12px;
+  }
+  .prg-f :global(.frame) {
+    border-radius: 0;
+  }
+  .prg-f figcaption {
+    padding-top: 16px;
+    padding-bottom: 56px;
+    align-items: baseline;
+    gap: 0 28px;
+  }
+  .pf-c {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+  }
+  .pf-s,
+  .pf-l {
+    color: var(--text-2);
+  }
+  .pf-m {
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .lnk-g {
+    margin: 24px 0 120px;
+  }
+
+  /* ============================================================
+     7. COMMITTENTI
+     ============================================================ */
+  .cli {
+    background: var(--bg1);
+    padding: 96px 0;
+  }
+  .cli-l {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(20px, 2.6vw, 32px);
+    line-height: 1.45;
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    max-width: 30ch;
+  }
+  .cli-p {
+    color: var(--red);
+    margin: 0 10px;
+  }
+
+  /* ============================================================
+     8. CHIUSURA
+     ============================================================ */
+  .fin {
+    background: var(--navy-deep);
+    padding: 120px 0;
+  }
+  .fin-t {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: clamp(38px, 7vw, 96px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: #fff;
+    margin-bottom: 56px;
+  }
+  .fin-b {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: end;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    padding-top: 40px;
+  }
+  .fin-b p {
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 44ch;
+  }
+  .fin-c {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    flex-wrap: wrap;
+    justify-self: end;
+  }
+  .fin-tel {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 22px;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.25s;
+  }
+  .fin-tel:hover {
+    color: var(--red-soft);
+  }
+
+  /* ============================================================
+     RESPONSIVE — decisioni per lo schermo stretto
+     ============================================================ */
+
+  @media (max-width: 1000px) {
+    .az-g {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .az-note {
+      border-left: none;
+      border-top: 1px solid var(--bg2);
+      padding-left: 0;
+      padding-top: 28px;
+      /* Le tappe diventano una fascia orizzontale invece di una spalla */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .nt {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  @media (max-width: 900px) {
+    /* Il pannello laterale sparisce: al suo posto l'immagine entra nella
+       riga. Non è il pannello rimpicciolito, è un altro impianto. */
+    .sol-g {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .sol-v {
+      display: none;
+    }
+    .idx-mob {
+      display: block;
+      padding: 0 0 26px;
+    }
+    .idx-mob :global(.frame) {
+      border-radius: 0;
+    }
+    .idx-r {
+      padding-bottom: 18px;
+    }
+    .idx-r:hover {
+      padding-left: 0;
+      background: none;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .ap {
+      padding-top: 116px;
+    }
+    .ap-b,
+    .fin-b {
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .ap-cta,
+    .fin-c {
+      justify-self: start;
+    }
+    .ap-t {
+      margin-top: 32px;
+    }
+
+    /* La tabella non si comprime: diventa un elenco di voci.
+       Comprimere quattro colonne su 360px è la cosa che rompe il 90%
+       dei siti economici. */
+    .tab,
+    .tab tbody,
+    .tab tr,
+    .tab th,
+    .tab td {
+      display: block;
+      width: auto;
+    }
+    .tab tr {
+      padding: 22px 0;
+    }
+    .tab th,
+    .tab td {
+      padding: 0;
+    }
+    .tab th {
+      margin-bottom: 8px;
+    }
+    .tab .note {
+      margin-top: 8px;
+    }
+
+    .dati {
+      padding: 64px 0 80px;
+    }
+    .az,
+    .sol,
+    .tav,
+    .fin {
+      padding: 80px 0;
+    }
+    .prg {
+      padding-top: 80px;
+    }
+    .lnk-g {
+      margin-bottom: 80px;
+    }
+    .tit-sez {
+      margin-bottom: 36px;
+    }
+    .tav-f {
+      padding: 20px 16px 16px;
+    }
+    .telaio {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .prg-f figcaption {
+      gap: 0 18px;
+      padding-bottom: 40px;
+    }
+  }
+</style>
+
+<script>
+  /* Indice delle soluzioni: al passaggio del mouse cambia l'immagine nel
+     pannello. È solo un arricchimento visivo — il pannello è aria-hidden e
+     tutta l'informazione sta già nelle righe. */
+  const idx = document.getElementById('idx');
+  if (idx && matchMedia('(min-width: 901px)').matches) {
+    const viste = Array.from(document.querySelectorAll<HTMLElement>('.v-i'));
+
+    const mostra = (i: number) => {
+      for (const v of viste) {
+        if (Number(v.dataset.i) === i) v.setAttribute('data-on', '');
+        else v.removeAttribute('data-on');
+      }
+    };
+
+    for (const r of idx.querySelectorAll<HTMLElement>('.idx-r')) {
+      const i = Number(r.dataset.i);
+      r.addEventListener('mouseenter', () => mostra(i));
+      /* Anche il focus da tastiera muove il pannello: chi naviga con Tab
+         vede la stessa cosa di chi usa il mouse. */
+      r.addEventListener('focus', () => mostra(i));
+    }
+  }
+</script>

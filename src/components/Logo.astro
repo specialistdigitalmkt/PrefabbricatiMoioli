@@ -1,0 +1,107 @@
+---
+/**
+ * Marchio Prefabbricati Moioli.
+ * Richiama i due <symbol> dichiarati una sola volta da LogoSprite.astro.
+ *
+ * Il lockup è composto da due strati sovrapposti nello stesso riquadro:
+ * la sigla e la riga di payoff. Accendere o spegnere la riga non cambia le
+ * proporzioni della sigla e non sposta nulla in pagina.
+ *
+ * Colori invariati rispetto al vettoriale originale: navy #1F2A43 e rosso
+ * marchio #E42829. Il marchio non si ritocca.
+ */
+interface Props {
+  variant?: 'auto' | 'light';
+  /**
+   * Riga di payoff dentro il marchio.
+   *  'auto'   → la decide un antenato con la classe .con-payoff (la testata)
+   *  'sempre' → sempre visibile
+   *  'mai'    → mai
+   */
+  payoff?: 'auto' | 'sempre' | 'mai';
+  class?: string;
+  /** Altezza in px dell'intero lockup. */
+  height?: number;
+}
+
+const {
+  variant = 'auto',
+  payoff = 'auto',
+  class: className = '',
+  height = 34,
+} = Astro.props;
+---
+
+<span
+  class:list={[
+    'logo',
+    { 'logo--light': variant === 'light' },
+    `logo--payoff-${payoff}`,
+    className,
+  ]}
+  style={`--logo-h:${height}px`}
+>
+  <svg class="logo-svg" role="img" aria-label="Prefabbricati Moioli" preserveAspectRatio="xMinYMid meet">
+    <use href="#moioli-logo" class="logo-mark"></use>
+    <use href="#moioli-logo-payoff" class="logo-payoff"></use>
+  </svg>
+</span>
+
+<style>
+  .logo {
+    display: block;
+    line-height: 0;
+  }
+
+  .logo-svg {
+    height: var(--logo-h);
+    /* Rapporto del lockup completo: 800:260. Resta questo anche quando la
+       riga di payoff è spenta, così non c'è mai uno scarto di ingombro. */
+    width: calc(var(--logo-h) * (800 / 260));
+    display: block;
+    transition: 0.4s var(--ease);
+
+    /* Valori del vettoriale originale */
+    --lg-n: #1f2a43;
+    --lg-r: #e42829;
+    transition-property: width, height, --lg-n, --lg-r;
+  }
+
+  .logo--light .logo-svg {
+    --lg-n: #ffffff;
+    --lg-r: #ffffff;
+  }
+
+  /* --- Riga di payoff ---------------------------------------------------
+     Spenta per difetto. Senza di lei la sigla resterebbe in alto nel proprio
+     riquadro, con un vuoto sotto: lo scarto di 3.65px la riporta al centro
+     ottico. Quando la riga si accende, la sigla risale alla sua posizione
+     nel lockup completo. È un movimento minimo e legato a un cambio di
+     stato reale, non un effetto.                                          */
+  .logo-payoff {
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+  }
+
+  .logo-mark {
+    transition: transform 0.4s var(--ease);
+    transform: translateY(calc(var(--logo-h) * 0.107));
+  }
+
+  .logo--payoff-sempre .logo-payoff,
+  :global(.con-payoff) .logo--payoff-auto .logo-payoff {
+    opacity: 1;
+  }
+
+  .logo--payoff-sempre .logo-mark,
+  :global(.con-payoff) .logo--payoff-auto .logo-mark {
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-mark,
+    .logo-payoff {
+      transition: none;
+    }
+  }
+</style>

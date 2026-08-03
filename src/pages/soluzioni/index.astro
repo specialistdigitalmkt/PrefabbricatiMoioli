@@ -1,0 +1,139 @@
+---
+/**
+ * /soluzioni — indice delle tipologie di copertura.
+ * Solo Tecnoshed ha oggi una pagina dedicata: le altre voci non linkano
+ * a pagine inesistenti, sono schede complete in sé.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SolutionCard from '../../components/SolutionCard.astro';
+import { soluzioni } from '../../data/soluzioni';
+import Icon from '../../components/Icon.astro';
+
+/* Due griglie separate invece di una sola con celle a doppia larghezza:
+   con sette schede in tre colonne, le due in evidenza lasciavano un buco
+   proprio nella prima riga. */
+const inEvidenza = soluzioni.filter((s) => s.inEvidenza);
+const altre = soluzioni.filter((s) => !s.inEvidenza);
+---
+
+<BaseLayout
+  title="Soluzioni di copertura — Prefabbricati Moioli"
+  description="Le sette tipologie di copertura prefabbricata Moioli: Tecnoshed, Stegos, Tecnowing, Tegolo TT, Bacacier, Doppia pendenza, Coverplan."
+>
+  <PageHero
+    eyebrow="Soluzioni"
+    title="Sette modi di coprire uno spazio."
+    lead="La copertura non è un dettaglio di finitura: decide come entra la luce, quanto pesa la struttura e cosa potrai farci sopra domani. Qui trovi le tipologie che produciamo."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Soluzioni' }]}
+  />
+
+  <section class="block sol">
+    <div class="wrap">
+      <ul class="sol-grid sol-grid--due stagger">
+        {inEvidenza.map((s, i) => <SolutionCard soluzione={s} indice={i + 1} grande />)}
+      </ul>
+
+      <ul class="sol-grid sol-grid--tre stagger">
+        {
+          altre.map((s, i) => (
+            <SolutionCard soluzione={s} indice={inEvidenza.length + i + 1} />
+          ))
+        }
+      </ul>
+
+      <p class="ph-note sol-note">
+        Nota per la revisione: i testi descrittivi delle tipologie sono redazionali e
+        vanno validati dall'ufficio tecnico. L'abbinamento fotografia ↔ tipologia è da
+        confermare. Nessun dato tecnico è stato inserito: tutte le voci in monospazio
+        sono segnaposto.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Non sai quale scegliere?</p>
+          <h2>Partiamo da come userai l'edificio.</h2>
+          <p class="cta-p">
+            Raccontaci destinazione d'uso, superficie e vincoli del lotto: ti indichiamo la
+            tipologia adatta e il perché.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Parliamo del progetto <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .sol {
+    background: var(--bg1);
+  }
+
+  .sol-grid {
+    list-style: none;
+    display: grid;
+    gap: 22px;
+  }
+
+  /* Le due tipologie di punta su una riga a sé: dentro un'unica griglia a tre
+     colonne lasciavano una cella vuota proprio in cima alla pagina. */
+  .sol-grid--due {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 22px;
+  }
+
+  .sol-grid--tre {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .sol-note {
+    margin-top: 40px;
+  }
+
+  /* --- CTA condivisa ---------------------------------------------------- */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 1000px) {
+    .sol-grid--tre {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 700px) {
+    .sol-grid--due,
+    .sol-grid--tre {
+      grid-template-columns: 1fr;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

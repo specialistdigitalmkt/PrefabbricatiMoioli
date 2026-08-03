@@ -1,0 +1,471 @@
+---
+/**
+ * Impaginato di base.
+ * Contiene testa SEO, dati strutturati, testata, piè di pagina e il
+ * sistema di animazione condiviso da tutte le pagine.
+ */
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import LogoSprite from '../components/LogoSprite.astro';
+import { azienda } from '../data/site';
+import images from '../data/images.json';
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Il preloader gira solo in home: su un sito multi-pagina ripeterlo a
+   *  ogni navigazione peggiorerebbe l'esperienza invece di migliorarla. */
+  preloader?: boolean;
+  /** id dell'immagine LCP della pagina, da precaricare. */
+  preloadImage?: string;
+  /** JSON-LD aggiuntivo specifico della pagina. */
+  jsonLd?: object | null;
+  /** Tiene la pagina fuori dai motori di ricerca (anteprime di lavoro). */
+  noindex?: boolean;
+  /** La pagina apre su fondo chiaro: la testata parte già in versione scura. */
+  headerSuChiaro?: boolean;
+}
+
+const {
+  title,
+  description,
+  preloader = false,
+  preloadImage,
+  jsonLd = null,
+  noindex = false,
+  headerSuChiaro = false,
+} = Astro.props;
+
+/* Il preload deve descrivere le stesse alternative dell'<img>, altrimenti il
+   browser scarica due file diversi: quello precaricato e quello scelto dal
+   srcset. Si ricostruisce quindi il srcset completo dal manifesto. */
+const lcp = preloadImage
+  ? (images as Record<string, { widths: number[] }>)[preloadImage]
+  : null;
+
+const lcpSrcset = lcp
+  ? lcp.widths.map((w) => `/img/${preloadImage}-${w}.webp ${w}w`).join(', ')
+  : null;
+
+const lcpFallback = lcp ? `/img/${preloadImage}-${lcp.widths.at(-1)}.webp` : null;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const { indirizzo } = azienda;
+
+/* Dati strutturati di sito: Organization + LocalBusiness. */
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${Astro.site}#organization`,
+      name: azienda.nome,
+      legalName: azienda.ragioneSociale,
+      url: String(Astro.site),
+      foundingDate: azienda.fondazione,
+      vatID: azienda.piva,
+      email: azienda.email,
+      telephone: azienda.telefono,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: indirizzo.via,
+        postalCode: indirizzo.cap,
+        addressLocality: indirizzo.citta,
+        addressRegion: indirizzo.provincia,
+        addressCountry: indirizzo.paese,
+      },
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': `${Astro.site}#localbusiness`,
+      name: azienda.nome,
+      description:
+        'Produzione di strutture prefabbricate in cemento armato per edilizia industriale, commerciale e civile.',
+      url: String(Astro.site),
+      telephone: azienda.telefono,
+      email: azienda.email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: indirizzo.via,
+        postalCode: indirizzo.cap,
+        addressLocality: indirizzo.citta,
+        addressRegion: indirizzo.provincia,
+        addressCountry: indirizzo.paese,
+      },
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: azienda.geo.lat,
+        longitude: azienda.geo.lng,
+      },
+      areaServed: 'IT',
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={azienda.nome} />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="theme-color" content="#1D2A44" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {/* I due tagli che compaiono per primi: precaricarli evita il salto
+        tipografico sul titolo e sul primo paragrafo. Gli altri pesi arrivano
+        quando servono. */}
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/space-grotesk-600-latin.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/ibm-plex-sans-400-latin.woff2"
+      crossorigin
+    />
+
+    {
+      lcpSrcset && (
+        <link
+          rel="preload"
+          as="image"
+          href={lcpFallback}
+          imagesrcset={lcpSrcset}
+          imagesizes="100vw"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    <script type="application/ld+json" set:html={JSON.stringify(orgLd)} is:inline />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />}
+  </head>
+
+  <body>
+    <LogoSprite />
+
+    <a href="#main" class="skip">Vai al contenuto</a>
+
+    {
+      preloader && (
+        <div class="loader" id="loader">
+          <div class="word">
+            Prefabbricati <b>Moioli</b>
+          </div>
+          <div class="line"><i id="loadbar" /></div>
+          <div class="pct" id="loadpct">0%</div>
+        </div>
+      )
+    }
+
+    <div class="progress" aria-hidden="true"><i id="pbar"></i></div>
+    <div class="cursor" id="cur" aria-hidden="true"></div>
+    <div class="cursor-ring" id="curing" aria-hidden="true"></div>
+    <div class="demo-flag" aria-hidden="true">Demo concept</div>
+
+    <Header suChiaro={headerSuChiaro} />
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <Footer />
+
+    <button class="totop" id="totop" aria-label="Torna all'inizio della pagina">
+      <Icon nome="freccia-su" dim={19} />
+    </button>
+
+    <style is:global>
+      /* --- Preloader (solo home) ------------------------------------- */
+      .loader {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: var(--navy-deep);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 18px;
+        transition: transform 1s var(--ease-io);
+      }
+      .loader.done {
+        transform: translateY(-101%);
+      }
+      .loader .word {
+        font-family: var(--brand);
+        font-weight: 600;
+        font-size: clamp(22px, 3.4vw, 34px);
+        color: #fff;
+        letter-spacing: 0.02em;
+      }
+      .loader .word b {
+        color: var(--red);
+        font-weight: 600;
+      }
+      .loader .pct {
+        font-family: var(--brand);
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 0.3em;
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .loader .line {
+        width: min(260px, 60vw);
+        height: 1px;
+        background: rgba(255, 255, 255, 0.14);
+        position: relative;
+        overflow: hidden;
+      }
+      .loader .line i {
+        position: absolute;
+        inset: 0;
+        background: var(--red);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.2s linear;
+      }
+    </style>
+
+    <script>
+      /* =====================================================================
+         Sistema condiviso: avanzamento, comparse, contatori, cursore.
+         Tutto ciò che è puramente decorativo si spegne con reduced-motion.
+         ===================================================================== */
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* --- Preloader ---------------------------------------------------- */
+      const loader = document.getElementById('loader');
+      const heroEl = document.querySelector('.hero');
+
+      const startHero = () => heroEl?.classList.add('go');
+
+      if (loader && !reduced) {
+        const pct = document.getElementById('loadpct')!;
+        const lbar = document.getElementById('loadbar')!;
+        let p = 0;
+        let done = false;
+        let finished = false;
+
+        const finish = () => {
+          if (finished) return;
+          finished = true;
+          pct.textContent = '100%';
+          lbar.style.transform = 'scaleX(1)';
+          setTimeout(() => {
+            loader.classList.add('done');
+            startHero();
+            setTimeout(() => loader.remove(), 1200);
+          }, 250);
+        };
+
+        /* Rete di sicurezza. requestAnimationFrame non gira nelle schede in
+           secondo piano o in risparmio energetico: senza questo il velo
+           resterebbe sopra il contenuto a tempo indeterminato. */
+        const SOGLIA_MS = 2600;
+        setTimeout(finish, SOGLIA_MS);
+        addEventListener('load', () => setTimeout(finish, 400), { once: true });
+
+        /* Si aspetta l'immagine di apertura già presente nel documento: usare
+           un new Image() significherebbe scaricare un terzo file oltre a
+           quello precaricato e a quello scelto dal srcset. */
+        const lcpImg = document.querySelector<HTMLImageElement>('img[fetchpriority="high"]');
+        if (!lcpImg) {
+          done = true;
+        } else if (lcpImg.complete) {
+          done = true;
+        } else {
+          lcpImg.addEventListener('load', () => (done = true), { once: true });
+          lcpImg.addEventListener('error', () => (done = true), { once: true });
+        }
+
+        const tick = () => {
+          if (finished) return;
+          p += done ? (100 - p) * 0.18 + 1 : Math.random() * 2.4;
+          if (p >= 100) {
+            finish();
+            return;
+          }
+          pct.textContent = Math.floor(p) + '%';
+          lbar.style.transform = `scaleX(${p / 100})`;
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      } else {
+        loader?.remove();
+        startHero();
+      }
+
+      /* --- Barra di avanzamento e torna-su ------------------------------ */
+      const pbar = document.getElementById('pbar')!;
+      const totop = document.getElementById('totop')!;
+
+      addEventListener(
+        'scroll',
+        () => {
+          totop.classList.toggle('show', scrollY > 700);
+          const h = document.documentElement;
+          const max = h.scrollHeight - h.clientHeight;
+          pbar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+        },
+        { passive: true }
+      );
+
+      totop.addEventListener('click', () =>
+        scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' })
+      );
+
+      /* --- Comparsa allo scroll ----------------------------------------- */
+      const io = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }),
+        { threshold: 0.15 }
+      );
+      document
+        .querySelectorAll('.reveal, .stagger, .img-reveal, .timeline')
+        .forEach((el) => io.observe(el));
+
+      /* --- Contatori ----------------------------------------------------- */
+      const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+      const countIO = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            const el = e.target as HTMLElement;
+            const to = Number(el.dataset.count);
+            countIO.unobserve(el);
+            if (reduced) {
+              el.textContent = String(to);
+              return;
+            }
+            const d = 1600;
+            const t0 = performance.now();
+            const step = (now: number) => {
+              const k = Math.min((now - t0) / d, 1);
+              el.textContent = String(Math.round(easeOut(k) * to));
+              if (k < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          }),
+        { threshold: 0.5 }
+      );
+      document.querySelectorAll('[data-count]').forEach((el) => countIO.observe(el));
+
+      /* Da qui in giù è solo decorazione: con reduced-motion non parte. */
+      if (!reduced) {
+        /* --- Parallax leggero ------------------------------------------ */
+        const prl = Array.from(document.querySelectorAll<HTMLElement>('[data-prl]'));
+        const heroPhoto = document.getElementById('heroPhoto');
+        let mx = 0,
+          my = 0,
+          sy = 0,
+          queued = false;
+
+        const apply = () => {
+          queued = false;
+          if (heroPhoto) heroPhoto.style.translate = `${mx * 14}px ${my * 10 + sy * 0.18}px`;
+          for (const el of prl) {
+            const r = el.getBoundingClientRect();
+            const v = (r.top + r.height / 2 - innerHeight / 2) * parseFloat(el.dataset.prl!);
+            el.style.translate = `0 ${v}px`;
+          }
+        };
+        const ask = () => {
+          if (!queued) {
+            queued = true;
+            requestAnimationFrame(apply);
+          }
+        };
+
+        if (heroPhoto || prl.length) {
+          addEventListener(
+            'mousemove',
+            (e) => {
+              mx = e.clientX / innerWidth - 0.5;
+              my = e.clientY / innerHeight - 0.5;
+              ask();
+            },
+            { passive: true }
+          );
+          addEventListener(
+            'scroll',
+            () => {
+              sy = Math.min(scrollY, innerHeight);
+              ask();
+            },
+            { passive: true }
+          );
+          ask();
+        }
+
+        /* Qui stavano i bottoni magnetici e l'inclinazione 3D delle schede.
+           Rimossi: sono due stilemi da vetrina d'agenzia che si riconoscono
+           al primo passaggio del mouse e non dicono nulla su ciò che il sito
+           vende. Un bottone che scappa dal cursore non è precisione. */
+
+        /* --- Cursore custom -------------------------------------------- */
+        if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+          const cur = document.getElementById('cur')!;
+          const ring = document.getElementById('curing')!;
+          let cx = 0,
+            cy = 0,
+            rx = 0,
+            ry = 0;
+
+          addEventListener(
+            'mousemove',
+            (e) => {
+              cx = e.clientX;
+              cy = e.clientY;
+              cur.style.left = cx + 'px';
+              cur.style.top = cy + 'px';
+            },
+            { passive: true }
+          );
+
+          (function follow() {
+            rx += (cx - rx) * 0.16;
+            ry += (cy - ry) * 0.16;
+            ring.style.left = rx + 'px';
+            ring.style.top = ry + 'px';
+            requestAnimationFrame(follow);
+          })();
+
+          document
+            .querySelectorAll('a, button, .work-card, .sol-card, input, textarea')
+            .forEach((el) => {
+              el.addEventListener('mouseenter', () => ring.classList.add('on'));
+              el.addEventListener('mouseleave', () => ring.classList.remove('on'));
+            });
+        }
+      } else {
+        document.querySelectorAll('.cursor, .cursor-ring').forEach((el) => el.remove());
+      }
+    </script>
+  </body>
+</html>

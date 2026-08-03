@@ -1,0 +1,534 @@
+---
+/**
+ * Explainer a punti caldi.
+ *
+ * Struttura: disegno con marker cliccabili + pannello di dettaglio.
+ * Sotto gli 860px i marker spariscono e gli stessi pannelli diventano una
+ * lista espandibile: non si rimpiccioliscono i bersagli, si cambia pattern.
+ *
+ * Componente generico: i punti caldi arrivano come dato, il disegno arriva
+ * come contenuto. Così la stessa meccanica serve tutte le schede prodotto e
+ * un disegno si sostituisce senza toccare la logica.
+ *
+ *   <HotspotExplainer hotspots={...} intro="...">
+ *     <StegosSection />
+ *   </HotspotExplainer>
+ *
+ * Il disegno deve usare viewBox="0 0 1200 700": le coordinate dei punti sono
+ * percentuali di quel sistema.
+ */
+import Icon from './Icon.astro';
+import type { Hotspot } from '../data/tipi';
+
+interface Props {
+  hotspots: readonly Hotspot[];
+  intro?: string;
+  /** Testo della didascalia sotto il disegno. */
+  didascalia?: string;
+}
+const {
+  hotspots,
+  intro,
+  didascalia = 'DISEGNO SEGNAPOSTO — vettoriale definitivo da produrre',
+} = Astro.props;
+---
+
+<div class="hs" id="hs">
+  {intro && <p class="hs-intro">{intro}</p>}
+
+  <div class="hs-grid">
+    <!-- ============ DISEGNO ============ -->
+    <figure class="hs-fig" id="hsFig">
+      {/* Il livello marker deve coincidere esattamente con il riquadro del
+          disegno, non con quello della figura: le percentuali dei marker sono
+          riferite al viewBox dell'SVG. Da qui il contenitore dedicato. */}
+      <div class="hs-canvas">
+        <slot />
+
+        <!-- Livello marker: solo da 860px in su -->
+        <div class="hs-markers" aria-hidden="true">
+          {
+            hotspots.map((h, i) => (
+              <button
+                type="button"
+                class="hs-marker"
+                data-target={h.id}
+                style={`left:${h.x}%; top:${h.y}%`}
+                tabindex="-1"
+              >
+                <span class="hs-dot">{i + 1}</span>
+                <span class="hs-tip">{h.titolo}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <figcaption class="hs-cap">
+        <span class="spec spec-dark">{didascalia}</span>
+      </figcaption>
+    </figure>
+
+    <!-- ============ PANNELLI ============ -->
+    <div class="hs-side">
+      {
+        hotspots.map((h, i) => (
+          <section class="hs-item" data-item={h.id}>
+            {/* Il bottone accordion è il comando reale: è nel flusso del
+                documento, quindi raggiungibile da tastiera su ogni schermo.
+                Da 860px in su viene disegnato come voce di elenco laterale. */}
+            <h3 class="hs-h">
+              <button
+                type="button"
+                class="hs-toggle"
+                id={`hsBtn-${h.id}`}
+                aria-expanded={i === 0 ? 'true' : 'false'}
+                aria-controls={`hsPanel-${h.id}`}
+                data-target={h.id}
+              >
+                <span class="hs-num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="hs-txt">
+                  <span class="hs-title">{h.titolo}</span>
+                  <span class="hs-sub">{h.sommario}</span>
+                </span>
+                <span class="hs-chev">
+                  <Icon nome="chevron-giu" dim={18} />
+                </span>
+              </button>
+            </h3>
+
+            <div
+              class="hs-panel"
+              id={`hsPanel-${h.id}`}
+              role="region"
+              aria-labelledby={`hsBtn-${h.id}`}
+              hidden={i !== 0}
+            >
+              <div class="hs-photo">
+                <span class="spec spec-dark">FOTO DETTAGLIO — da servizio fotografico</span>
+              </div>
+
+              <p class="hs-desc">{h.descrizione}</p>
+
+              <ul class="hs-specs">
+                {h.specs.map((s) => (
+                  <li>
+                    <span class="spec spec-dark">{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<style>
+  .hs-intro {
+    max-width: 62ch;
+    margin-bottom: 40px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .hs-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  /* Senza questo le colonne di una griglia non scendono sotto la larghezza
+     minima del loro contenuto e trascinano fuori l'intera pagina. */
+  .hs-grid > * {
+    min-width: 0;
+  }
+
+  /* --- Disegno ---------------------------------------------------------- */
+
+  .hs-fig {
+    position: relative;
+    margin: 0;
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  /* Quando un punto è selezionato il disegno arretra ma resta leggibile. */
+  .hs-fig :global(.shed) {
+    transition: opacity 0.4s var(--ease);
+  }
+  .hs.is-open .hs-fig :global(.shed) {
+    opacity: 0.55;
+  }
+
+  .hs-cap {
+    margin-top: 18px;
+    text-align: center;
+  }
+
+  /* --- Marker ------------------------------------------------------------ */
+
+  /* Il disegno e i marker condividono lo stesso riquadro: le percentuali del
+     viewBox restano valide a qualunque larghezza. */
+  .hs-canvas {
+    position: relative;
+    /* line-height: 0 evita il gap del baseline sotto l'SVG, che sfalserebbe
+       l'altezza del riquadro rispetto al disegno. */
+    line-height: 0;
+  }
+
+  .hs-markers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .hs-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    pointer-events: auto;
+    /* Bersaglio ampio anche se il pallino è piccolo */
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+  }
+
+  .hs-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--brand);
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--red);
+    box-shadow: 0 0 0 0 rgba(177, 55, 51, 0.5);
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease),
+      background 0.3s var(--ease);
+  }
+
+  .hs-marker:hover .hs-dot {
+    transform: scale(1.14);
+  }
+
+  .hs-marker.act .hs-dot {
+    background: #fff;
+    color: var(--navy);
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.16);
+  }
+
+  /* Alone pulsante solo finché l'utente non ha capito che sono cliccabili */
+  .hs:not(.is-touched) .hs-marker .hs-dot {
+    animation: hsPulse 2.8s var(--ease-io) infinite;
+  }
+  .hs:not(.is-touched) .hs-marker:nth-child(2) .hs-dot {
+    animation-delay: 0.3s;
+  }
+  .hs:not(.is-touched) .hs-marker:nth-child(3) .hs-dot {
+    animation-delay: 0.6s;
+  }
+  .hs:not(.is-touched) .hs-marker:nth-child(4) .hs-dot {
+    animation-delay: 0.9s;
+  }
+  .hs:not(.is-touched) .hs-marker:nth-child(5) .hs-dot {
+    animation-delay: 1.2s;
+  }
+  .hs:not(.is-touched) .hs-marker:nth-child(6) .hs-dot {
+    animation-delay: 1.5s;
+  }
+
+  @keyframes hsPulse {
+    0%,
+    70%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(177, 55, 51, 0.5);
+    }
+    35% {
+      box-shadow: 0 0 0 10px rgba(177, 55, 51, 0);
+    }
+  }
+
+  .hs-tip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - 4px);
+    transform: translateX(-50%) translateY(6px);
+    background: var(--navy-ink);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    padding: 7px 11px;
+    border-radius: var(--r-sm);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.25s var(--ease);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .hs-marker:hover .hs-tip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* --- Elenco / pannelli -------------------------------------------------- */
+
+  .hs-side {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .hs-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .hs-item:first-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .hs-h {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  .hs-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    padding: 18px 4px;
+    min-height: 56px;
+    transition: background 0.25s var(--ease);
+  }
+
+  .hs-toggle:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .hs-num {
+    font-family: var(--brand);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--red-soft);
+    flex: none;
+    width: 22px;
+  }
+
+  .hs-txt {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hs-title {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+    line-height: 1.25;
+  }
+
+  .hs-sub {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.4;
+  }
+
+  .hs-chev {
+    flex: none;
+    color: rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s var(--ease), color 0.3s;
+    display: grid;
+    place-items: center;
+  }
+
+  .hs-toggle[aria-expanded='true'] .hs-chev {
+    transform: rotate(180deg);
+    color: var(--red-soft);
+  }
+
+  .hs-panel {
+    padding: 0 4px 26px 42px;
+  }
+
+  .hs-photo {
+    aspect-ratio: 4 / 3;
+    border: 1px dashed rgba(255, 255, 255, 0.24);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.04);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .hs-desc {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .hs-specs {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  /* --- Sotto gli 860px: niente marker, solo lista espandibile ------------ */
+
+  @media (max-width: 860px) {
+    .hs-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .hs-markers {
+      display: none;
+    }
+    .hs.is-open .hs-fig :global(.shed) {
+      opacity: 1;
+    }
+    .hs-fig {
+      padding: 16px;
+    }
+
+    /* Su schermo stretto il disegno non si rimpicciolisce oltre: diventerebbe
+       illeggibile, quote comprese. Scorre dentro il proprio riquadro — la
+       pagina resta ferma. */
+    .hs-canvas {
+      overflow-x: auto;
+      overscroll-behavior-x: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+    .hs-canvas :global(.shed) {
+      min-width: 620px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .hs-panel {
+      padding: 0 0 22px 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hs-dot {
+      animation: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Un solo stato condiviso da marker ed elenco: entrambi comandano lo stesso
+   * pannello. I marker sono un'aggiunta visiva, non un secondo meccanismo.
+   */
+  const root = document.getElementById('hs');
+  if (root) {
+    const toggles = Array.from(root.querySelectorAll<HTMLButtonElement>('.hs-toggle'));
+    const markers = Array.from(root.querySelectorAll<HTMLButtonElement>('.hs-marker'));
+    /* Si osserva direttamente il breakpoint invece dell'evento resize: è il
+       segnale che conta ed è più affidabile quando la finestra cambia
+       dimensione senza un ricaricamento. */
+    const mq = matchMedia('(min-width: 861px)');
+    const isDesktop = () => mq.matches;
+
+    const setOpen = (id: string | null, moveFocus = false, byUser = true) => {
+      for (const t of toggles) {
+        const target = t.dataset.target!;
+        const open = target === id;
+        t.setAttribute('aria-expanded', String(open));
+        const panel = document.getElementById(`hsPanel-${target}`)!;
+        panel.hidden = !open;
+      }
+      /* Il marker rispecchia sempre il pannello aperto, anche quando lo stato
+         è impostato dal codice: altrimenti al primo caricamento la scheda
+         risulta aperta senza che si capisca a quale punto si riferisce. */
+      for (const m of markers) m.classList.toggle('act', m.dataset.target === id);
+
+      if (byUser) {
+        /* L'alone pulsante serve solo finché l'utente non ha capito che i
+           pallini si cliccano: si spegne al primo comando vero, non a un
+           riallineamento automatico dopo un resize. */
+        root.classList.add('is-touched');
+        /* Il disegno arretra solo dopo una scelta esplicita. All'arrivo deve
+           essere il disegno la cosa in primo piano, non il pannello. */
+        root.classList.toggle('is-open', id !== null);
+      }
+
+      if (moveFocus && id) {
+        const t = toggles.find((x) => x.dataset.target === id);
+        t?.focus();
+        // Su mobile l'elenco è sotto il disegno: porta in vista la voce aperta.
+        if (!isDesktop()) t?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    };
+
+    /* Elenco: comportamento a fisarmonica. Su desktop resta sempre una voce
+       aperta, così il pannello laterale non collassa lasciando un buco. */
+    for (const t of toggles) {
+      t.addEventListener('click', () => {
+        const id = t.dataset.target!;
+        const isOpen = t.getAttribute('aria-expanded') === 'true';
+        if (isOpen && isDesktop()) return;
+        setOpen(isOpen ? null : id);
+      });
+    }
+
+    /* Marker: stesso comando, ingresso diverso. */
+    for (const m of markers) {
+      m.addEventListener('click', () => setOpen(m.dataset.target!, true));
+    }
+
+    /* Le due modalità hanno stati di partenza diversi:
+       - desktop: una voce sempre aperta, altrimenti la colonna resta vuota
+         accanto al disegno;
+       - mobile: tutto chiuso, perché l'elenco è già la pagina.
+       Si riallinea a ogni cambio di modalità, non solo al primo caricamento:
+       chi ruota il telefono o allarga la finestra deve trovare lo stato giusto. */
+    let modo: 'desktop' | 'mobile' | null = null;
+
+    const sync = () => {
+      const nuovo = isDesktop() ? 'desktop' : 'mobile';
+      if (nuovo === modo) return;
+      modo = nuovo;
+
+      if (nuovo === 'desktop') {
+        const corrente =
+          toggles.find((t) => t.getAttribute('aria-expanded') === 'true') ?? toggles[0];
+        setOpen(corrente.dataset.target!, false, false);
+      } else {
+        setOpen(null, false, false);
+        root.classList.remove('is-open');
+      }
+    };
+
+    sync();
+    mq.addEventListener('change', sync);
+
+    /* Esc chiude il pannello aperto (solo dove ha senso: su mobile). */
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !isDesktop()) setOpen(null);
+    });
+  }
+</script>

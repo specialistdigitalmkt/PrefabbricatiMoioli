@@ -1,0 +1,206 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione trasversale dell'elemento Stegos.
+ *
+ * NON è un disegno esecutivo e NON è ricavato dalla tavola di catalogo:
+ * è uno schema costruito a partire dalla descrizione testuale del sistema
+ * (elemento piano con lucernario continuo centrale, alleggerimento interno,
+ * getto di completamento all'estradosso, appoggio su trave, pilastro).
+ * Geometria neutra, quote sostituite da segnaposto.
+ *
+ * SOSTITUZIONE
+ * Per usare il disegno definitivo basta rimpiazzare il contenuto di questo
+ * file mantenendo `viewBox="0 0 1200 700"` e l'orientamento. Le coordinate
+ * dei punti caldi stanno in src/data/stegos.ts, in percentuale del viewBox:
+ * non vanno toccate. Nessuna logica dipende da questo SVG.
+ */
+---
+
+<svg
+  class="stegos"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="sgTitle sgDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="sgTitle">Sezione trasversale segnaposto dell'elemento Stegos</title>
+  <desc id="sgDesc">
+    Disegno schematico: elemento piano con lucernario continuo centrale,
+    alleggerimento interno e getto di completamento all'estradosso, appoggiato
+    su trave e pilastro. Le quote sono segnaposto in attesa del disegno
+    definitivo.
+  </desc>
+
+  <defs>
+    <pattern id="sgAllegg" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="7" cy="7" r="3.4" class="ln-hatch-f" />
+    </pattern>
+    <pattern id="sgGround" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" class="ln-hatch" />
+    </pattern>
+    <pattern id="sgVetro" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="9" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ TERRENO ============ -->
+  <g class="g-ground">
+    <line x1="0" y1="612" x2="1200" y2="612" class="ln-strong" />
+    <rect x="0" y="612" width="1200" height="16" fill="url(#sgGround)" stroke="none" />
+  </g>
+
+  <!-- ============ STRUTTURA PORTANTE ============ -->
+  <g class="g-struct">
+    <!-- plinti -->
+    <rect x="118" y="612" width="104" height="34" class="ln-solid" />
+    <rect x="978" y="612" width="104" height="34" class="ln-solid" />
+    <!-- pilastri -->
+    <rect x="146" y="430" width="48" height="182" class="ln-solid" />
+    <rect x="1006" y="430" width="48" height="182" class="ln-solid" />
+
+    <!-- travi a "T": anima verticale + ali di appoggio -->
+    <path d="M150 430 L150 386 L104 386 L104 356 L236 356 L236 386 L190 386 L190 430 Z" class="ln-solid" />
+    <path d="M1010 430 L1010 386 L964 386 L964 356 L1096 356 L1096 386 L1050 386 L1050 430 Z" class="ln-solid" />
+  </g>
+
+  <!-- ============ ELEMENTO STEGOS ============ -->
+  <!-- Corpo dell'elemento, appoggiato sulle ali delle travi -->
+  <g class="g-elem">
+    <rect x="104" y="286" width="424" height="70" class="ln-solid" />
+    <rect x="672" y="286" width="424" height="70" class="ln-solid" />
+    <!-- alleggerimento interno -->
+    <rect x="132" y="300" width="368" height="42" fill="url(#sgAllegg)" class="ln-thin" />
+    <rect x="700" y="300" width="368" height="42" fill="url(#sgAllegg)" class="ln-thin" />
+  </g>
+
+  <!-- ============ GETTO DI COMPLETAMENTO ============ -->
+  <g class="g-getto">
+    <rect x="104" y="268" width="424" height="18" class="ln-solid" />
+    <rect x="672" y="268" width="424" height="18" class="ln-solid" />
+  </g>
+
+  <!-- ============ MANTO E COIBENTE ============ -->
+  <g class="g-manto">
+    <line x1="104" y1="258" x2="528" y2="258" class="ln-thin" />
+    <line x1="672" y1="258" x2="1096" y2="258" class="ln-thin" />
+    <line x1="104" y1="250" x2="528" y2="250" class="ln-strong" />
+    <line x1="672" y1="250" x2="1096" y2="250" class="ln-strong" />
+  </g>
+
+  <!-- ============ LUCERNARIO CONTINUO CENTRALE ============ -->
+  <g class="g-luce">
+    <!-- rialzi laterali -->
+    <rect x="528" y="236" width="18" height="120" class="ln-solid" />
+    <rect x="654" y="236" width="18" height="120" class="ln-solid" />
+    <!-- calotta -->
+    <path d="M546 236 Q600 186 654 236 Z" fill="url(#sgVetro)" class="ln-thin" />
+    <path d="M546 236 Q600 186 654 236" class="ln-solid" fill="none" />
+    <!-- velario -->
+    <line x1="546" y1="290" x2="654" y2="290" class="ln-dash" />
+    <!-- raggi: indicano la direzione della luce, non sono elementi costruttivi -->
+    <g class="g-raggi">
+      <line x1="600" y1="150" x2="600" y2="182" />
+      <line x1="548" y1="164" x2="562" y2="192" />
+      <line x1="652" y1="164" x2="638" y2="192" />
+    </g>
+  </g>
+
+  <!-- ============ QUOTE (segnaposto) ============ -->
+  <g class="g-dim">
+    <!-- larghezza modulo -->
+    <line x1="104" y1="676" x2="528" y2="676" class="ln-dim" />
+    <line x1="104" y1="664" x2="104" y2="688" class="ln-dim" />
+    <line x1="528" y1="664" x2="528" y2="688" class="ln-dim" />
+    <text x="316" y="658" class="tx-dim" text-anchor="middle">LARGHEZZA MODULO</text>
+
+    <!-- altezza dell'elemento -->
+    <line x1="60" y1="268" x2="60" y2="356" class="ln-dim" />
+    <line x1="48" y1="268" x2="72" y2="268" class="ln-dim" />
+    <line x1="48" y1="356" x2="72" y2="356" class="ln-dim" />
+    <text x="48" y="232" class="tx-dim" text-anchor="start">ALTEZZA</text>
+  </g>
+</svg>
+
+<style>
+  .stegos {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Il disegno vive su fondo navy: tutto è definito in bianco a opacità
+     diverse, così un cambio di fondo non rompe nulla. */
+  .stegos :global(.ln-solid) {
+    fill: rgba(255, 255, 255, 0.06);
+    stroke: rgba(255, 255, 255, 0.62);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .stegos :global(.ln-strong) {
+    stroke: rgba(255, 255, 255, 0.48);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .stegos :global(.ln-thin) {
+    stroke: rgba(255, 255, 255, 0.34);
+    stroke-width: 1.25;
+  }
+
+  .stegos :global(.ln-dash) {
+    stroke: rgba(255, 255, 255, 0.34);
+    stroke-width: 1.25;
+    stroke-dasharray: 6 5;
+    fill: none;
+  }
+
+  .stegos :global(.ln-hatch) {
+    stroke: rgba(255, 255, 255, 0.24);
+    stroke-width: 1;
+  }
+
+  .stegos :global(.ln-hatch-f) {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.22);
+    stroke-width: 1;
+  }
+
+  .stegos :global(.g-struct rect),
+  .stegos :global(.g-struct path) {
+    fill: rgba(255, 255, 255, 0.04);
+  }
+
+  .stegos :global(.g-getto rect) {
+    fill: rgba(255, 255, 255, 0.12);
+  }
+
+  /* La luce è l'unico elemento che prende colore: è il punto del prodotto. */
+  .stegos :global(.g-raggi line) {
+    stroke: var(--red-soft);
+    stroke-width: 2;
+    stroke-linecap: round;
+    opacity: 0.8;
+  }
+
+  .stegos :global(.ln-dim) {
+    stroke: var(--red-soft);
+    stroke-width: 1.25;
+    opacity: 0.85;
+  }
+
+  .stegos :global(.tx-dim) {
+    font-family: var(--mono);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    fill: var(--red-soft);
+    opacity: 0.9;
+  }
+
+  @media (max-width: 860px) {
+    .stegos :global(.tx-dim) {
+      font-size: 22px;
+    }
+  }
+</style>

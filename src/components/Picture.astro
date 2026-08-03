@@ -1,0 +1,61 @@
+---
+/**
+ * Immagine responsive.
+ * Legge le larghezze disponibili da src/data/images.json (generato da
+ * `npm run images`) e costruisce il srcset corrispondente.
+ *
+ * `ratio` è obbligatorio: il contenitore riserva lo spazio prima del
+ * caricamento, così il CLS resta a zero.
+ */
+import images from '../data/images.json';
+
+interface Props {
+  /** id dell'immagine nel manifesto (public/img/<id>-<w>.webp) */
+  id: string;
+  alt: string;
+  /** Rapporto del contenitore, es. "16/9" oppure "4/3". */
+  ratio?: string;
+  /** Attributo sizes. Default: larghezza piena del viewport. */
+  sizes?: string;
+  class?: string;
+  /** L'immagine sopra la piega va caricata subito. */
+  priority?: boolean;
+  /** Posizione del soggetto, es. "center 30%". */
+  position?: string;
+}
+
+const {
+  id,
+  alt,
+  ratio = '16/9',
+  sizes = '100vw',
+  class: className = '',
+  priority = false,
+  position,
+} = Astro.props;
+
+const meta = (images as Record<string, { widths: number[] }>)[id];
+
+if (!meta) {
+  throw new Error(
+    `Picture: immagine "${id}" assente da src/data/images.json. Lancia "npm run images".`
+  );
+}
+
+const widths = meta.widths;
+const srcset = widths.map((w) => `/img/${id}-${w}.webp ${w}w`).join(', ');
+const fallback = `/img/${id}-${widths[widths.length - 1]}.webp`;
+---
+
+<div class={`frame ${className}`} style={`aspect-ratio:${ratio}`}>
+  <img
+    src={fallback}
+    srcset={srcset}
+    sizes={sizes}
+    alt={alt}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : 'auto'}
+    style={position ? `object-position:${position}` : undefined}
+  />
+</div>

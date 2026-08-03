@@ -1,0 +1,21 @@
+# build
+dist/
+.astro/
+
+# dipendenze
+node_modules/
+
+# ambiente
+.env
+.env.production
+.vercel
+
+# sistema
+.DS_Store
+Thumbs.db
+
+# Le derivate delle immagini si rigenerano con `npm run images` dagli
+# originali in ../moioli-site/assets, che NON stanno in questo repository.
+# Restano però versionate: senza, un deploy da CI non avrebbe le immagini,
+# perché gli originali non sono raggiungibili dal server di build.
+# public/img/

@@ -1,0 +1,681 @@
+---
+/**
+ * Testata fissa.
+ * Trasparente sopra la fascia scura di apertura, compatta e chiara allo scroll.
+ * Il menu contiene solo route esistenti e finite.
+ */
+import Logo from './Logo.astro';
+import { nav } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  /** La pagina apre su fondo chiaro: la testata parte già in versione scura. */
+  suChiaro?: boolean;
+}
+const { suChiaro = false } = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+/** Una voce è attiva anche sulle sue sottopagine (/soluzioni/tecnoshed). */
+const isActive = (href: string) => {
+  if (href.startsWith('/#')) return false;
+  if (href === '/') return path === '/';
+  return path === href || path.startsWith(href + '/');
+};
+---
+
+<header id="hdr" class:list={{ 'su-chiaro': suChiaro }}>
+  <div class="bar">
+    <a href="/" class="logo-link" aria-label="Prefabbricati Moioli — home">
+      <Logo height={34} />
+    </a>
+
+    <nav class="main" aria-label="Navigazione principale">
+      {
+        nav.map((v) =>
+          v.voci ? (
+            /* Voce con sottomenu.
+               Il comando è un <button>, non un link: apre un pannello, non
+               naviga. La destinazione principale resta comunque raggiungibile
+               come prima voce dell'elenco. */
+            <div class="sub" data-sub>
+              <button
+                type="button"
+                class:list={['sub-tog', { act: isActive(v.href) }]}
+                aria-expanded="false"
+                aria-haspopup="true"
+              >
+                {v.label}
+                <span class="sub-chev" aria-hidden="true">
+                  <Icon nome="chevron-giu" dim={14} />
+                </span>
+              </button>
+
+              <div class="sub-panel" hidden>
+                <ul>
+                  {v.voci.map((s) => (
+                    <li>
+                      <a href={s.href} aria-current={path === s.href ? 'page' : undefined}>
+                        <span class="sub-l">{s.label}</span>
+                        <span class="sub-n">{s.nota}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <a
+              href={v.href}
+              class:list={[{ act: isActive(v.href) }]}
+              aria-current={isActive(v.href) ? 'page' : undefined}
+            >
+              {v.label}
+            </a>
+          )
+        )
+      }
+    </nav>
+
+    <a href="/contatti" class="btn btn-light hdr-cta">Richiedi preventivo</a>
+
+    <button class="menu-tog" id="mtog" aria-label="Apri il menu" aria-expanded="false" aria-controls="mnav">
+      <Icon nome="menu" dim={24} />
+    </button>
+  </div>
+</header>
+
+<nav class="mnav" id="mnav" aria-label="Navigazione principale (mobile)" aria-hidden="true">
+  <button class="x" id="mclose" aria-label="Chiudi il menu">
+    <Icon nome="chiudi" dim={26} />
+  </button>
+
+  {
+    nav.map((v, i) => (
+      <>
+        <a href={v.href} aria-current={isActive(v.href) ? 'page' : undefined}>
+          <span>{v.label}</span>
+          <small>{String(i + 1).padStart(2, '0')}</small>
+        </a>
+
+        {/* Su telefono il sottomenu non si apre: le voci stanno già in
+            pagina, rientrate sotto la principale. Un pannello a comparsa
+            dentro un pannello a comparsa è solo un passaggio in più. */}
+        {v.voci && (
+          <ul class="mnav-sub">
+            {v.voci.slice(1).map((s) => (
+              <li>
+                <a href={s.href} aria-current={path === s.href ? 'page' : undefined}>
+                  {s.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </>
+    ))
+  }
+
+  <a href="/contatti" class="mnav-cta">
+    <span>Richiedi preventivo</span>
+    <small><Icon nome="freccia-dx" dim={16} /></small>
+  </a>
+</nav>
+
+<style>
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition: 0.4s var(--ease);
+  }
+
+  /* Velo di leggibilità.
+     Finché la testata è trasparente si appoggia su una fotografia: dove il
+     cielo è chiaro il bianco scendeva a circa 4:1, sotto la soglia AA. Questa
+     fascia garantisce il contrasto qualunque sia l'immagine sottostante, senza
+     dover ritoccare le sfumature di ogni singolo hero. */
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 190px;
+    background: linear-gradient(
+      180deg,
+      rgba(17, 25, 46, 0.62) 0%,
+      rgba(17, 25, 46, 0.34) 46%,
+      transparent 100%
+    );
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease);
+  }
+
+  header.scrolled::before,
+  header.su-chiaro::before {
+    opacity: 0;
+  }
+
+  /* Apertura su fondo chiaro: nessun velo, marchio e voci già in scuro.
+     Senza questo il bianco su bianco sparirebbe. */
+  header.su-chiaro:not(.scrolled) .logo-link :global(.logo-svg) {
+    --lg-n: #1f2a43;
+    --lg-r: #e42829;
+  }
+  header.su-chiaro:not(.scrolled) nav.main a {
+    color: var(--text);
+  }
+  header.su-chiaro:not(.scrolled) nav.main a:hover,
+  header.su-chiaro:not(.scrolled) nav.main a.act {
+    color: var(--navy);
+  }
+  header.su-chiaro:not(.scrolled) .hdr-cta {
+    color: var(--navy);
+    border-color: var(--navy);
+  }
+  header.su-chiaro:not(.scrolled) .hdr-cta:hover {
+    background: var(--navy);
+    color: #fff;
+  }
+  header.su-chiaro:not(.scrolled) .menu-tog {
+    color: var(--navy);
+  }
+
+  .bar {
+    position: relative;
+    z-index: 1;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 20px var(--pad);
+    max-width: var(--maxw);
+    margin: 0 auto;
+    transition: 0.4s var(--ease);
+  }
+
+  .logo-link {
+    flex: none;
+  }
+
+  /* Sopra la fascia scura il marchio va in bianco pieno. */
+  header:not(.scrolled) .logo-link :global(.logo-svg) {
+    --lg-n: #ffffff;
+    --lg-r: #ffffff;
+  }
+
+  nav.main {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+  }
+
+  nav.main a {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.25s;
+    position: relative;
+    padding: 4px 0;
+  }
+
+  nav.main a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.3s var(--ease);
+  }
+
+  nav.main a:hover::after,
+  nav.main a.act::after {
+    width: 100%;
+  }
+
+  /* --- Sottomenu -------------------------------------------------------- */
+
+  .sub {
+    position: relative;
+  }
+
+  .sub-tog {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 4px 0;
+    cursor: pointer;
+    font-family: var(--ui-font);
+    font-size: 14.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    transition: color 0.25s;
+    position: relative;
+  }
+
+  .sub-tog::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--red);
+    transition: width 0.3s var(--ease);
+  }
+  .sub-tog:hover::after,
+  .sub-tog.act::after,
+  .sub-tog[aria-expanded='true']::after {
+    width: 100%;
+  }
+
+  .sub-chev {
+    display: inline-flex;
+    transition: transform 0.3s var(--ease);
+    opacity: 0.7;
+  }
+  .sub-tog[aria-expanded='true'] .sub-chev {
+    transform: rotate(180deg);
+  }
+
+  .sub-panel {
+    position: absolute;
+    top: calc(100% + 18px);
+    left: -20px;
+    min-width: 268px;
+    background: var(--white);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    box-shadow: var(--sh-card);
+    padding: 8px;
+    z-index: 10;
+  }
+
+  /* Fascia invisibile che colma il vuoto fra voce e pannello: senza, il
+     pannello si chiude mentre il cursore lo raggiunge. */
+  .sub-panel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -18px;
+    height: 18px;
+  }
+
+  .sub-panel ul {
+    list-style: none;
+  }
+
+  .sub-panel a {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 11px 14px;
+    border-radius: var(--r-sm);
+    color: var(--text);
+    transition: background 0.2s var(--ease);
+  }
+  .sub-panel a:hover {
+    background: var(--bg1);
+  }
+  .sub-panel a[aria-current] {
+    background: var(--bg1);
+  }
+  .sub-panel a[aria-current] .sub-l {
+    color: var(--red);
+  }
+
+  .sub-l {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+  }
+  .sub-panel a:hover .sub-l {
+    color: var(--red);
+  }
+  .sub-n {
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+
+  header.scrolled .sub-tog {
+    color: var(--text);
+  }
+  header.scrolled .sub-tog:hover,
+  header.scrolled .sub-tog.act,
+  header.scrolled .sub-tog[aria-expanded='true'] {
+    color: var(--navy);
+  }
+  header.su-chiaro:not(.scrolled) .sub-tog {
+    color: var(--text);
+  }
+  header.su-chiaro:not(.scrolled) .sub-tog:hover,
+  header.su-chiaro:not(.scrolled) .sub-tog.act {
+    color: var(--navy);
+  }
+
+  header.scrolled {
+    background: rgba(245, 246, 247, 0.92);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 1px 0 var(--bg2);
+  }
+
+  header.scrolled .bar {
+    padding: 12px var(--pad);
+  }
+
+  header.scrolled nav.main a {
+    color: var(--text);
+  }
+  header.scrolled nav.main a:hover,
+  header.scrolled nav.main a.act {
+    color: var(--navy);
+  }
+  header.scrolled .hdr-cta {
+    color: var(--navy);
+    border-color: var(--navy);
+  }
+  header.scrolled .hdr-cta:hover {
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .hdr-cta {
+    flex: none;
+    padding: 12px 22px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .menu-tog {
+    display: none;
+    color: #fff;
+    background: none;
+    border: none;
+    cursor: pointer;
+    /* Target touch pieno anche se l'icona è 24px */
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    margin-right: -10px;
+  }
+  header.scrolled .menu-tog {
+    color: var(--navy);
+  }
+
+  /* --- Menu mobile ------------------------------------------------------ */
+
+  /* Apertura a taglio diagonale.
+     Il pannello entra da destra dietro un bordo inclinato netto: nessuna
+     curva, nessun cerchio che si gonfia. La pendenza resta la stessa per
+     tutta la corsa — è un piano che scorre, non una bolla che cresce. */
+  .mnav {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: var(--navy-deep);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 72px 9vw 40px;
+    gap: 6px;
+    /* Con le voci di secondo livello il menu è più alto: su uno schermo
+       molto basso (telefono in orizzontale) deve poter scorrere, altrimenti
+       le ultime voci restano irraggiungibili. */
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    clip-path: polygon(125% 0, 100% 0, 100% 100%, 150% 100%);
+    /* La visibilità non si interpola: va commutata a mano. In chiusura
+       aspetta la fine del taglio, in apertura scatta subito — altrimenti il
+       pannello resta non focalizzabile proprio mentre gli si sposta dentro
+       il focus. */
+    transition: clip-path 0.55s var(--ease-io), visibility 0s linear 0.55s;
+    visibility: hidden;
+  }
+
+  .mnav.open {
+    /* Sconfina oltre il bordo sinistro: il taglio esce di scena invece di
+       fermarsi visibile dentro lo schermo. */
+    clip-path: polygon(-25% 0, 100% 0, 100% 100%, 0 100%);
+    visibility: visible;
+    transition: clip-path 0.55s var(--ease-io), visibility 0s;
+  }
+
+  /* Le voci rincorrono il taglio, sfalsate di poco: si legge come un'unica
+     lastra che scorre, non come sei elementi che entrano a turno.
+     `> *` invece di `a`: fra le voci principali ci sono anche gli elenchi
+     di secondo livello, e devono entrare nella stessa onda. */
+  .mnav > a,
+  .mnav > ul {
+    opacity: 0;
+    transform: translateX(24px);
+    transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .mnav.open > a,
+  .mnav.open > ul {
+    opacity: 1;
+    transform: none;
+  }
+  .mnav.open > *:nth-child(3) {
+    transition-delay: 0.06s;
+  }
+  .mnav.open > *:nth-child(4) {
+    transition-delay: 0.1s;
+  }
+  .mnav.open > *:nth-child(5) {
+    transition-delay: 0.14s;
+  }
+  .mnav.open > *:nth-child(6) {
+    transition-delay: 0.18s;
+  }
+  .mnav.open > *:nth-child(7) {
+    transition-delay: 0.22s;
+  }
+  .mnav.open > *:nth-child(n + 8) {
+    transition-delay: 0.26s;
+  }
+
+  .mnav a {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(28px, 7.5vw, 44px);
+    color: #fff;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .mnav a small {
+    font-family: var(--ui-font);
+    font-size: 12px;
+    color: var(--red-soft);
+    font-weight: 600;
+    flex: none;
+  }
+
+  .mnav a[aria-current] {
+    color: var(--red-soft);
+  }
+
+  /* Voci di secondo livello nel menu mobile: rientrate, più piccole,
+     senza pannello da aprire. */
+  .mnav-sub {
+    list-style: none;
+    padding-left: 18px;
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+    margin: 4px 0 10px;
+  }
+  .mnav-sub a {
+    font-family: var(--ui-font) !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.72) !important;
+    border-bottom: none !important;
+    padding: 9px 0 !important;
+    min-height: 40px;
+  }
+  .mnav-sub a[aria-current] {
+    color: var(--red-soft) !important;
+  }
+
+  .mnav-cta {
+    margin-top: 18px;
+    border-bottom: none !important;
+    font-size: clamp(18px, 4.5vw, 22px) !important;
+    color: var(--red-soft) !important;
+  }
+
+  .mnav .x {
+    position: absolute;
+    top: 20px;
+    right: calc(var(--pad) - 10px);
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+  }
+
+  @media (max-width: 920px) {
+    nav.main,
+    .hdr-cta {
+      display: none;
+    }
+    .menu-tog {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  /* Testata: stato "scrolled" + menu mobile accessibile. */
+  const hdr = document.getElementById('hdr')!;
+  const mnav = document.getElementById('mnav')!;
+  const tog = document.getElementById('mtog')!;
+  const close = document.getElementById('mclose')!;
+
+  const onScroll = () => hdr.classList.toggle('scrolled', window.scrollY > 40);
+  onScroll();
+  addEventListener('scroll', onScroll, { passive: true });
+
+  /* Riga di payoff dentro il marchio.
+     Finché l'apertura della home è a schermo, il payoff è già scritto in
+     grande come titolo: mostrarlo anche nel marchio lo farebbe leggere due
+     volte nella stessa schermata. Superata l'apertura, il lockup si completa.
+     Sulle altre pagine non c'è nessun payoff a testo, quindi è completo
+     da subito. */
+  const apertura = document.querySelector('.hero');
+
+  if (!apertura) {
+    hdr.classList.add('con-payoff');
+  } else {
+    const osservatore = new IntersectionObserver(
+      ([voce]) => hdr.classList.toggle('con-payoff', !voce.isIntersecting),
+      { threshold: 0 }
+    );
+    osservatore.observe(apertura);
+  }
+
+  const setMenu = (open: boolean) => {
+    mnav.classList.toggle('open', open);
+    mnav.setAttribute('aria-hidden', String(!open));
+    tog.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+
+    /* Il focus segue l'elemento che ha senso in quel momento.
+       All'apertura si aspetta il fotogramma successivo: nell'istante in cui
+       si aggiunge la classe il pannello è ancora visibility:hidden per il
+       browser, e focus() su un elemento non visibile non fa nulla. */
+    if (open) requestAnimationFrame(() => close.focus());
+    else tog.focus();
+  };
+
+  tog.addEventListener('click', () => setMenu(true));
+  close.addEventListener('click', () => setMenu(false));
+  mnav.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => setMenu(false))
+  );
+
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mnav.classList.contains('open')) setMenu(false);
+  });
+
+  /* ---------------------------------------------------------------------
+     Sottomenu della testata (solo desktop: sotto i 920px la navigazione
+     principale è nascosta e le voci stanno già dentro il menu mobile).
+     Si apre col passaggio del mouse e con un clic o Invio da tastiera.
+     --------------------------------------------------------------------- */
+  for (const sub of document.querySelectorAll<HTMLElement>('[data-sub]')) {
+    const tog = sub.querySelector<HTMLButtonElement>('.sub-tog')!;
+    const panel = sub.querySelector<HTMLElement>('.sub-panel')!;
+    let chiusura: number | undefined;
+
+    const apri = (v: boolean) => {
+      clearTimeout(chiusura);
+      panel.hidden = !v;
+      tog.setAttribute('aria-expanded', String(v));
+    };
+
+    /* Piccolo ritardo in chiusura: passando dalla voce al pannello il
+       cursore attraversa uno stacco, e senza attesa il pannello sparisce
+       proprio mentre lo si sta raggiungendo. */
+    const chiudiFraPoco = () => {
+      clearTimeout(chiusura);
+      chiusura = window.setTimeout(() => apri(false), 140);
+    };
+
+    sub.addEventListener('mouseenter', () => apri(true));
+    sub.addEventListener('mouseleave', chiudiFraPoco);
+
+    tog.addEventListener('click', () => apri(panel.hidden));
+
+    /* Chiude quando il focus esce dal gruppo: chi naviga con Tab non deve
+       ritrovarsi un pannello aperto alle spalle. */
+    sub.addEventListener('focusout', (e) => {
+      if (!sub.contains(e.relatedTarget as Node)) apri(false);
+    });
+
+    sub.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) {
+        apri(false);
+        tog.focus();
+      }
+    });
+
+    /* Un clic fuori chiude. */
+    document.addEventListener('click', (e) => {
+      if (!sub.contains(e.target as Node)) apri(false);
+    });
+  }
+
+  /* Trattiene il focus dentro il menu finché è aperto. */
+  mnav.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab' || !mnav.classList.contains('open')) return;
+    const items = [close, ...Array.from(mnav.querySelectorAll('a'))] as HTMLElement[];
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+</script>

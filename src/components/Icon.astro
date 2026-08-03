@@ -1,0 +1,54 @@
+---
+/**
+ * Icone.
+ *
+ * Sostituiscono i caratteri tipografici usati prima come frecce (→ ↑ ←).
+ * Quei glifi dipendono dal font installato: su alcuni sistemi cambiano peso,
+ * su altri vengono resi come emoji a colori. Un tracciato vettoriale ha lo
+ * stesso spessore ovunque e segue il colore del testo.
+ *
+ * Tratto unico a 1.75 per tutto il sito: lo spessore misto è la cosa che
+ * più fa sembrare improvvisato un insieme di icone.
+ */
+interface Props {
+  nome: 'freccia-dx' | 'freccia-sx' | 'freccia-giu' | 'freccia-su' | 'chevron-giu' | 'chiudi' | 'menu';
+  /** Dimensione in px. */
+  dim?: number;
+  class?: string;
+}
+
+const { nome, dim = 18, class: className = '' } = Astro.props;
+
+const tracciati: Record<Props['nome'], string> = {
+  'freccia-dx': 'M4 12h15m-6-6 6 6-6 6',
+  'freccia-sx': 'M20 12H5m6-6-6 6 6 6',
+  'freccia-giu': 'M12 4v15m-6-6 6 6 6-6',
+  'freccia-su': 'M12 20V5m-6 6 6-6 6 6',
+  'chevron-giu': 'M6 9l6 6 6-6',
+  chiudi: 'M6 6l12 12M18 6L6 18',
+  menu: 'M3 6h18M3 12h18M3 18h18',
+};
+---
+
+<svg
+  class={`icon ${className}`}
+  width={dim}
+  height={dim}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d={tracciati[nome]} />
+</svg>
+
+<style>
+  .icon {
+    display: block;
+    flex: none;
+  }
+</style>

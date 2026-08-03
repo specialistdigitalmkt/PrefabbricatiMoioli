@@ -1,0 +1,186 @@
+---
+/**
+ * Scheda di una tipologia di copertura.
+ * Solo le tipologie con una pagina dedicata sono cliccabili: le altre sono
+ * schede complete in sé, non link verso pagine che non esistono.
+ */
+import Picture from './Picture.astro';
+import type { Soluzione } from '../data/soluzioni';
+import Icon from './Icon.astro';
+
+interface Props {
+  soluzione: Soluzione;
+  /** Numero progressivo mostrato sull'immagine. */
+  indice: number;
+  /** Formato ampio per le tipologie di punta. */
+  grande?: boolean;
+}
+
+const { soluzione: s, indice, grande = false } = Astro.props;
+const Tag = s.href ? 'a' : 'div';
+const sizes = grande
+  ? '(max-width: 700px) 100vw, 46vw'
+  : '(max-width: 700px) 100vw, (max-width: 1000px) 50vw, 33vw';
+---
+
+<li class:list={['sol-card', { 'is-link': !!s.href, 'is-big': grande }]}>
+  <Tag {...(s.href ? { href: s.href } : {})} class="sol-inner">
+    <div class="sol-media">
+      {
+        s.img ? (
+          <Picture id={s.img} alt={s.alt} ratio="16/10" sizes={sizes} />
+        ) : (
+          /* Nessuna fotografia disponibile per questa tipologia:
+             si dichiara invece di riempire con un'immagine di repertorio. */
+          <div class="sol-noimg">
+            <span class="spec">FOTO — da servizio fotografico</span>
+          </div>
+        )
+      }
+      <span class="sol-idx" aria-hidden="true">{String(indice).padStart(2, '0')}</span>
+    </div>
+
+    <div class="sol-body">
+      <h2>{s.nome}</h2>
+      {s.alias && <p class="sol-alias">{s.alias}</p>}
+      <p class="sol-claim">{s.claim}</p>
+      <p class="sol-intro">{s.intro}</p>
+
+      <ul class="sol-specs">
+        {
+          s.specs.map((sp) => (
+            <li>
+              <span class="spec">{sp} — da catalogo</span>
+            </li>
+          ))
+        }
+      </ul>
+
+      {s.href && <span class="more">Scopri la soluzione <i><Icon nome="freccia-dx" dim={15} /></i></span>}
+    </div>
+  </Tag>
+</li>
+
+<style>
+  .sol-card {
+    display: flex;
+  }
+
+  .sol-inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: box-shadow 0.4s var(--ease), border-color 0.4s, transform 0.4s var(--ease);
+  }
+
+  .sol-card.is-link .sol-inner:hover {
+    box-shadow: var(--sh-card);
+    border-color: #fff;
+    transform: translateY(-4px);
+  }
+
+  .sol-media {
+    position: relative;
+    overflow: hidden;
+  }
+  .sol-media :global(.frame) {
+    border-radius: 0;
+  }
+  .sol-media :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+  }
+  .sol-card.is-link .sol-inner:hover .sol-media :global(.frame img) {
+    transform: scale(1.05);
+  }
+
+  .sol-noimg {
+    aspect-ratio: 16 / 10;
+    background: var(--ph-bg);
+    border-bottom: 1px dashed var(--ph-border);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .sol-idx {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    z-index: 2;
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    /* 0.72 anziché 0.55: sopra una fotografia chiara il bianco scendeva a
+       3.92:1. Il velo più denso lo riporta sopra la soglia qualunque sia
+       l'immagine sotto. */
+    background: rgba(17, 25, 46, 0.72);
+    backdrop-filter: blur(4px);
+    padding: 4px 9px;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
+  }
+  .sol-noimg ~ .sol-idx {
+    color: var(--ph-text);
+    background: rgba(255, 255, 255, 0.75);
+  }
+
+  .sol-body {
+    padding: 26px 28px 30px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .sol-body h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+  }
+  .sol-card.is-big .sol-body h2 {
+    font-size: 30px;
+  }
+
+  .sol-alias {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 2px;
+  }
+
+  .sol-claim {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--red);
+    margin: 12px 0 10px;
+    line-height: 1.35;
+  }
+  .sol-card.is-big .sol-claim {
+    font-size: 18px;
+  }
+
+  .sol-intro {
+    font-size: 14.5px;
+  }
+
+  .sol-specs {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 18px;
+  }
+
+  /* L'ultimo elemento è spinto in basso: le schede affiancate chiudono
+     allineate anche con testi di lunghezza diversa. */
+  .sol-body > *:last-child {
+    margin-top: auto;
+    padding-top: 20px;
+  }
+</style>

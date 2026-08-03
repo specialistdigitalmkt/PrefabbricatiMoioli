@@ -1,0 +1,318 @@
+---
+/**
+ * /azienda/referenze — i committenti, filtrabili per settore.
+ *
+ * Impostazione ripresa dalla pagina Referenze di Baraclit: non un testo, ma
+ * una griglia di committenti con filtro per settore.
+ *
+ * DIFFERENZA IMPORTANTE: Baraclit mostra i loghi. Di Moioli non abbiamo i
+ * loghi dei committenti e non è nostro compito procurarseli — al loro posto
+ * c'è un riquadro dichiarato con il nome. Vedi CONTENT-STATUS.md §7.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SezioneNav from '../../components/SezioneNav.astro';
+import Icon from '../../components/Icon.astro';
+import { referenze, settori, committenti } from '../../data/azienda';
+
+/** Conteggio per settore: serve a non mostrare filtri che non filtrano nulla. */
+const conteggio = new Map<string, number>();
+for (const c of committenti) {
+  conteggio.set(c.settore, (conteggio.get(c.settore) ?? 0) + 1);
+}
+const settoriAttivi = settori.filter((s) => (conteggio.get(s) ?? 0) > 0);
+---
+
+<BaseLayout
+  title="Referenze — Prefabbricati Moioli"
+  description="I committenti di Prefabbricati Moioli, divisi per settore: alimentare, logistica, automotive, meccanica, chimica, elettronica."
+>
+  <PageHero
+    eyebrow={referenze.eyebrow}
+    title={referenze.titolo}
+    lead={referenze.lead}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Azienda', href: '/azienda' },
+      { label: 'Referenze' },
+    ]}
+  />
+
+  <SezioneNav sezione="/azienda" />
+
+  <section class="block ref">
+    <div class="wrap">
+      <!-- ============ FILTRI ============ -->
+      <div class="filtri reveal">
+        <h2 class="f-t" id="filtroTitolo">Filtra per settore</h2>
+        <div class="f-row" role="group" aria-labelledby="filtroTitolo">
+          <button type="button" class="f-b" data-settore="" aria-pressed="true">
+            Tutti
+            <span class="f-n">{committenti.length}</span>
+          </button>
+          {
+            settoriAttivi.map((s) => (
+              <button type="button" class="f-b" data-settore={s} aria-pressed="false">
+                {s}
+                <span class="f-n">{conteggio.get(s)}</span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- ============ GRIGLIA ============ -->
+      <ul class="ref-grid stagger" id="refGrid">
+        {
+          committenti.map((c) => (
+            <li class="ref-card" data-settore={c.settore}>
+              {/* Al posto del logo: riquadro dichiarato con il nome.
+                  I marchi dei committenti vanno forniti dal cliente. */}
+              <div class="ref-logo">
+                <span class="ref-nome">{c.nome}</span>
+                <span class="spec ref-spec">LOGO — da fornire</span>
+              </div>
+              <p class="ref-set">{c.settore}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="ref-vuoto" id="refVuoto" hidden>Nessun committente in questo settore.</p>
+
+      <!-- L'esito del filtro va annunciato: chi usa uno screen reader non
+           vede le schede sparire. -->
+      <p class="sr-only" role="status" aria-live="polite" id="refStato"></p>
+
+      <p class="ph-note ref-nota">{referenze.nota}</p>
+    </div>
+  </section>
+
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Il prossimo</p>
+          <h2>Il tuo stabilimento può essere il prossimo.</h2>
+          <p class="cta-p">
+            Raccontaci cosa devi costruire: partiamo dai vincoli reali del lotto.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Parliamo del progetto <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ref {
+    background: var(--bg1);
+  }
+
+  /* ==================== FILTRI ==================== */
+  .filtri {
+    margin-bottom: 44px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .f-t {
+    font-family: var(--brand);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 18px;
+  }
+  .f-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .f-b {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--ui-font);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-sm);
+    padding: 10px 15px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: border-color 0.25s var(--ease), background 0.25s var(--ease),
+      color 0.25s var(--ease);
+  }
+  .f-b:hover {
+    border-color: var(--navy);
+  }
+  .f-b[aria-pressed='true'] {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  .f-n {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .f-b[aria-pressed='true'] .f-n {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  /* ==================== GRIGLIA ==================== */
+  .ref-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .ref-card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ref-card[hidden] {
+    display: none;
+  }
+
+  /* Riquadro al posto del logo. Rapporto fisso: quando i loghi veri
+     arriveranno prenderanno esattamente questo spazio, senza rimpaginare. */
+  .ref-logo {
+    aspect-ratio: 16 / 9;
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 16px;
+    text-align: center;
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .ref-card:hover .ref-logo {
+    border-color: var(--navy);
+    box-shadow: var(--sh-lift);
+  }
+
+  .ref-nome {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--navy);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .ref-spec {
+    font-size: 10.5px;
+  }
+
+  .ref-set {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  .ref-vuoto {
+    padding: 40px 0;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+
+  .ref-nota {
+    margin-top: 44px;
+  }
+
+  /* ==================== CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 1000px) {
+    .ref-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 760px) {
+    .ref-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .f-b {
+      font-size: 13.5px;
+      padding: 9px 13px;
+    }
+    .ref-nome {
+      font-size: 16px;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>
+
+<script>
+  /* Filtro per settore.
+     Senza JavaScript la griglia resta completa e i bottoni non fanno nulla:
+     nessun contenuto viene mai nascosto per errore. */
+  const griglia = document.getElementById('refGrid');
+  const stato = document.getElementById('refStato');
+  const vuoto = document.getElementById('refVuoto');
+
+  if (griglia && stato && vuoto) {
+    const bottoni = Array.from(document.querySelectorAll<HTMLButtonElement>('.f-b'));
+    const schede = Array.from(griglia.querySelectorAll<HTMLElement>('.ref-card'));
+
+    const filtra = (settore: string) => {
+      let visibili = 0;
+
+      for (const s of schede) {
+        const mostra = settore === '' || s.dataset.settore === settore;
+        s.hidden = !mostra;
+        if (mostra) visibili++;
+      }
+
+      for (const b of bottoni) {
+        b.setAttribute('aria-pressed', String((b.dataset.settore ?? '') === settore));
+      }
+
+      vuoto.hidden = visibili > 0;
+      stato.textContent =
+        settore === ''
+          ? `${visibili} committenti, tutti i settori.`
+          : `${visibili} committenti nel settore ${settore}.`;
+    };
+
+    for (const b of bottoni) {
+      b.addEventListener('click', () => filtra(b.dataset.settore ?? ''));
+    }
+  }
+</script>

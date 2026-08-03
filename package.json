@@ -1,0 +1,19 @@
+{
+  "name": "moioli-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prefabbricati Moioli - demo sito multi-pagina",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "images": "node scripts/build-images.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.14.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.4"
+  }
+}

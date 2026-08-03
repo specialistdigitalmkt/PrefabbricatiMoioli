@@ -1,0 +1,432 @@
+---
+/**
+ * /azienda — profilo aziendale.
+ *
+ * Impostazione ripresa dal Company Profile di Baraclit — identità, numeri,
+ * sistema proprietario, video — e adattata a ciò che di Moioli è documentato.
+ * Dove Baraclit ha un dato e Moioli non ce l'ha, c'è un segnaposto visibile
+ * invece di un numero plausibile.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SezioneNav from '../../components/SezioneNav.astro';
+import Picture from '../../components/Picture.astro';
+import Icon from '../../components/Icon.astro';
+import { profilo } from '../../data/azienda';
+import { azienda } from '../../data/site';
+---
+
+<BaseLayout
+  title="L'azienda — Prefabbricati Moioli, Bagnatica (BG)"
+  description="Prefabbricati Moioli: dal 1972 a Bagnatica (BG). Strutture prefabbricate in cemento armato per edilizia industriale, commerciale e civile. Oltre 700.000 mq realizzati."
+>
+  <PageHero
+    eyebrow={profilo.eyebrow}
+    title={profilo.titolo}
+    lead={profilo.lead}
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Azienda' }]}
+  />
+
+  <SezioneNav sezione="/azienda" />
+
+  <!-- ==================== 1. NUMERI ==================== -->
+  <section class="block az-num">
+    <div class="wrap">
+      <div class="az-testo reveal">
+        {profilo.paragrafi.map((p) => <p>{p}</p>)}
+      </div>
+
+      <dl class="num-grid stagger">
+        {
+          profilo.numeri.map((n) => (
+            <div class:list={['num', { manca: n.stato === 'manca' }]}>
+              <dd>
+                {'valore' in n ? (
+                  <>
+                    <span class="v">{n.valore}</span>
+                    {'unita' in n && n.unita && <span class="u">{n.unita}</span>}
+                  </>
+                ) : (
+                  <span class="spec">{n.spec} — da cliente</span>
+                )}
+              </dd>
+              <dt>{n.label}</dt>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <!-- ==================== 2. IL SISTEMA PROPRIETARIO ==================== -->
+  <section class="block az-sis on-dark">
+    <div class="sec-num" aria-hidden="true">01</div>
+    <div class="wrap">
+      <div class="sis-grid">
+        <div class="reveal">
+          <p class="eyebrow">{profilo.sistema.eyebrow}</p>
+          <h2 class="sis-nome">{profilo.sistema.nome}</h2>
+          <p class="sis-claim">{profilo.sistema.claim}</p>
+          <p class="sis-t">{profilo.sistema.testo}</p>
+          <a href={profilo.sistema.href} class="btn btn-light sis-btn">
+            Vai alla scheda tecnica
+            <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+          </a>
+        </div>
+
+        <div class="sis-img img-reveal">
+          <Picture
+            id="stegos-interno"
+            alt="Interno di un edificio realizzato con elementi Stegos"
+            ratio="4/3"
+            sizes="(max-width: 920px) 100vw, 46vw"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. LO STABILIMENTO ==================== -->
+  <section class="block az-stab">
+    <div class="sec-num" aria-hidden="true">02</div>
+    <div class="wrap">
+      <div class="stab-grid">
+        <div class="stab-img img-reveal">
+          <Picture
+            id="stabilimento"
+            alt="Reparto di produzione degli elementi prefabbricati nello stabilimento di Bagnatica"
+            ratio="4/3"
+            sizes="(max-width: 920px) 100vw, 52vw"
+          />
+        </div>
+
+        <div class="reveal">
+          <p class="eyebrow">{profilo.stabilimento.eyebrow}</p>
+          <h2>{profilo.stabilimento.titolo}</h2>
+          <p class="stab-t">{profilo.stabilimento.testo}</p>
+
+          <address class="stab-a">
+            {azienda.indirizzo.via}<br />
+            {azienda.indirizzo.cap} {azienda.indirizzo.citta} ({azienda.indirizzo.provincia})<br />
+            <span class="stab-acc">{azienda.accesso}</span>
+          </address>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. TAPPE ==================== -->
+  <section class="block az-tap on-dark">
+    <div class="sec-num" aria-hidden="true">03</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Mezzo secolo</p>
+        <h2>Le tappe.</h2>
+      </div>
+
+      <ol class="tap-grid stagger">
+        {
+          profilo.tappe.map((t) => (
+            <li>
+              <span class="tap-a">{t.anno}</span>
+              <p>{t.testo}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==================== 5. VIDEO (previsto) ==================== -->
+  <section class="block az-vid">
+    <div class="wrap">
+      <div class="vid-slot reveal">
+        <span class="spec">{profilo.video.titolo.toUpperCase()} — da fornire</span>
+        <p>{profilo.video.nota}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. CTA ==================== -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Il passo successivo</p>
+          <h2>Parliamo di cosa devi costruire.</h2>
+          <p class="cta-p">
+            Un solo interlocutore dalla progettazione alla consegna.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Contattaci <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ==================== 1. NUMERI ==================== */
+  .az-num {
+    background: var(--white);
+    padding-top: 88px;
+  }
+  .az-testo {
+    max-width: 68ch;
+    margin-bottom: 64px;
+  }
+  .az-testo p {
+    font-size: 17px;
+    margin-bottom: 18px;
+  }
+  .az-testo p:last-child {
+    margin-bottom: 0;
+  }
+
+  .num-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1px;
+    background: var(--bg2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .num {
+    background: #fff;
+    padding: 26px 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  /* I riquadri senza dato si distinguono a colpo d'occhio in presentazione */
+  .num.manca {
+    background: var(--ph-bg);
+  }
+  /* Su questo fondo --text-2 scende a 4.44:1, appena sotto la soglia:
+     l'etichetta passa al grigio dei segnaposto, che dà 5.25:1. */
+  .num.manca dt {
+    color: var(--ph-text);
+  }
+  .num dd {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .num .v {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: clamp(26px, 2.6vw, 36px);
+    color: var(--navy);
+    letter-spacing: -0.025em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .num .u {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--red);
+  }
+  .num dt {
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.4;
+    margin-top: auto;
+  }
+
+  /* ==================== 2. SISTEMA ==================== */
+  .az-sis {
+    background: var(--navy);
+  }
+  .sis-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.9fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .sis-nome {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(44px, 6vw, 82px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 18px 0 12px;
+  }
+  .sis-claim {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(18px, 2.1vw, 24px);
+    color: #fff;
+    line-height: 1.3;
+    max-width: 24ch;
+  }
+  .sis-t {
+    margin-top: 20px;
+    max-width: 52ch;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .sis-btn {
+    margin-top: 30px;
+  }
+  .sis-img :global(.frame) {
+    border-radius: var(--r-md);
+  }
+
+  /* ==================== 3. STABILIMENTO ==================== */
+  .az-stab {
+    background: var(--bg1);
+  }
+  .stab-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .stab-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin: 16px 0 20px;
+    letter-spacing: -0.02em;
+  }
+  .stab-t {
+    font-size: 17px;
+    max-width: 50ch;
+  }
+  .stab-a {
+    font-style: normal;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid var(--bg2);
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--navy);
+  }
+  .stab-acc {
+    color: var(--text-2);
+    font-size: 14.5px;
+  }
+
+  /* ==================== 4. TAPPE ==================== */
+  .az-tap {
+    background: var(--navy-deep);
+  }
+  .tap-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .tap-grid li {
+    border-top: 2px solid var(--red);
+    padding-top: 20px;
+  }
+  .tap-a {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 26px;
+    color: #fff;
+    display: block;
+    margin-bottom: 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .tap-grid p {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  /* ==================== 5. VIDEO ==================== */
+  .az-vid {
+    background: var(--white);
+  }
+  .vid-slot {
+    aspect-ratio: 16 / 7;
+    border: 1px dashed var(--ph-border);
+    background: var(--ph-bg);
+    border-radius: var(--r-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .vid-slot p {
+    font-size: 14.5px;
+    color: var(--ph-text);
+    max-width: 46ch;
+  }
+
+  /* ==================== 6. CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==================== RESPONSIVE ==================== */
+  @media (max-width: 1100px) {
+    .num-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 920px) {
+    .sis-grid,
+    .stab-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    /* L'immagine dello stabilimento va sotto il testo: su schermo stretto
+       l'ordine di lettura conta più della composizione. */
+    .stab-img {
+      order: 2;
+    }
+    .tap-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .az-num {
+      padding-top: 56px;
+    }
+    .az-testo {
+      margin-bottom: 40px;
+    }
+    .num-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .tap-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .vid-slot {
+      aspect-ratio: 4 / 3;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

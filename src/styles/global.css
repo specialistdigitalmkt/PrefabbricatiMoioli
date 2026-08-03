@@ -1,0 +1,703 @@
+/* =========================================================================
+   GLOBAL — Prefabbricati Moioli
+   Base, primitive riusabili e sistema di animazione.
+   Gli stili specifici di una sola pagina restano nel file della pagina.
+   ========================================================================= */
+
+@import './fonts.css';
+@import './tokens.css';
+
+/* I riempimenti del marchio sono registrati come proprietà tipizzate: senza
+   questo il passaggio navy → bianco della testata scatterebbe di colpo invece
+   di seguire la stessa transizione del resto. Dove non è supportato, il colore
+   cambia istantaneamente: nessuna rottura. */
+@property --lg-n {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1f2a43;
+}
+@property --lg-r {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e42829;
+}
+
+/* --- Reset ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Compensa l'header fisso quando si atterra su un'ancora */
+  scroll-padding-top: 96px;
+}
+
+body {
+  font-family: var(--ui-font);
+  color: var(--text);
+  background: var(--bg1);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--navy);
+  color: #fff;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--navy);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* --- Accessibilità -------------------------------------------------------- */
+
+/* L'index non definiva stati di focus: senza questo il sito è inutilizzabile
+   da tastiera. Solo :focus-visible, così il mouse non vede l'anello. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.on-dark :focus-visible,
+.hero :focus-visible,
+footer :focus-visible,
+.mnav :focus-visible {
+  outline-color: #fff;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  background: var(--red);
+  color: #fff;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 0 0 var(--r-sm) 0;
+}
+.skip:focus {
+  left: 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Layout --------------------------------------------------------------- */
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+section.block {
+  /* 124: 140 era troppo generoso una volta visto in pagina, 120 troppo
+     serrato fra due fasce di colore diverso. */
+  padding: 124px 0;
+  position: relative;
+}
+
+.sec-head {
+  /* 680 anziché 780: una testata di sezione che si avvicina alla larghezza
+     del contenitore non legge più come testata. Il margine vuoto a destra
+     è ciò che le dà rango. */
+  max-width: 680px;
+  margin-bottom: 72px;
+}
+
+.sec-head h2 {
+  font-family: var(--brand);
+  font-weight: 600;
+  font-size: clamp(34px, 4.4vw, 58px);
+  margin: 18px 0 22px;
+  letter-spacing: -0.02em;
+}
+
+.sec-head p {
+  font-size: 18px;
+  max-width: 56ch;
+  color: var(--text-2);
+}
+
+.on-dark .sec-head p {
+  color: rgba(255, 255, 255, 0.66);
+}
+
+.sec-num {
+  position: absolute;
+  top: 64px;
+  right: var(--pad);
+  font-family: var(--brand);
+  font-weight: 700;
+  font-size: clamp(60px, 8vw, 120px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--bg2);
+  user-select: none;
+  pointer-events: none;
+}
+
+.on-dark .sec-num {
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+}
+
+/* --- Tipografia ricorrente ------------------------------------------------ */
+
+.eyebrow {
+  font-family: var(--brand);
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 34px;
+  height: 2px;
+  background: currentColor;
+  display: inline-block;
+  flex: none;
+}
+
+.on-dark .eyebrow {
+  color: var(--red-soft);
+}
+
+/* Titolo di pagina interna: scala ridotta, non compete con l'H1 della home */
+.page-title {
+  font-family: var(--brand);
+  font-weight: 600;
+  font-size: clamp(34px, 5vw, 64px);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  margin: 18px 0 22px;
+}
+
+.lead {
+  font-size: clamp(16px, 1.5vw, 20px);
+  max-width: 60ch;
+}
+
+/* --- Sezioni scure -------------------------------------------------------- */
+
+.on-dark {
+  background: var(--navy);
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.on-dark h1,
+.on-dark h2,
+.on-dark h3,
+.on-dark h4 {
+  color: #fff;
+}
+
+/* --- Bottoni -------------------------------------------------------------- */
+
+.btn {
+  font-family: var(--ui-font);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 15px 26px;
+  border-radius: var(--r-sm);
+  transition: 0.35s var(--ease);
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  position: relative;
+  overflow: hidden;
+  /* Target touch: 15px+15px+~20px di riga = 50px, sopra i 44px minimi */
+  min-height: 50px;
+}
+
+/* Contenitore dell'icona: è lui a muoversi, non l'SVG, così il tracciato
+   non viene ridisegnato a ogni fotogramma. */
+.btn .arr,
+.btn .arr-l {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.35s var(--ease);
+}
+.btn:hover .arr {
+  transform: translateX(4px);
+}
+.btn:hover .arr-l {
+  transform: translateX(-4px);
+}
+
+.btn-navy {
+  background: var(--navy);
+  color: #fff;
+}
+.btn-navy:hover {
+  background: var(--navy-deep);
+  transform: translateY(-2px);
+}
+
+.btn-red {
+  background: var(--red);
+  color: #fff;
+}
+.btn-red:hover {
+  background: var(--red-deep);
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--bg2);
+}
+.btn-ghost:hover {
+  border-color: var(--navy);
+  background: var(--navy);
+  color: #fff;
+}
+
+.btn-light {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.btn-light:hover {
+  background: #fff;
+  color: var(--navy);
+  border-color: #fff;
+}
+
+/* --- Link testuale con freccia -------------------------------------------- */
+
+.more {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.more i {
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s var(--ease);
+}
+a:hover .more i,
+.more:hover i,
+*:hover > .more i {
+  transform: translateX(4px);
+}
+
+/* --- Placeholder dato tecnico --------------------------------------------
+   Deve staccare a colpo d'occhio in presentazione: è l'unico punto del sito
+   in cui compare un monospace. Vedi CONTENT-STATUS.md.                      */
+
+.spec {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  letter-spacing: -0.01em;
+  background: var(--ph-bg);
+  color: var(--ph-text);
+  border: 1px dashed var(--ph-border);
+  border-radius: 2px;
+  padding: 2px 7px;
+  display: inline-block;
+  /* Niente nowrap: etichette come "LUNGHEZZA APPOGGIO — da catalogo" non
+     stanno su una riga a 360px e allargavano l'intera griglia, facendo
+     sbordare la pagina. Meglio due righe che uno scorrimento orizzontale. */
+  overflow-wrap: anywhere;
+}
+
+.on-dark .spec,
+.spec-dark {
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.72);
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+/* Nota di contenuto non verificato, a livello di sezione */
+.ph-note {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ph-text);
+  background: var(--ph-bg);
+  border-left: 3px solid var(--ph-border);
+  padding: 12px 16px;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  max-width: 78ch;
+}
+
+.on-dark .ph-note {
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* --- Breadcrumb ----------------------------------------------------------- */
+
+.breadcrumb {
+  font-size: 13px;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+/* Altezza minima del bersaglio (WCAG 2.5.8): le voci restavano a 21px. */
+.breadcrumb a,
+.breadcrumb [aria-current] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+}
+.breadcrumb a:hover {
+  color: var(--red);
+}
+.breadcrumb .sep {
+  opacity: 0.5;
+}
+.breadcrumb [aria-current] {
+  color: var(--text);
+}
+.on-dark .breadcrumb {
+  color: rgba(255, 255, 255, 0.55);
+}
+.on-dark .breadcrumb [aria-current] {
+  color: rgba(255, 255, 255, 0.9);
+}
+.on-dark .breadcrumb a:hover {
+  color: var(--red-soft);
+}
+
+/* --- Immagini ------------------------------------------------------------- */
+
+/* Contenitore con rapporto fisso: CLS a zero anche prima del caricamento */
+.frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: var(--bg2);
+}
+
+.frame > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- Sistema di comparsa allo scroll -------------------------------------- */
+
+/* Comparsa allo scroll.
+   Volutamente contenuta: 10px di spostamento e mezzo secondo. Il salto da
+   28px su nove decimi di secondo — il classico "fade up" che si vede ovunque —
+   si nota come effetto invece che come transizione, e su una pagina lunga
+   diventa una sfilata. Qui il contenuto sembra semplicemente già lì, appena
+   assestato. */
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+.stagger > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.45s var(--ease), transform 0.45s var(--ease);
+}
+.stagger.in > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Scarto di 45ms: si legge come un'unica onda, non come voci che entrano
+   una alla volta. Oltre la sesta si azzera, altrimenti l'ultima scheda di una
+   griglia arriverebbe mezzo secondo dopo la prima. */
+.stagger.in > *:nth-child(2) {
+  transition-delay: 0.045s;
+}
+.stagger.in > *:nth-child(3) {
+  transition-delay: 0.09s;
+}
+.stagger.in > *:nth-child(4) {
+  transition-delay: 0.135s;
+}
+.stagger.in > *:nth-child(5) {
+  transition-delay: 0.18s;
+}
+.stagger.in > *:nth-child(n + 6) {
+  transition-delay: 0.225s;
+}
+
+.img-reveal {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1.2s var(--ease-io);
+}
+.img-reveal.in {
+  clip-path: inset(0 0 0 0);
+}
+.img-reveal img {
+  transform: scale(1.12);
+  transition: transform 1.6s var(--ease);
+  will-change: transform;
+}
+.img-reveal.in img {
+  transform: scale(1);
+}
+
+/* --- Barra di avanzamento scroll ------------------------------------------ */
+
+.progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 300;
+  pointer-events: none;
+}
+.progress i {
+  display: block;
+  height: 100%;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* --- Cursore custom ------------------------------------------------------- */
+
+.cursor,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  pointer-events: none;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.cursor {
+  width: 8px;
+  height: 8px;
+  background: var(--red);
+}
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid rgba(177, 55, 51, 0.55);
+  transition: width 0.3s, height 0.3s, border-color 0.3s;
+  mix-blend-mode: multiply;
+}
+.cursor-ring.on {
+  width: 64px;
+  height: 64px;
+  border-color: rgba(177, 55, 51, 0.9);
+}
+@media (hover: none), (pointer: coarse) {
+  .cursor,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* --- Torna su ------------------------------------------------------------- */
+
+.totop {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 90;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: 0.4s var(--ease);
+  box-shadow: var(--sh-float);
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+}
+.totop.show {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.totop:hover {
+  background: var(--red);
+}
+
+/* --- Etichetta demo ------------------------------------------------------- */
+
+.demo-flag {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 200;
+  background: var(--red);
+  color: #fff;
+  font-family: var(--brand);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 8px 13px;
+  border-radius: var(--r-sm);
+  text-transform: uppercase;
+  box-shadow: var(--sh-float);
+  pointer-events: none;
+}
+
+/* =========================================================================
+   RESPONSIVE
+   ========================================================================= */
+
+@media (max-width: 920px) {
+  .sec-num {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  /* I bottoni si rimpiccioliscono: alla scala del telefono quelli da 56px
+     con 26px di respiro laterale occupavano mezza schermata. 46px restano
+     sopra il minimo tattile di 44 e pesano molto meno nella composizione. */
+  .btn {
+    padding: 13px 20px;
+    font-size: 14.5px;
+    min-height: 46px;
+    gap: 8px;
+  }
+
+  /* Scelta pensata per il telefono, non una riduzione della versione grande.
+     Su schermo stretto le sezioni si distinguono per stacco verticale, non
+     per margini laterali: quelli servono al testo. Quindi meno aria ai lati
+     (20px, dai token) e molta più separazione fra un blocco e l'altro in
+     proporzione all'altezza dello schermo. */
+  section.block {
+    padding: 88px 0;
+  }
+  .sec-head {
+    margin-bottom: 40px;
+  }
+
+  /* Il salto di scala fra titolo e testo va aumentato, non ridotto: su un
+     display piccolo è l'unico segnale di gerarchia che resta, mancando lo
+     spazio orizzontale per articolare la composizione. */
+  .sec-head h2 {
+    font-size: clamp(30px, 8.2vw, 40px);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .sec-head p {
+    font-size: 16px;
+  }
+  .demo-flag {
+    bottom: 12px;
+    left: 12px;
+    font-size: 10px;
+    padding: 6px 10px;
+  }
+  .totop {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+/* =========================================================================
+   MOVIMENTO RIDOTTO
+   Il sito deve restare completamente leggibile e utilizzabile.
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .img-reveal {
+    clip-path: none !important;
+  }
+  .img-reveal img {
+    transform: none !important;
+  }
+
+  .cursor,
+  .cursor-ring {
+    display: none !important;
+  }
+
+  /* Rete di sicurezza sull'apertura: questi elementi partono a opacità 0 e
+     compaiono con la classe .go. Se per qualsiasi motivo la classe non
+     arrivasse, resterebbero invisibili — qui si forza la visibilità a
+     prescindere dallo stato dello script. */
+  .hero .lead,
+  .hero-cta,
+  .hero-stats,
+  .since,
+  .scroll-cue {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero h1 .ln span {
+    transform: none !important;
+  }
+}

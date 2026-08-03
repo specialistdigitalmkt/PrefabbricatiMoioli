@@ -1,0 +1,272 @@
+---
+/**
+ * /progetti — griglia semplice.
+ * Le sei commesse hanno dati verificati ma non hanno una scheda di dettaglio:
+ * non sono link, per non portare a pagine inesistenti.
+ * La scheda modello è l'unica navigabile ed è dichiarata come dimostrativa.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Picture from '../../components/Picture.astro';
+import { progetti, progettoModello } from '../../data/progetti';
+import Icon from '../../components/Icon.astro';
+---
+
+<BaseLayout
+  title="Progetti realizzati — Prefabbricati Moioli"
+  description="Una selezione delle strutture prefabbricate realizzate da Moioli per gruppi industriali e logistici del Nord Italia. Oltre 700.000 mq costruiti."
+>
+  <PageHero
+    eyebrow="Realizzazioni"
+    title="Oltre 700.000 mq costruiti."
+    lead="Più di 100 aziende ci hanno affidato i loro stabilimenti. Qui una selezione dei progetti realizzati per i principali gruppi industriali e logistici del Nord Italia."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Progetti' }]}
+  />
+
+  <section class="block prj">
+    <div class="wrap">
+      <div class="prj-grid stagger">
+        <!-- Scheda modello: unica navigabile, dichiarata come dimostrativa -->
+        <article class="prj-card is-model">
+          <a href={`/progetti/${progettoModello.slug}`}>
+            <Picture
+              id={progettoModello.cover}
+              alt="Montaggio degli elementi prefabbricati in cantiere"
+              ratio="4/3.5"
+              sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
+            />
+            <div class="tint" aria-hidden="true"></div>
+            <span class="prj-badge">Scheda modello</span>
+            <span class="prj-arrow"><Icon nome="freccia-dx" dim={18} /></span>
+            <div class="info">
+              <p class="cat">{progettoModello.settore}</p>
+              <h2>{progettoModello.titolo}</h2>
+              <p class="mq">Esempio di scheda di dettaglio</p>
+              <p class="loc">{progettoModello.localita}</p>
+            </div>
+          </a>
+        </article>
+
+        {
+          progetti.map((p) => (
+            <article class="prj-card">
+              <Picture
+                id={p.img}
+                alt={p.alt}
+                ratio="4/3.5"
+                sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
+              />
+              <div class="tint" aria-hidden="true" />
+              <div class="info">
+                <p class="cat">{p.settore}</p>
+                <h2>{p.cliente}</h2>
+                <p class="mq">{p.superficie}</p>
+                <p class="loc">{p.localita}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="ph-note prj-note">
+        Nota per la revisione: nomi committente, superfici e località sono dati verificati.
+        Le immagini sono fotografie reali di cantieri Moioli, ma l'abbinamento fotografia ↔
+        commessa non è documentato negli archivi forniti ed è da confermare. Nella versione
+        finale ogni progetto avrà la propria scheda di dettaglio.
+      </p>
+    </div>
+  </section>
+
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Il prossimo</p>
+          <h2>Il tuo progetto può essere il prossimo.</h2>
+          <p class="cta-p">
+            Dalla progettazione strutturale alla consegna, con un solo interlocutore.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Parliamo del tuo progetto <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prj {
+    background: var(--bg1);
+  }
+
+  .prj-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .prj-card {
+    position: relative;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--navy);
+  }
+  .prj-card :global(.frame) {
+    border-radius: var(--r-md);
+  }
+  .prj-card :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+    filter: saturate(0.82);
+  }
+  .prj-card:hover :global(.frame img) {
+    transform: scale(1.07);
+  }
+
+  .prj-card .tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.18) 0%,
+      rgba(22, 32, 58, 0.1) 40%,
+      rgba(15, 22, 42, 0.93) 100%
+    );
+    transition: background 0.5s;
+  }
+  .prj-card:hover .tint {
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.05) 0%,
+      rgba(22, 32, 58, 0.05) 40%,
+      rgba(15, 22, 42, 0.95) 100%
+    );
+  }
+
+  .prj-card .info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    padding: 24px;
+    transform: translateY(8px);
+    transition: transform 0.45s var(--ease);
+  }
+  .prj-card:hover .info {
+    transform: translateY(0);
+  }
+
+  .prj-card .cat {
+    font-family: var(--brand);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red-soft);
+    font-weight: 600;
+  }
+  .prj-card h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    color: #fff;
+    font-size: 21px;
+    margin: 8px 0 4px;
+  }
+  .prj-card .mq {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .prj-card .loc {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+  }
+
+  /* --- Scheda modello ---------------------------------------------------- */
+  .is-model {
+    outline: 2px solid var(--red);
+    outline-offset: -2px;
+  }
+
+  .prj-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 4;
+    background: var(--red);
+    color: #fff;
+    font-family: var(--brand);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 11px;
+    border-radius: 2px;
+  }
+
+  .prj-arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+    width: 38px;
+    height: 38px;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    opacity: 0;
+    transform: rotate(-30deg);
+    transition: 0.45s var(--ease);
+    background: rgba(15, 22, 42, 0.3);
+    backdrop-filter: blur(4px);
+  }
+  .is-model:hover .prj-arrow,
+  .is-model a:focus-visible .prj-arrow {
+    opacity: 1;
+    transform: rotate(0);
+  }
+
+  .prj-note {
+    margin-top: 40px;
+  }
+
+  /* --- CTA --------------------------------------------------------------- */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 920px) {
+    .prj-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 600px) {
+    .prj-grid {
+      grid-template-columns: 1fr;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

@@ -1,0 +1,96 @@
+---
+/**
+ * Navigazione interna a una sezione (usata da /azienda).
+ *
+ * Sta sotto l'apertura e resta uguale su tutte e tre le pagine: chi entra da
+ * un link diretto capisce subito che è dentro una sezione con altre pagine.
+ * È un <nav> con aria-current sulla voce attiva, non una fila di bottoni.
+ */
+import { nav } from '../data/site';
+
+interface Props {
+  /** href della voce di primo livello che contiene il sottomenu. */
+  sezione: string;
+}
+const { sezione } = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const voci = nav.find((v) => v.href === sezione)?.voci ?? [];
+---
+
+{
+  voci.length > 0 && (
+    <nav class="sez-nav" aria-label="Pagine della sezione Azienda">
+      <div class="wrap">
+        <ul>
+          {voci.map((v) => (
+            <li>
+              <a href={v.href} aria-current={path === v.href ? 'page' : undefined}>
+                {v.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+  )
+}
+
+<style>
+  .sez-nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--bg2);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+
+  .sez-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 4px;
+    /* Su schermo stretto le voci scorrono invece di andare a capo:
+       una barra di sezione a due righe non si legge più come barra. */
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .sez-nav ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sez-nav a {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: 18px 18px 16px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--text-2);
+    border-bottom: 2px solid transparent;
+    transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+    min-height: 52px;
+  }
+
+  .sez-nav a:hover {
+    color: var(--navy);
+  }
+
+  .sez-nav a[aria-current] {
+    color: var(--navy);
+    border-bottom-color: var(--red);
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    .sez-nav a {
+      padding: 15px 14px 13px;
+      font-size: 14px;
+    }
+    /* I bordi del contenitore non devono tagliare la prima e l'ultima voce
+       quando l'elenco scorre. */
+    .sez-nav ul {
+      margin: 0 calc(var(--pad) * -1);
+      padding: 0 var(--pad);
+    }
+  }
+</style>

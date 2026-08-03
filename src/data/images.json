@@ -1,0 +1,315 @@
+{
+  "hero-home": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.9139,
+    "source": "hero probabule moioli (1).jpg"
+  },
+  "stabilimento": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7778,
+    "source": "Produzione-prefabbricati-moioli-2.jpg"
+  },
+  "plant": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3393,
+    "source": "plant.webp"
+  },
+  "warehouse": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3393,
+    "source": "warehouse.webp"
+  },
+  "sol-tecnoshed": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7779,
+    "source": "tegolo alare contenuti/Record_44DJI_0873.jpg"
+  },
+  "sol-tecnowing": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4987,
+    "source": "tegolo alare contenuti/DSC00679.jpg"
+  },
+  "sol-bacacier": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Bacacier/IMG_6804.JPG"
+  },
+  "sol-tegolo-tt": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.4979,
+    "source": "Tegolo TT/09-PAN_0783.jpg"
+  },
+  "sol-stegos": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7779,
+    "source": "Stegos/LeCorne_32PAZ_5921.jpg"
+  },
+  "shed-hero": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.778,
+    "source": "tegolo alare contenuti/Record_45DJI_0881.jpg"
+  },
+  "shed-interno": {
+    "widths": [
+      480,
+      768
+    ],
+    "ratio": 0.8,
+    "source": "tegolo alare contenuti/shed modificato .png"
+  },
+  "shed-copertura": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Shed/IMG_3655.jpg"
+  },
+  "shed-aerea-01": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7775,
+    "source": "tegolo alare contenuti/Senago_48DJI_0566.jpg"
+  },
+  "shed-aerea-02": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7777,
+    "source": "tegolo alare contenuti/Senago_62DJI_0844.jpg"
+  },
+  "shed-cantiere": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5,
+    "source": "tegolo alare contenuti/Record_47DJI_0880 1.jpg"
+  },
+  "shed-lineart": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "tegolo alare contenuti/alare bianco.png"
+  },
+  "stegos-hero": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7779,
+    "source": "Stegos/LeCorne_32PAZ_5921.jpg"
+  },
+  "stegos-elementi": {
+    "widths": [
+      480
+    ],
+    "ratio": 1.4941,
+    "source": "Stegos/Stegos Foto/Risorsa 1Stegos.png"
+  },
+  "stegos-nodo": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Stegos/IMG_0422.jpg"
+  },
+  "stegos-interno": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Stegos/IMG_0410.jpg"
+  },
+  "stegos-cantiere": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5032,
+    "source": "Stegos/LeCorne_34PAZ_5925.jpg"
+  },
+  "stegos-struttura": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Stegos/IMG_0428.jpg"
+  },
+  "prj-01": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5,
+    "source": "Auto industriale SI/DJI_0100.JPG"
+  },
+  "prj-02": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5,
+    "source": "Cingol car SI/DJI_0170.JPG"
+  },
+  "prj-03": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7779,
+    "source": "tegolo alare contenuti/Senago_46PAN_8323.jpg"
+  },
+  "prj-04": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5001,
+    "source": "Tegolo TT/CMB_Martignoni_24PAN_8335.jpg"
+  },
+  "prj-05": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.4994,
+    "source": "Auto industriale SI/DSC00301.JPG"
+  },
+  "prj-06": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 0.667,
+    "source": "Cingol car SI/DSC00540.JPG"
+  },
+  "prj-07": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Stegos/IMG_0410.jpg"
+  },
+  "prj-08": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "Bac-acier betania SI/IMG_6895.JPG"
+  },
+  "prj-09": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7774,
+    "source": "tegolo alare contenuti/Senago_84PAN_3700.jpg"
+  },
+  "sede": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5032,
+    "source": "tegolo alare contenuti/Record_50PAZ_3638.jpg"
+  }
+}

@@ -1,0 +1,198 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione trasversale di copertura a shed.
+ *
+ * Geometria neutra, quote sostituite da segnaposto. NON è un disegno esecutivo
+ * e non rappresenta un prodotto reale: serve a mostrare il funzionamento del
+ * blocco interattivo in attesa del vettoriale definitivo.
+ *
+ * SOSTITUZIONE
+ * Per usare il disegno definitivo basta rimpiazzare il contenuto di questo
+ * file mantenendo:
+ *   - viewBox="0 0 1200 700"
+ *   - lo stesso orientamento (valle in basso, colmo in alto)
+ * Le coordinate dei marker vivono in src/data/tecnoshed.ts e sono espresse in
+ * percentuale del viewBox: non vanno toccate se il sistema di riferimento resta
+ * questo. Nessuna logica dipende da questo SVG.
+ */
+---
+
+<svg
+  class="shed"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="shedTitle shedDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="shedTitle">Sezione trasversale segnaposto di una copertura a shed</title>
+  <desc id="shedDesc">
+    Disegno schematico: tre elementi di copertura inclinati, superfici vetrate
+    verticali orientate a nord, canali di gronda, travi portanti e pilastri su
+    plinti. Le quote sono segnaposto in attesa del disegno definitivo.
+  </desc>
+
+  <defs>
+    <!-- Tratteggio per le superfici vetrate -->
+    <pattern id="glassHatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="10" class="ln-hatch" />
+    </pattern>
+    <!-- Tratteggio per il terreno -->
+    <pattern id="groundHatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ TERRENO ============ -->
+  <g class="g-ground">
+    <line x1="0" y1="596" x2="1200" y2="596" class="ln-strong" />
+    <rect x="0" y="596" width="1200" height="16" fill="url(#groundHatch)" stroke="none" />
+  </g>
+
+  <!-- ============ FONDAZIONI E PILASTRI ============ -->
+  <g class="g-struct">
+    <!-- plinti -->
+    <rect x="432" y="596" width="96" height="32" class="ln-solid" />
+    <rect x="852" y="596" width="96" height="32" class="ln-solid" />
+    <!-- pilastri -->
+    <rect x="458" y="436" width="44" height="160" class="ln-solid" />
+    <rect x="878" y="436" width="44" height="160" class="ln-solid" />
+    <!-- travi portanti -->
+    <rect x="432" y="382" width="96" height="54" class="ln-solid" />
+    <rect x="852" y="382" width="96" height="54" class="ln-solid" />
+    <!-- mensole di appoggio -->
+    <path d="M432 396 L418 396 L432 414 Z" class="ln-solid" />
+    <path d="M528 396 L542 396 L528 414 Z" class="ln-solid" />
+    <path d="M852 396 L838 396 L852 414 Z" class="ln-solid" />
+    <path d="M948 396 L962 396 L948 414 Z" class="ln-solid" />
+  </g>
+
+  <!-- ============ ELEMENTI DI COPERTURA ============ -->
+  <!-- Ogni elemento è una banda: estradosso + intradosso a 26px -->
+  <g class="g-elem">
+    <path d="M60 380 L400 250 L400 276 L60 406 Z" class="ln-solid" />
+    <path d="M480 380 L820 250 L820 276 L480 406 Z" class="ln-solid" />
+    <path d="M900 380 L1200 265 L1200 291 L900 406 Z" class="ln-solid" />
+  </g>
+
+  <!-- ============ MANTO DI FINITURA ============ -->
+  <!-- Linea sottile parallela all'estradosso: stratigrafia -->
+  <g class="g-manto">
+    <line x1="60" y1="368" x2="400" y2="238" class="ln-thin" />
+    <line x1="480" y1="368" x2="820" y2="238" class="ln-thin" />
+    <line x1="900" y1="368" x2="1200" y2="253" class="ln-thin" />
+  </g>
+
+  <!-- ============ SUPERFICI VETRATE (a nord) ============ -->
+  <g class="g-glass">
+    <rect x="394" y="250" width="12" height="130" fill="url(#glassHatch)" class="ln-thin" />
+    <rect x="814" y="250" width="12" height="130" fill="url(#glassHatch)" class="ln-thin" />
+    <!-- montanti -->
+    <line x1="400" y1="250" x2="400" y2="380" class="ln-thin" />
+    <line x1="820" y1="250" x2="820" y2="380" class="ln-thin" />
+  </g>
+
+  <!-- ============ CANALI DI GRONDA ============ -->
+  <g class="g-gronda">
+    <path d="M400 380 L400 402 L480 402 L480 380" class="ln-solid" />
+    <path d="M820 380 L820 402 L900 402 L900 380" class="ln-solid" />
+  </g>
+
+  <!-- ============ QUOTE (segnaposto) ============ -->
+  <g class="g-dim">
+    <!-- interasse fra i pilastri -->
+    <line x1="480" y1="666" x2="900" y2="666" class="ln-dim" />
+    <line x1="480" y1="654" x2="480" y2="678" class="ln-dim" />
+    <line x1="900" y1="654" x2="900" y2="678" class="ln-dim" />
+    <text x="690" y="648" class="tx-dim" text-anchor="middle">INTERASSE — da catalogo</text>
+
+    <!-- altezza della superficie vetrata -->
+    <line x1="30" y1="250" x2="30" y2="380" class="ln-dim" />
+    <line x1="18" y1="250" x2="42" y2="250" class="ln-dim" />
+    <line x1="18" y1="380" x2="42" y2="380" class="ln-dim" />
+    <text x="18" y="236" class="tx-dim" text-anchor="start">ALTEZZA — da catalogo</text>
+
+    <!-- luce netta dell'elemento -->
+    <line x1="480" y1="180" x2="820" y2="180" class="ln-dim" />
+    <line x1="480" y1="168" x2="480" y2="192" class="ln-dim" />
+    <line x1="820" y1="168" x2="820" y2="192" class="ln-dim" />
+    <text x="650" y="162" class="tx-dim" text-anchor="middle">LUCE NETTA — da catalogo</text>
+  </g>
+
+  <!-- ============ ORIENTAMENTO ============ -->
+  <g class="g-north">
+    <line x1="1130" y1="120" x2="1130" y2="60" class="ln-dim" />
+    <path d="M1130 54 L1124 70 L1136 70 Z" class="fill-dim" />
+    <text x="1130" y="140" class="tx-dim" text-anchor="middle">N</text>
+  </g>
+</svg>
+
+<style>
+  .shed {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* Il disegno vive su fondo navy: tutto è definito in bianco a opacità
+     diverse, così un eventuale cambio di fondo non rompe nulla. */
+  .shed :global(.ln-solid) {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.62);
+    stroke-width: 2;
+    stroke-linejoin: round;
+  }
+
+  .shed :global(.ln-strong) {
+    stroke: rgba(255, 255, 255, 0.42);
+    stroke-width: 2;
+  }
+
+  .shed :global(.ln-thin) {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.34);
+    stroke-width: 1.25;
+  }
+
+  .shed :global(.ln-hatch) {
+    stroke: rgba(255, 255, 255, 0.24);
+    stroke-width: 1;
+  }
+
+  .shed :global(.g-elem path) {
+    fill: rgba(255, 255, 255, 0.06);
+  }
+
+  .shed :global(.g-struct rect),
+  .shed :global(.g-struct path) {
+    fill: rgba(255, 255, 255, 0.04);
+  }
+
+  /* Quote: rosso tenue, come tutte le indicazioni su fondo scuro */
+  .shed :global(.ln-dim) {
+    stroke: var(--red-soft);
+    stroke-width: 1.25;
+    opacity: 0.85;
+  }
+
+  .shed :global(.fill-dim) {
+    fill: var(--red-soft);
+    opacity: 0.85;
+  }
+
+  .shed :global(.tx-dim) {
+    font-family: var(--mono);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    fill: var(--red-soft);
+    opacity: 0.9;
+  }
+
+  /* Su schermo stretto il disegno è più piccolo in pixel reali: le quote
+     vanno ingrandite in unità del viewBox per restare leggibili. */
+  @media (max-width: 860px) {
+    .shed :global(.tx-dim) {
+      font-size: 22px;
+    }
+  }
+</style>

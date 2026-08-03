@@ -1,0 +1,28 @@
+---
+/**
+ * Definizione del marchio, una sola volta per pagina.
+ *
+ * La geometria del logo pesa parecchio: inlinarla sia in testata sia nel piè
+ * di pagina significava spedirla due volte a ogni caricamento. Qui viene
+ * dichiarata una volta come <symbol> e richiamata con <use>.
+ *
+ * Il marchio NON contiene più la riga "Prefabbricare per il futuro": quel
+ * tracciato è stato rimosso dal lockup e il viewBox stretto di conseguenza.
+ *
+ * I riempimenti passano da variabili CSS perché sono le uniche proprietà che
+ * attraversano il confine di <use>: è così che la variante bianca funziona
+ * senza duplicare i tracciati.
+ */
+import symbol from '../assets/logo-symbol.svg?raw';
+---
+
+<svg class="logo-sprite" aria-hidden="true" focusable="false" set:html={symbol} />
+
+<style>
+  .logo-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+</style>

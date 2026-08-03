@@ -1,0 +1,699 @@
+---
+/**
+ * /soluzioni/tecnoshed — pagina vetrina.
+ * Scorrimento verticale, sezioni a tutta larghezza, progressione narrativa:
+ * hero → descrizione → tecnologia → sezione interattiva → vantaggi → gallery
+ * → altre soluzioni → CTA.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Picture from '../../components/Picture.astro';
+import HotspotExplainer from '../../components/HotspotExplainer.astro';
+import ShedSection from '../../components/ShedSection.astro';
+import { pagina, hotspots } from '../../data/tecnoshed';
+import { soluzioni } from '../../data/soluzioni';
+import Icon from '../../components/Icon.astro';
+
+const altre = soluzioni.filter((s) => s.slug !== 'tecnoshed').slice(0, 3);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.prefabbricatimoioli.it/' },
+    { '@type': 'ListItem', position: 2, name: 'Soluzioni', item: 'https://www.prefabbricatimoioli.it/soluzioni' },
+    { '@type': 'ListItem', position: 3, name: 'Tecnoshed' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Tecnoshed — Copertura a shed prefabbricata | Prefabbricati Moioli"
+  description="Tecnoshed: copertura a shed in cemento armato precompresso. Luce naturale diffusa e costante sul piano di lavoro, senza abbagliamento. Prefabbricati Moioli, Bagnatica (BG)."
+  preloadImage="shed-hero"
+  jsonLd={jsonLd}
+>
+  <!-- ==================== 1. HERO ==================== -->
+  <!-- on-dark: senza questa classe il breadcrumb eredita i colori da fondo
+       chiaro e diventa illeggibile sopra la fotografia -->
+  <section class="ts-hero on-dark">
+    <div class="ts-hero-img">
+      <img
+        src="/img/shed-hero-1800.webp"
+        srcset="/img/shed-hero-480.webp 480w, /img/shed-hero-768.webp 768w, /img/shed-hero-1200.webp 1200w, /img/shed-hero-1800.webp 1800w"
+        sizes="100vw"
+        alt="Edificio industriale con copertura a shed realizzato da Prefabbricati Moioli"
+        fetchpriority="high"
+        decoding="sync"
+      />
+    </div>
+    <div class="ts-hero-grad" aria-hidden="true"></div>
+
+    <div class="wrap ts-hero-body">
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Soluzioni', href: '/soluzioni' },
+          { label: 'Tecnoshed' },
+        ]}
+      />
+      <p class="eyebrow ts-eyebrow">{pagina.eyebrow}</p>
+      <h1>{pagina.titolo}</h1>
+      <p class="ts-claim">{pagina.claim}</p>
+      <p class="lead ts-lead">{pagina.lead}</p>
+
+      <div class="ts-hero-cta">
+        <a href="#sezione" class="btn btn-red">
+          Vedi la sezione costruttiva <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
+        </a>
+        <a href="/contatti" class="btn btn-light">Richiedi un preventivo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. DESCRIZIONE ==================== -->
+  <section class="block ts-desc">
+    <div class="sec-num" aria-hidden="true">01</div>
+    <div class="wrap">
+      <div class="ts-desc-grid">
+        <div class="reveal">
+          <p class="eyebrow">{pagina.descrizione.eyebrow}</p>
+          <h2>{pagina.descrizione.titolo}</h2>
+        </div>
+        <div class="ts-desc-text reveal">
+          {pagina.descrizione.paragrafi.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+
+      {/* La sorgente è verticale e il soggetto — il soffitto a shed con la
+          luce che entra — sta nella parte alta. Un ritaglio centrato lasciava
+          in vista soprattutto il pavimento: da qui l'impressione di un blocco
+          vuoto. Il fuoco è spostato in alto. */}
+      <div class="ts-desc-img img-reveal">
+        <Picture
+          id="shed-interno"
+          alt="Interno di un capannone illuminato dalla luce naturale della copertura a shed"
+          ratio="21/9"
+          sizes="100vw"
+          position="center 22%"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 3. TECNOLOGIA ==================== -->
+  <section class="block ts-tech on-dark">
+    <div class="sec-num" aria-hidden="true">02</div>
+    <!-- Lineart tecnico reale usato come tessitura di fondo: il fondo scuro
+         dell'immagine si annulla in blend, restano le sole linee bianche. -->
+    <div class="ts-tech-art" aria-hidden="true">
+      <img src="/img/shed-lineart-1200.webp" alt="" loading="lazy" decoding="async" />
+    </div>
+
+    <div class="wrap">
+      <div class="ts-tech-grid">
+        <div class="reveal">
+          <p class="eyebrow">{pagina.tecnologia.eyebrow}</p>
+          <h2>{pagina.tecnologia.titolo}</h2>
+          {pagina.tecnologia.paragrafi.map((p) => <p class="ts-tech-p">{p}</p>)}
+        </div>
+
+        <ul class="ts-tech-list stagger">
+          {
+            pagina.tecnologia.punti.map((p, i) => (
+              <li>
+                <span class="n">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{p.titolo}</h3>
+                  <p>{p.testo}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 4. SEZIONE INTERATTIVA ==================== -->
+  <section class="block ts-exp on-dark" id="sezione">
+    <div class="sec-num" aria-hidden="true">03</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.experience.eyebrow}</p>
+        <h2>{pagina.experience.titolo}</h2>
+      </div>
+
+      <HotspotExplainer hotspots={hotspots} intro={pagina.experience.intro}>
+        <ShedSection />
+      </HotspotExplainer>
+    </div>
+  </section>
+
+  <!-- ==================== 5. VANTAGGI ==================== -->
+  <section class="block ts-adv">
+    <div class="sec-num" aria-hidden="true">04</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.vantaggi.eyebrow}</p>
+        <h2>{pagina.vantaggi.titolo}</h2>
+      </div>
+
+      <ul class="adv-grid stagger">
+        {
+          pagina.vantaggi.voci.map((v) => (
+            <li>
+              <span class="adv-n">{v.num}</span>
+              <h3>{v.titolo}</h3>
+              <p>{v.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 6. GALLERY ==================== -->
+  <section class="block ts-gal on-dark">
+    <div class="sec-num" aria-hidden="true">05</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.gallery.eyebrow}</p>
+        <h2>{pagina.gallery.titolo}</h2>
+      </div>
+
+      <div class="gal-grid stagger">
+        {
+          pagina.gallery.immagini.map((img, i) => (
+            <figure class:list={['gal-item', { wide: i === 0 || i === 3 }]}>
+              <Picture
+                id={img.id}
+                alt={img.alt}
+                ratio={i === 0 || i === 3 ? '16/9' : '4/3'}
+                sizes="(max-width: 700px) 100vw, 50vw"
+              />
+            </figure>
+          ))
+        }
+      </div>
+
+      <p class="ph-note gal-note">
+        Nota per la revisione: le fotografie provengono dall'archivio Moioli.
+        L'abbinamento immagine ↔ tipologia di copertura è da confermare
+        dall'ufficio tecnico.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== 7. ALTRE SOLUZIONI ==================== -->
+  <section class="block ts-other">
+    <div class="wrap">
+      <div class="other-head reveal">
+        <div>
+          <p class="eyebrow">Altre soluzioni</p>
+          <h2>Tecnoshed non è l'unica strada.</h2>
+        </div>
+        <a href="/soluzioni" class="btn btn-ghost">
+          Tutte le soluzioni <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+
+      <ul class="other-grid stagger">
+        {
+          altre.map((s) => (
+            <li>
+              <a href="/soluzioni">
+                {s.img ? (
+                  <Picture
+                    id={s.img}
+                    alt={s.alt}
+                    ratio="4/3"
+                    sizes="(max-width: 700px) 100vw, 33vw"
+                  />
+                ) : (
+                  <div class="other-noimg">
+                    <span class="spec">FOTO — da servizio fotografico</span>
+                  </div>
+                )}
+                <h3>{s.nome}</h3>
+                <p>{s.claim}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 8. CTA ==================== -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Il passo successivo</p>
+          <h2>Verifichiamo se Tecnoshed è adatta al tuo lotto.</h2>
+          <p class="cta-p">
+            Superficie, destinazione d'uso, orientamento e vincoli: con questi quattro dati
+            possiamo già dirti se ha senso.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Richiedi una valutazione <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ==================== 1. HERO ==================== */
+  .ts-hero {
+    position: relative;
+    min-height: 92svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--navy);
+    color: #fff;
+  }
+
+  .ts-hero-img {
+    position: absolute;
+    inset: 0;
+  }
+  .ts-hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+  }
+
+  .ts-hero-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.72) 0%,
+      rgba(29, 42, 68, 0.34) 34%,
+      rgba(22, 32, 58, 0.88) 82%,
+      var(--navy) 100%
+    );
+  }
+
+  .ts-hero-body {
+    position: relative;
+    z-index: 2;
+    padding-top: 150px;
+    padding-bottom: 64px;
+    width: 100%;
+  }
+
+  .ts-eyebrow {
+    margin-top: 24px;
+    color: var(--red-soft);
+  }
+
+  .ts-hero h1 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(48px, 8vw, 104px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 16px 0 14px;
+    color: #fff;
+  }
+
+  .ts-claim {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(19px, 2.4vw, 28px);
+    color: #fff;
+    line-height: 1.25;
+    max-width: 22ch;
+  }
+
+  .ts-lead {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 56ch;
+  }
+
+  .ts-hero-cta {
+    display: flex;
+    gap: 14px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+  }
+
+  /* ==================== 2. DESCRIZIONE ==================== */
+  /* Questa sezione arriva subito dopo un hero a piena pagina: non le serve
+     lo stesso respiro delle altre, altrimenti fra la fotografia e il primo
+     paragrafo si apre un vuoto che sembra un errore di impaginazione. */
+  .ts-desc {
+    background: var(--white);
+    padding-top: 96px;
+    padding-bottom: 104px;
+  }
+
+  .ts-desc-grid {
+    /* Colonna del titolo più stretta: così il titolo va a capo e riempie
+       la propria colonna invece di lasciare 163px di vuoto sotto di sé. */
+    display: grid;
+    grid-template-columns: 0.72fr 1.28fr;
+    gap: 52px;
+    align-items: start;
+    margin-bottom: 44px;
+  }
+
+  .ts-desc-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .ts-desc-text p {
+    font-size: 17px;
+    margin-bottom: 18px;
+    max-width: 62ch;
+  }
+  .ts-desc-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ==================== 3. TECNOLOGIA ==================== */
+  .ts-tech {
+    background: var(--navy);
+    overflow: hidden;
+  }
+
+  .ts-tech-art {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(62%, 820px);
+    opacity: 0.22;
+    /* Il fondo scuro dell'immagine si annulla: restano le linee bianche */
+    mix-blend-mode: screen;
+    pointer-events: none;
+    mask-image: linear-gradient(200deg, #000 10%, transparent 72%);
+    -webkit-mask-image: linear-gradient(200deg, #000 10%, transparent 72%);
+  }
+  .ts-tech-art img {
+    width: 100%;
+    height: auto;
+  }
+
+  .ts-tech-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .ts-tech-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin: 16px 0 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .ts-tech-p {
+    margin-bottom: 16px;
+    max-width: 54ch;
+  }
+
+  .ts-tech-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ts-tech-list li {
+    display: flex;
+    gap: 20px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .ts-tech-list li:last-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .ts-tech-list .n {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--red-soft);
+    flex: none;
+    padding-top: 3px;
+  }
+  .ts-tech-list h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .ts-tech-list p {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  /* ==================== 4. SEZIONE INTERATTIVA ==================== */
+  .ts-exp {
+    background: var(--navy-deep);
+  }
+
+  /* ==================== 5. VANTAGGI ==================== */
+  .ts-adv {
+    background: var(--bg1);
+  }
+
+  .adv-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+
+  .adv-grid li {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 34px 32px 32px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.4s var(--ease), border-color 0.4s, transform 0.4s var(--ease);
+  }
+  .adv-grid li::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 3px;
+    width: 0;
+    background: var(--red);
+    transition: width 0.45s var(--ease);
+  }
+  .adv-grid li:hover {
+    box-shadow: var(--sh-card);
+    border-color: #fff;
+    transform: translateY(-3px);
+  }
+  .adv-grid li:hover::after {
+    width: 100%;
+  }
+
+  .adv-n {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--red);
+  }
+  .adv-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 21px;
+    margin: 14px 0 10px;
+    line-height: 1.25;
+  }
+  .adv-grid p {
+    font-size: 15px;
+    max-width: 46ch;
+  }
+
+  /* ==================== 6. GALLERY ==================== */
+  .ts-gal {
+    background: var(--navy-ink);
+  }
+
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .gal-item {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--r-md);
+  }
+  .gal-item.wide {
+    grid-column: span 2;
+  }
+  .gal-item :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+  }
+  .gal-item:hover :global(.frame img) {
+    transform: scale(1.04);
+  }
+
+  .gal-note {
+    margin-top: 32px;
+  }
+
+  /* ==================== 7. ALTRE SOLUZIONI ==================== */
+  .ts-other {
+    background: var(--white);
+  }
+
+  .other-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .other-head h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(28px, 3.4vw, 42px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+
+  .other-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .other-grid a {
+    display: block;
+  }
+  .other-grid :global(.frame) {
+    transition: transform 0.4s var(--ease);
+  }
+  .other-grid a:hover :global(.frame) {
+    transform: translateY(-4px);
+  }
+  .other-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 20px;
+    margin: 16px 0 6px;
+  }
+  .other-grid p {
+    font-size: 14px;
+    color: var(--text);
+  }
+  .other-noimg {
+    aspect-ratio: 4 / 3;
+    background: var(--ph-bg);
+    border: 1px dashed var(--ph-border);
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+  }
+
+  /* ==================== 8. CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==================== RESPONSIVE ==================== */
+  @media (max-width: 920px) {
+    .ts-desc-grid,
+    .ts-tech-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .ts-tech-art {
+      width: 100%;
+      opacity: 0.14;
+    }
+    .other-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .ts-hero {
+      min-height: auto;
+    }
+    .ts-hero-body {
+      padding-top: 122px;
+      padding-bottom: 48px;
+    }
+    .adv-grid,
+    .gal-grid,
+    .other-grid {
+      grid-template-columns: 1fr;
+    }
+    .gal-item.wide {
+      grid-column: span 1;
+    }
+    /* Vedi la nota nella home: affiancate su schermo stretto le etichette
+       andavano a capo e i bottoni diventavano blocchi alti tre righe. */
+    .ts-hero-cta {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    /* Su schermo stretto questa sezione si allungava oltre misura: le stesse
+       spaziature che a schermo largo danno respiro, in colonna singola
+       diventano vuoto. */
+    .ts-desc {
+      padding-top: 64px;
+      padding-bottom: 72px;
+    }
+    .ts-desc-grid {
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    .ts-desc-text p {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

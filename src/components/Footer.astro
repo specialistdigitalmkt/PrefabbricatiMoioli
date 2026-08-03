@@ -1,0 +1,199 @@
+---
+/**
+ * Piè di pagina.
+ * Ospita il blocco documentazione: nella demo i file non sono allegati,
+ * quindi le voci sono dichiarate come non ancora disponibili invece di
+ * puntare a un download inesistente.
+ */
+import Logo from './Logo.astro';
+import { azienda, nav, download } from '../data/site';
+
+const { indirizzo } = azienda;
+---
+
+<footer class="on-dark">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        {/* Nel piè di pagina il lockup è sempre completo: qui il payoff
+            non compete con nessun altro testo. */}
+        <Logo variant="light" payoff="sempre" height={40} />
+        {/* Riga fattuale, non il payoff: quello vive solo nell'apertura
+            della home, altrimenti sulla home comparirebbe due volte. */}
+        <p>{azienda.ragioneSociale} — {azienda.descrizione} dal {azienda.fondazione}.</p>
+        <address>
+          {indirizzo.via}, {indirizzo.cap} {indirizzo.citta} ({indirizzo.provincia})<br />
+          <a href={`tel:${azienda.telefonoHref}`}>{azienda.telefono}</a><br />
+          <a href={`mailto:${azienda.email}`}>{azienda.email}</a>
+        </address>
+      </div>
+
+      <div class="foot-col">
+        <h2 class="foot-h">Naviga</h2>
+        <nav class="foot-nav" aria-label="Navigazione secondaria">
+          {nav.map((v) => <a href={v.href}>{v.label}</a>)}
+        </nav>
+      </div>
+
+      <div class="foot-col">
+        <h2 class="foot-h">{download.titolo}</h2>
+        <ul class="dl-list">
+          {
+            download.voci.map((v) => (
+              <li>
+                <span class="dl-fmt">{v.formato}</span>
+                <span class="dl-label">{v.label}</span>
+                <span class="spec spec-dark">FILE — da fornire</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="dl-note">{download.nota}</p>
+      </div>
+    </div>
+
+    <div class="foot-bot">
+      <span>
+        &copy; {new Date().getFullYear()} {azienda.ragioneSociale} — P.IVA {azienda.piva}
+      </span>
+      <span class="foot-legal">Privacy Policy · Cookie Policy</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    background: var(--navy-ink);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 64px 0 30px;
+    font-size: 14px;
+  }
+
+  .foot-top {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr 1.1fr;
+    gap: 48px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .foot-brand p {
+    margin-top: 16px;
+    max-width: 34ch;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  address {
+    font-style: normal;
+    margin-top: 18px;
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  address a {
+    transition: color 0.2s;
+  }
+  address a:hover {
+    color: #fff;
+  }
+
+  .foot-h {
+    font-family: var(--brand);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red-soft);
+    margin-bottom: 18px;
+  }
+
+  .foot-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .foot-nav a {
+    transition: color 0.2s;
+    /* Altezza minima del bersaglio (WCAG 2.5.8): senza padding queste voci
+       restavano a 22px. */
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 2px 0;
+  }
+  .foot-nav a:hover {
+    color: #fff;
+  }
+
+  .dl-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .dl-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  }
+
+  .dl-fmt {
+    font-family: var(--brand);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--red-soft);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 2px;
+    padding: 2px 6px;
+    flex: none;
+  }
+
+  .dl-label {
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .dl-note {
+    margin-top: 16px;
+    font-size: 13px;
+    /* 0.55 anziché 0.42: sotto questa soglia il testo scende a 4.06:1
+       su --navy-ink, sotto il minimo AA. */
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .foot-bot {
+    padding-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12.5px;
+    /* idem: 0.4 dava 3.79:1 su --navy-ink */
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  @media (max-width: 920px) {
+    .foot-top {
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .foot-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 600px) {
+    footer {
+      padding-top: 48px;
+    }
+    .foot-top {
+      grid-template-columns: 1fr;
+      gap: 34px;
+    }
+  }
+</style>

@@ -1,0 +1,570 @@
+---
+/**
+ * /contatti — form, dati, mappa.
+ *
+ * Il form è INERTE: valida e mostra lo stato di successo senza inviare nulla.
+ * Scelta voluta per la demo — nessun invio accidentale durante la presentazione.
+ * Per attivarlo basta sostituire il gestore di submit con una chiamata reale.
+ *
+ * La mappa è uno schema disegnato, non un iframe: niente script di terze parti
+ * e nessun banner cookie da gestire in demo.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { azienda } from '../data/site';
+import Icon from '../components/Icon.astro';
+
+const { indirizzo } = azienda;
+---
+
+<BaseLayout
+  title="Contatti — Prefabbricati Moioli, Bagnatica (BG)"
+  description="Prefabbricati Moioli — Via F.lli Kennedy 24, Bagnatica (BG). Telefono +39 035 681239. Richiedi un preventivo per la tua struttura prefabbricata."
+>
+  <PageHero
+    eyebrow="Contatti"
+    title="Parliamo del tuo progetto."
+    lead="Raccontaci cosa devi costruire: destinazione d'uso, superficie e vincoli del lotto. Ti rispondiamo con una proposta tecnica, non con un preventivo generico."
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Contatti' }]}
+  />
+
+  <section class="block ct">
+    <div class="wrap">
+      <div class="ct-grid">
+        <!-- ==================== DATI ==================== -->
+        <div class="ct-info reveal">
+          <h2 class="ct-h">Dove siamo</h2>
+
+          <div class="ci">
+            <p class="lab">Telefono</p>
+            <p class="val"><a href={`tel:${azienda.telefonoHref}`}>{azienda.telefono}</a></p>
+          </div>
+
+          <div class="ci">
+            <p class="lab">Email</p>
+            <p class="val"><a href={`mailto:${azienda.email}`}>{azienda.email}</a></p>
+          </div>
+
+          <div class="ci">
+            <p class="lab">Sede e stabilimento</p>
+            <address class="val">
+              {indirizzo.via}<br />
+              {indirizzo.cap} {indirizzo.citta} ({indirizzo.provincia})
+            </address>
+          </div>
+
+          <div class="ci">
+            <p class="lab">Come raggiungerci</p>
+            <p class="val">{azienda.accesso}</p>
+          </div>
+
+          <!-- Mappa schematica: nessun servizio esterno, nessun cookie -->
+          <figure class="ct-map">
+            <svg viewBox="0 0 640 360" role="img" aria-labelledby="mapTitle" class="map">
+              <title id="mapTitle">
+                Schema di posizione: sede Moioli a Bagnatica, in prossimità
+                dell'autostrada A4, uscita Seriate
+              </title>
+
+              <rect x="0" y="0" width="640" height="360" class="m-bg" />
+
+              <!-- maglia viaria di contesto -->
+              <g class="m-minor">
+                <path d="M0 250 L640 220" />
+                <path d="M0 130 L640 105" />
+                <path d="M180 0 L210 360" />
+                <path d="M430 0 L455 360" />
+              </g>
+
+              <!-- autostrada A4 -->
+              <path d="M0 175 C 160 150, 300 200, 640 160" class="m-hw" />
+              <path d="M0 175 C 160 150, 300 200, 640 160" class="m-hw-in" />
+              <text x="60" y="163" class="m-tx-hw">A4</text>
+
+              <!-- svincolo -->
+              <circle cx="286" cy="184" r="7" class="m-node" />
+              <text x="286" y="210" class="m-tx" text-anchor="middle">Uscita Seriate</text>
+
+              <!-- collegamento allo stabilimento -->
+              <path d="M286 184 L400 268" class="m-link" />
+
+              <!-- sede -->
+              <g class="m-pin">
+                <circle cx="400" cy="268" r="13" class="m-pin-o" />
+                <circle cx="400" cy="268" r="5.5" class="m-pin-i" />
+              </g>
+              <text x="422" y="264" class="m-tx-strong">Prefabbricati Moioli</text>
+              <text x="422" y="284" class="m-tx">
+                {indirizzo.via} — {indirizzo.citta}
+              </text>
+            </svg>
+
+            <figcaption>
+              <span class="spec">SCHEMA — mappa non in scala</span>
+            </figcaption>
+          </figure>
+
+          <a
+            href={azienda.mapsUrl}
+            class="btn btn-ghost ct-map-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Apri in Google Maps <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+          </a>
+        </div>
+
+        <!-- ==================== FORM ==================== -->
+        <div class="ct-form-wrap reveal">
+          <form class="ct-form" id="ctForm" novalidate>
+            <h2 class="ct-h">Richiedi un preventivo</h2>
+            <p class="ct-req">I campi contrassegnati con * sono obbligatori.</p>
+
+            <div class="field">
+              <label for="f-nome">Nome e cognome *</label>
+              <input
+                id="f-nome"
+                name="nome"
+                type="text"
+                autocomplete="name"
+                required
+                aria-describedby="e-nome"
+              />
+              <p class="err" id="e-nome" hidden>Inserisci il tuo nome e cognome.</p>
+            </div>
+
+            <div class="two">
+              <div class="field">
+                <label for="f-az">Azienda *</label>
+                <input
+                  id="f-az"
+                  name="azienda"
+                  type="text"
+                  autocomplete="organization"
+                  required
+                  aria-describedby="e-az"
+                />
+                <p class="err" id="e-az" hidden>Inserisci il nome dell'azienda.</p>
+              </div>
+
+              <div class="field">
+                <label for="f-tel">Telefono *</label>
+                <input
+                  id="f-tel"
+                  name="telefono"
+                  type="tel"
+                  inputmode="tel"
+                  autocomplete="tel"
+                  required
+                  aria-describedby="e-tel"
+                />
+                <p class="err" id="e-tel" hidden>Inserisci un recapito telefonico.</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-mail">Email *</label>
+              <input
+                id="f-mail"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                required
+                aria-describedby="e-mail h-mail"
+              />
+              <p class="err" id="e-mail" hidden>Inserisci un indirizzo email valido.</p>
+            </div>
+
+            <div class="field">
+              <label for="f-tipo">Tipo di intervento</label>
+              <select id="f-tipo" name="tipo">
+                <option value="">Non saprei ancora</option>
+                <option>Nuovo edificio industriale</option>
+                <option>Ampliamento di un edificio esistente</option>
+                <option>Solo copertura</option>
+                <option>Altro</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="f-msg">Il progetto</label>
+              <textarea
+                id="f-msg"
+                name="messaggio"
+                rows="4"
+                aria-describedby="h-msg"></textarea>
+              <p class="hint" id="h-msg">
+                Superficie indicativa, destinazione d'uso e comune: bastano per una prima
+                risposta tecnica.
+              </p>
+            </div>
+
+            <button type="submit" class="btn btn-red ct-submit">
+              Invia richiesta <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+            </button>
+
+            <!-- L'esito è annunciato agli screen reader senza rubare il focus -->
+            <p class="ct-status" id="ctStatus" role="status" aria-live="polite"></p>
+
+            <p class="ph-note ct-demo-note">
+              Demo: il modulo valida i campi ma non invia nulla. Prima della messa online va
+              collegato alla casella aziendale e completato con l'informativa privacy.
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ct {
+    background: var(--bg1);
+  }
+
+  .ct-grid {
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .ct-h {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 26px;
+    margin-bottom: 26px;
+    letter-spacing: -0.01em;
+  }
+
+  /* --- Dati --------------------------------------------------------------- */
+  .ci {
+    margin-bottom: 24px;
+  }
+  .lab {
+    font-family: var(--brand);
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .val {
+    font-size: 17px;
+    color: var(--navy);
+    font-style: normal;
+    line-height: 1.55;
+  }
+  .val a {
+    transition: color 0.25s;
+  }
+  .val a:hover {
+    color: var(--red);
+  }
+
+  /* --- Mappa schematica --------------------------------------------------- */
+  .ct-map {
+    margin: 32px 0 16px;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: #fff;
+  }
+  .map {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .ct-map figcaption {
+    padding: 12px 14px;
+    border-top: 1px solid var(--bg2);
+    text-align: center;
+  }
+
+  .map :global(.m-bg) {
+    fill: #eceef0;
+  }
+  .map :global(.m-minor path) {
+    stroke: #d7dade;
+    stroke-width: 6;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .map :global(.m-hw) {
+    stroke: #b9bec5;
+    stroke-width: 16;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .map :global(.m-hw-in) {
+    stroke: #fff;
+    stroke-width: 7;
+    fill: none;
+    stroke-linecap: round;
+  }
+  .map :global(.m-link) {
+    stroke: var(--red);
+    stroke-width: 3;
+    stroke-dasharray: 7 6;
+    fill: none;
+    opacity: 0.75;
+  }
+  .map :global(.m-node) {
+    fill: #fff;
+    stroke: #9aa1aa;
+    stroke-width: 3;
+  }
+  .map :global(.m-pin-o) {
+    fill: var(--red);
+    opacity: 0.22;
+  }
+  .map :global(.m-pin-i) {
+    fill: var(--red);
+  }
+  .map :global(.m-tx) {
+    font-family: var(--ui-font);
+    font-size: 15px;
+    fill: #6b727c;
+  }
+  .map :global(.m-tx-strong) {
+    font-family: var(--brand);
+    font-size: 18px;
+    font-weight: 600;
+    fill: var(--navy);
+  }
+  .map :global(.m-tx-hw) {
+    font-family: var(--brand);
+    font-size: 17px;
+    font-weight: 700;
+    fill: #8d949d;
+  }
+
+  .ct-map-btn {
+    width: 100%;
+  }
+
+  /* --- Form --------------------------------------------------------------- */
+  .ct-form {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 38px;
+  }
+
+  .ct-req {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: -16px;
+    margin-bottom: 24px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: var(--ui-font);
+    width: 100%;
+    background: var(--bg1);
+    border: 1px solid var(--bg2);
+    padding: 14px 15px;
+    color: var(--navy);
+    /* 16px evita lo zoom automatico su iOS al focus */
+    font-size: 16px;
+    border-radius: var(--r-sm);
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    min-height: 50px;
+  }
+
+  select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--ui) 50%),
+      linear-gradient(135deg, var(--ui) 50%, transparent 50%);
+    background-position: calc(100% - 20px) 22px, calc(100% - 14px) 22px;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 44px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--red);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(177, 55, 51, 0.16);
+  }
+
+  input[aria-invalid='true'],
+  textarea[aria-invalid='true'] {
+    border-color: var(--red);
+    background: rgba(177, 55, 51, 0.04);
+  }
+
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .err {
+    font-size: 13px;
+    color: var(--red-deep);
+    margin-top: 7px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .err::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--red);
+    /* Il colore non è l'unico indicatore: c'è anche il simbolo */
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2L1 21h22L12 2zm0 6v7m0 3v1' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E")
+      center/contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2L1 21h22L12 2zm0 6v7m0 3v1' fill='none' stroke='%23000' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E")
+      center/contain no-repeat;
+  }
+
+  .hint {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 7px;
+  }
+
+  .ct-submit {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .ct-status {
+    margin-top: 16px;
+    font-size: 14.5px;
+    font-weight: 500;
+  }
+  .ct-status.ok {
+    color: #1f6b46;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ct-status.ko {
+    color: var(--red-deep);
+  }
+
+  .ct-demo-note {
+    margin-top: 24px;
+  }
+
+  /* --- Responsive --------------------------------------------------------- */
+  @media (max-width: 920px) {
+    .ct-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .ct-form {
+      padding: 26px 22px;
+    }
+    .two {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Validazione lato client.
+   * L'invio è volutamente disattivato: la demo non deve poter spedire nulla.
+   * Per attivarlo, sostituire il blocco "esito simulato" con la fetch reale.
+   */
+  const form = document.getElementById('ctForm') as HTMLFormElement | null;
+
+  if (form) {
+    const status = document.getElementById('ctStatus')!;
+
+    const regole: Record<string, { err: string; test: (v: string) => boolean }> = {
+      'f-nome': { err: 'e-nome', test: (v) => v.trim().length >= 2 },
+      'f-az': { err: 'e-az', test: (v) => v.trim().length >= 2 },
+      'f-tel': { err: 'e-tel', test: (v) => v.replace(/[^\d+]/g, '').length >= 8 },
+      'f-mail': { err: 'e-mail', test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) },
+    };
+
+    const check = (id: string) => {
+      const el = document.getElementById(id) as HTMLInputElement;
+      const err = document.getElementById(regole[id].err)!;
+      const ok = regole[id].test(el.value);
+      el.setAttribute('aria-invalid', String(!ok));
+      err.hidden = ok;
+      return ok;
+    };
+
+    /* Si valida all'uscita dal campo, non a ogni tasto: correggere qualcuno
+       mentre sta ancora scrivendo è solo fastidioso. */
+    for (const id of Object.keys(regole)) {
+      const el = document.getElementById(id)!;
+      el.addEventListener('blur', () => {
+        if ((el as HTMLInputElement).value !== '') check(id);
+      });
+      el.addEventListener('input', () => {
+        if (el.getAttribute('aria-invalid') === 'true') check(id);
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      status.className = 'ct-status';
+      status.textContent = '';
+
+      const ids = Object.keys(regole);
+      const esiti = ids.map(check);
+      const primoErrore = ids[esiti.indexOf(false)];
+
+      if (primoErrore) {
+        status.classList.add('ko');
+        status.textContent = 'Controlla i campi evidenziati e riprova.';
+        document.getElementById(primoErrore)!.focus();
+        return;
+      }
+
+      /* --- Esito simulato (demo) --------------------------------------- */
+      const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      btn.disabled = true;
+      btn.textContent = 'Invio…';
+
+      setTimeout(() => {
+        status.classList.add('ok');
+        status.textContent =
+          'Richiesta registrata. In demo non viene inviata nessuna email.';
+        btn.disabled = false;
+        btn.innerHTML = 'Invia richiesta <span class="arr">→</span>';
+        form.reset();
+      }, 700);
+    });
+  }
+</script>

@@ -1,0 +1,470 @@
+---
+/**
+ * /progetti/[slug] — scheda di dettaglio.
+ *
+ * Nella demo esiste una sola scheda ed è un PROGETTO FITTIZIO, dichiarato
+ * tale in pagina: serve a mostrare il formato, non a rappresentare una
+ * commessa reale. Nessun dato tecnico: tutti i valori sono segnaposto.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Picture from '../../components/Picture.astro';
+import { progettoModello as p } from '../../data/progetti';
+import Icon from '../../components/Icon.astro';
+
+export function getStaticPaths() {
+  return [{ params: { slug: 'scheda-modello' } }];
+}
+---
+
+<BaseLayout
+  title="Scheda progetto (modello dimostrativo) — Prefabbricati Moioli"
+  description="Modello di scheda progetto: struttura della pagina di dettaglio di una realizzazione Prefabbricati Moioli. Contenuti dimostrativi."
+  preloadImage="shed-cantiere"
+>
+  <!-- ==================== HERO ==================== -->
+  <!-- on-dark: vedi nota in tecnoshed.astro — serve al breadcrumb -->
+  <section class="pd-hero on-dark">
+    <div class="pd-hero-img">
+      <img
+        src="/img/shed-cantiere-1800.webp"
+        srcset="/img/shed-cantiere-480.webp 480w, /img/shed-cantiere-768.webp 768w, /img/shed-cantiere-1200.webp 1200w, /img/shed-cantiere-1800.webp 1800w"
+        sizes="100vw"
+        alt="Cantiere di montaggio di una struttura prefabbricata"
+        fetchpriority="high"
+        decoding="sync"
+      />
+    </div>
+    <div class="pd-hero-grad" aria-hidden="true"></div>
+
+    <div class="wrap pd-hero-body">
+      <Breadcrumb
+        items={[
+          { label: 'Home', href: '/' },
+          { label: 'Progetti', href: '/progetti' },
+          { label: 'Scheda modello' },
+        ]}
+      />
+
+      <p class="pd-flag">Progetto dimostrativo — non è una commessa reale</p>
+      <p class="eyebrow pd-eyebrow">{p.settore}</p>
+      <h1>{p.titolo}</h1>
+      <p class="pd-client">{p.cliente} — {p.localita}</p>
+    </div>
+  </section>
+
+  <!-- ==================== SCHEDA ==================== -->
+  <section class="block pd-body">
+    <div class="wrap">
+      <p class="ph-note pd-note">
+        Questa pagina è un modello di impaginazione. Il committente è fittizio e ogni
+        valore tecnico è un segnaposto: nella versione finale i dati arrivano dall'ufficio
+        tecnico, verificati dal geometra.
+      </p>
+
+      <div class="pd-grid">
+        <div class="pd-text reveal">
+          <p class="pd-intro">{p.intro}</p>
+          {p.descrizione.map((t) => <p>{t}</p>)}
+
+          <a href={p.soluzioneHref} class="btn btn-ghost pd-btn">
+            Soluzione impiegata: {p.soluzione} <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+          </a>
+        </div>
+
+        <aside class="pd-side reveal" aria-label="Dati tecnici del progetto">
+          <h2 class="pd-side-h">Dati di progetto</h2>
+          <dl class="pd-dl">
+            <div>
+              <dt>Committente</dt>
+              <dd>{p.cliente}</dd>
+            </div>
+            <div>
+              <dt>Località</dt>
+              <dd>{p.localita}</dd>
+            </div>
+            <div>
+              <dt>Anno</dt>
+              <dd><span class="spec">{p.anno} — da commessa</span></dd>
+            </div>
+            {
+              p.scheda.map((r) => (
+                <div>
+                  <dt>{r.label}</dt>
+                  <dd><span class="spec">{r.spec}</span></dd>
+                </div>
+              ))
+            }
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FASI ==================== -->
+  <section class="block pd-fasi on-dark">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Come è andata</p>
+        <h2>Dalla progettazione alla consegna.</h2>
+      </div>
+
+      <ol class="fasi-grid stagger">
+        {
+          p.fasi.map((f) => (
+            <li>
+              <span class="num">{f.num}</span>
+              <h3>{f.titolo}</h3>
+              <p>{f.testo}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==================== GALLERY ==================== -->
+  <section class="block pd-gal">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">Immagini</p>
+        <h2>Il cantiere.</h2>
+      </div>
+
+      <div class="gal-grid stagger">
+        {
+          p.gallery.map((id, i) => (
+            <figure class:list={['gal-item', { wide: i === 0 }]}>
+              <Picture
+                id={id}
+                alt="Fotografia di cantiere di una struttura prefabbricata Moioli"
+                ratio={i === 0 ? '16/9' : '4/3'}
+                sizes="(max-width: 700px) 100vw, 50vw"
+              />
+            </figure>
+          ))
+        }
+      </div>
+
+      <p class="ph-note gal-note">
+        Nota per la revisione: fotografie dall'archivio Moioli, usate qui come esempio.
+        Nella scheda reale saranno le immagini della commessa.
+      </p>
+
+      <div class="pd-back reveal">
+        <a href="/progetti" class="btn btn-ghost">
+          <span class="arr-l"><Icon nome="freccia-sx" dim={17} /></span> Tutti i progetti
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CTA ==================== -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Contatti</p>
+          <h2>Un progetto simile in programma?</h2>
+          <p class="cta-p">Raccontaci cosa devi costruire: partiamo dai vincoli reali.</p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Richiedi un preventivo <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ==================== HERO ==================== */
+  .pd-hero {
+    position: relative;
+    min-height: 72svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--navy);
+    color: #fff;
+  }
+  .pd-hero-img {
+    position: absolute;
+    inset: 0;
+  }
+  .pd-hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 50%;
+  }
+  .pd-hero-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.74) 0%,
+      rgba(29, 42, 68, 0.4) 38%,
+      rgba(22, 32, 58, 0.9) 84%,
+      var(--navy) 100%
+    );
+  }
+  .pd-hero-body {
+    position: relative;
+    z-index: 2;
+    padding-top: 150px;
+    padding-bottom: 56px;
+    width: 100%;
+  }
+
+  /* Etichetta esplicita: in presentazione deve essere impossibile
+     scambiare questa scheda per una commessa reale. */
+  .pd-flag {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: #fff;
+    background: var(--red);
+    padding: 6px 12px;
+    border-radius: 2px;
+  }
+
+  .pd-eyebrow {
+    margin-top: 20px;
+    color: var(--red-soft);
+  }
+
+  .pd-hero h1 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(36px, 5.6vw, 72px);
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    margin: 14px 0 12px;
+    color: #fff;
+  }
+
+  .pd-client {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* ==================== CORPO ==================== */
+  .pd-body {
+    background: var(--white);
+  }
+
+  .pd-note {
+    margin-bottom: 48px;
+  }
+
+  .pd-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.75fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .pd-intro {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(19px, 2.2vw, 24px);
+    line-height: 1.4;
+    color: var(--navy);
+    margin-bottom: 26px;
+    max-width: 40ch;
+  }
+
+  .pd-text p {
+    font-size: 16.5px;
+    margin-bottom: 16px;
+    max-width: 62ch;
+  }
+
+  .pd-btn {
+    margin-top: 18px;
+  }
+
+  .pd-side {
+    background: var(--bg1);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 30px 28px;
+    position: sticky;
+    top: 110px;
+  }
+
+  .pd-side-h {
+    font-family: var(--brand);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 22px;
+  }
+
+  .pd-dl {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .pd-dl > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .pd-dl > div:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  .pd-dl dt {
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-2);
+  }
+  .pd-dl dd {
+    font-size: 15px;
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  /* ==================== FASI ==================== */
+  .pd-fasi {
+    background: var(--navy);
+  }
+  .fasi-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .fasi-grid li {
+    background: var(--navy);
+    padding: 36px 26px;
+    transition: background 0.4s var(--ease);
+  }
+  .fasi-grid li:hover {
+    background: var(--navy-deep);
+  }
+  .fasi-grid .num {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--red-soft);
+  }
+  .fasi-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 18px;
+    margin: 14px 0 8px;
+  }
+  .fasi-grid p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  /* ==================== GALLERY ==================== */
+  .pd-gal {
+    background: var(--bg1);
+  }
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .gal-item {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--r-md);
+  }
+  .gal-item.wide {
+    grid-column: span 2;
+  }
+  .gal-item :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+  }
+  .gal-item:hover :global(.frame img) {
+    transform: scale(1.04);
+  }
+  .gal-note {
+    margin-top: 30px;
+  }
+  .pd-back {
+    margin-top: 36px;
+  }
+  .arr-l {
+    transition: transform 0.35s var(--ease);
+    display: inline-block;
+  }
+  .pd-back .btn:hover .arr-l {
+    transform: translateX(-5px);
+  }
+
+  /* ==================== CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==================== RESPONSIVE ==================== */
+  @media (max-width: 920px) {
+    .pd-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .pd-side {
+      position: static;
+    }
+    .fasi-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .pd-hero {
+      min-height: auto;
+    }
+    .pd-hero-body {
+      padding-top: 122px;
+      padding-bottom: 44px;
+    }
+    .fasi-grid,
+    .gal-grid {
+      grid-template-columns: 1fr;
+    }
+    .gal-item.wide {
+      grid-column: span 1;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>
