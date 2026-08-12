@@ -178,97 +178,54 @@ si può ripetere lo stesso lavoro sulle rispettive schede.
 
 ---
 
-## 5. Progetti — `src/data/progetti.ts`
+## 5. Realizzazioni — `src/data/progetti.ts`
+
+Rifatte sul materiale fotografico fornito dal cliente
+(`CARTELLA IMMAGINI/REALIZZAZIONI/da catalogo`, non versionata).
+Elaborazione: `npm run realizzazioni`.
+
+**25 realizzazioni**, ognuna con pagina propria e galleria.
 
 | Blocco | Stato | Note |
 |---|---|---|
-| 6 committenti, superfici, località | `ready` | Confermati |
-| Abbinamento foto ↔ commessa | `needs-client-approval` | Foto reali Moioli, ma la corrispondenza con la singola commessa non risulta dagli archivi. Dichiarato in pagina |
-| Testo introduttivo di pagina | `needs-client-approval` | Nuovo |
+| Fotografie | `ready` | Reali, d'archivio Moioli. 658 derivate WebP responsive |
+| Nomi di **6** realizzazioni | `needs-client-approval` | Autoindustriale, Centro Ufficio, Cingol Car, Frigor Trasporti, K22, Sacar. Sono i nomi delle cartelle d'archivio: va confermato che siano la denominazione da esporre al pubblico |
+| Nomi delle altre **19** | `placeholder` dichiarato | «Realizzazione 01…19» con segnaposto in evidenza sia in griglia sia nella scheda |
+| Superficie, località, anno, tipologia, finitura | `placeholder` | **Non forniti per nessuna delle 25.** Sei righe di segnaposto per scheda |
 
-### Scheda di dettaglio `/progetti/scheda-modello`
+### Cosa serve, in ordine
 
-**L'intera pagina è un modello dimostrativo**, con committente fittizio e
-etichetta rossa in evidenza nell'hero.
+1. **I 19 nomi mancanti.** Le fotografie sono già in pagina: arriva il nome, sparisce il segnaposto.
+2. **Conferma dei 6 nomi d'archivio.** Alcuni sembrano ragioni sociali (Sacar, Cingol Car, Frigor Trasporti), altri descrizioni di destinazione d'uso (Autoindustriale, Centro Ufficio), uno un nome di progetto (K22). Vanno uniformati.
+3. **Dati di commessa**: superficie, comune, anno, tipologia di copertura impiegata, finitura.
 
-| Blocco | Stato |
-|---|---|
-| Committente "Committente dimostrativo" | `placeholder` dichiarato |
-| Tre paragrafi descrittivi | `needs-client-approval` |
-| Tutti i 6 dati di progetto in scheda | `needs-geometra` (segnaposto) |
-| Le 4 fasi | `needs-client-approval` |
-| Immagini | `placeholder` — foto d'archivio usate come esempio |
+> Nelle fotografie sono leggibili alcune insegne — SACAR, IMEC, «il gigante», RAB.
+> Possono aiutare a ricostruire le denominazioni mancanti, ma non le ho usate come
+> nome: un'insegna in facciata non è necessariamente il committente della commessa.
 
-Nella versione finale ogni progetto avrà la propria scheda: la demo ne mostra
-una sola, come da perimetro concordato.
+### Scelta di impianto
+
+I sei committenti con dati verificati (Sanpellegrino, Arcese, Metelli, Ravago, SIAE,
+Pneumax) **non sono più in questa pagina**: vivono in `/azienda/referenze`, dove il
+dato è il nome. Qui vive il costruito, dove il dato è la fotografia. Ogni cosa dove
+il suo contenuto è reale.
 
 ---
 
-## 5-bis. Azienda — `src/data/azienda.ts`
+## 5-ter. Rivestimenti — `/soluzioni/rivestimenti`
 
-Sezione a tre pagine con sottomenu, impostata sul profilo aziendale di
-Baraclit (chi siamo con i numeri → referenze per settore → riconoscimenti e
-network) e adattata a ciò che di Moioli è documentato.
-
-> **Nota di perimetro.** Il brief iniziale escludeva esplicitamente le
-> referenze. La sezione è stata aggiunta su richiesta successiva del cliente.
-
-### `/azienda` — chi siamo
+**74 campioni di finitura** dalle pagine di catalogo fornite dal cliente.
 
 | Blocco | Stato | Note |
 |---|---|---|
-| Storia e paragrafi introduttivi | `ready` | Riformulati dai testi dell'index esistente |
-| Numeri: 1972, 700.000 mq, 100+ committenti, 50+ anni | `ready` | Confermati |
-| **Superficie stabilimento** | `placeholder` | Baraclit dichiara 300.000 mq; di Moioli non abbiamo il dato. Riquadro dichiarato |
-| **Organico** | `placeholder` | Baraclit dichiara 350 dipendenti; di Moioli non abbiamo il dato |
-| Fatturato | **non inserito** | Baraclit lo dichiara. Per Moioli non è stato fornito e non è stato previsto un riquadro: si aggiunge solo se il cliente vuole esporlo |
-| Sistema proprietario (Stegos) | `ready` | È l'equivalente di quello che per Baraclit è Aliant. Fonte: catalogo ufficiale |
-| Stabilimento e indirizzo | `ready` | Confermati |
-| Le quattro tappe | `ready` | Già in uso in home |
-| **Video istituzionale** | `placeholder` | Baraclit ha «Baraclit in 240 secondi». Riquadro previsto, video da girare o fornire |
+| Fotografie dei campioni | `ready` | Riprese di superficie reali, ~648×648px |
+| **Nome e codice di ogni finitura** | `placeholder` | **Nessuno fornito.** Senza codice un campione non è ordinabile: è il dato che serve per primo |
+| Raggruppamento per famiglia | `placeholder` | Il catalogo li divide su dieci pagine, ma non è detto che corrispondano a famiglie (graniglia, lavato, sabbiato…). Da chiarire |
+| Testi di pagina | `needs-client-approval` | Redazionali |
 
-### `/azienda/referenze`
-
-| Blocco | Stato | Note |
-|---|---|---|
-| I dieci nomi dei committenti | `ready` | Già presenti nei materiali Moioli |
-| **Attribuzione di settore** | `needs-client-approval` | È una nostra classificazione in sei settori. Da confermare |
-| **Loghi dei committenti** | `placeholder` | Baraclit mostra i loghi. Di Moioli non li abbiamo: al loro posto un riquadro con il nome, delle stesse proporzioni, così i loghi veri entreranno senza rimpaginare |
-| Completezza dell'elenco | `placeholder` dichiarato | Dieci nomi sui più di cento committenti. Lista completa da fornire |
-
-Il filtro per settore funziona ed è accessibile: bottoni con `aria-pressed`,
-esito annunciato in una regione `aria-live`. Senza JavaScript la griglia resta
-completa — nessun contenuto sparisce mai per errore.
-
-### `/azienda/riconoscimenti`
-
-**È la pagina più scoperta del sito.** Di Moioli non è stato fornito nessun
-riconoscimento, nessuna certificazione e nessuna appartenenza associativa.
-
-La struttura c'è ed è quella giusta, ma i contenuti vanno raccolti: la pagina
-**si dichiara apertamente incompleta** e ogni riquadro indica il documento che
-serve. In presentazione diventa una lista della spesa, che è più utile di una
-pagina riempita con voci verosimili.
-
-| Gruppo | Voci | Stato |
-|---|---|---|
-| Certificazioni di prodotto | DoP, marcatura CE, classificazione al fuoco | `placeholder` |
-| Certificazioni aziendali | ISO 9001 / 14001 / 45001 | `placeholder` — **da verificare se esistono** |
-| Riconoscimenti | — | `placeholder` — nessuno fornito |
-| Associazioni e network | Categoria, collaborazioni, territorio | `placeholder` |
-
-Unico riferimento documentato: il «Materiale DOP» citato fra i download del
-sito precedente. Le Dichiarazioni di Prestazione quindi esistono, ma vanno
-recuperate e verificate.
-
-**Cosa serve dal cliente, in ordine di utilità:**
-1. Le DoP e gli estremi della marcatura CE
-2. Se esistono, le certificazioni ISO
-3. Appartenenze associative (es. associazione di categoria dei prefabbricatori)
-4. Eventuali premi o progetti segnalati
-
-Se dopo la raccolta la pagina resta troppo magra, l'alternativa è **assorbirla
-dentro `/azienda`** come blocco finale invece di tenerla come pagina a sé.
+**Collocazione:** dentro `/soluzioni`, in un gruppo «Finiture» dichiarato a parte
+dalle sette coperture. Struttura e facciata si scelgono nello stesso momento, ma
+un rivestimento non è una tipologia di copertura e la tassonomia resta pulita.
 
 ---
 

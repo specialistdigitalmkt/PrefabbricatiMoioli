@@ -1,79 +1,97 @@
 ---
 /**
- * /progetti — griglia semplice.
- * Le sei commesse hanno dati verificati ma non hanno una scheda di dettaglio:
- * non sono link, per non portare a pagine inesistenti.
- * La scheda modello è l'unica navigabile ed è dichiarata come dimostrativa.
+ * /progetti — le realizzazioni fotografate.
+ *
+ * Ogni scheda porta a una pagina di dettaglio con la propria galleria.
+ * Le realizzazioni ancora senza nome sono marcate: il titolo mancante è
+ * dichiarato, non inventato.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import Picture from '../../components/Picture.astro';
-import { progetti, progettoModello } from '../../data/progetti';
 import Icon from '../../components/Icon.astro';
+import { realizzazioni, paginaProgetti, etichetta } from '../../data/progetti';
+
+const conNome = realizzazioni.filter((r) => !r.numerata);
+const daNominare = realizzazioni.filter((r) => r.numerata);
 ---
 
 <BaseLayout
-  title="Progetti realizzati — Prefabbricati Moioli"
-  description="Una selezione delle strutture prefabbricate realizzate da Moioli per gruppi industriali e logistici del Nord Italia. Oltre 700.000 mq costruiti."
+  title="Realizzazioni — Prefabbricati Moioli"
+  description="Le strutture prefabbricate realizzate da Moioli: capannoni industriali, poli logistici e sedi direzionali nel Nord Italia. Oltre 700.000 mq costruiti."
 >
   <PageHero
-    eyebrow="Realizzazioni"
-    title="Oltre 700.000 mq costruiti."
-    lead="Più di 100 aziende ci hanno affidato i loro stabilimenti. Qui una selezione dei progetti realizzati per i principali gruppi industriali e logistici del Nord Italia."
-    crumbs={[{ label: 'Home', href: '/' }, { label: 'Progetti' }]}
+    eyebrow={paginaProgetti.eyebrow}
+    title={paginaProgetti.titolo}
+    lead={paginaProgetti.lead}
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Realizzazioni' }]}
   />
 
   <section class="block prj">
     <div class="wrap">
-      <div class="prj-grid stagger">
-        <!-- Scheda modello: unica navigabile, dichiarata come dimostrativa -->
-        <article class="prj-card is-model">
-          <a href={`/progetti/${progettoModello.slug}`}>
-            <Picture
-              id={progettoModello.cover}
-              alt="Montaggio degli elementi prefabbricati in cantiere"
-              ratio="4/3.5"
-              sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
-            />
-            <div class="tint" aria-hidden="true"></div>
-            <span class="prj-badge">Scheda modello</span>
-            <span class="prj-arrow"><Icon nome="freccia-dx" dim={18} /></span>
-            <div class="info">
-              <p class="cat">{progettoModello.settore}</p>
-              <h2>{progettoModello.titolo}</h2>
-              <p class="mq">Esempio di scheda di dettaglio</p>
-              <p class="loc">{progettoModello.localita}</p>
-            </div>
-          </a>
-        </article>
-
-        {
-          progetti.map((p) => (
-            <article class="prj-card">
-              <Picture
-                id={p.img}
-                alt={p.alt}
-                ratio="4/3.5"
-                sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
-              />
-              <div class="tint" aria-hidden="true" />
-              <div class="info">
-                <p class="cat">{p.settore}</p>
-                <h2>{p.cliente}</h2>
-                <p class="mq">{p.superficie}</p>
-                <p class="loc">{p.localita}</p>
-              </div>
-            </article>
-          ))
-        }
+      <!-- ============ CON NOME ============ -->
+      <div class="grp-h reveal">
+        <h2>Con denominazione</h2>
+        <span class="grp-n">{conNome.length}</span>
       </div>
 
-      <p class="ph-note prj-note">
-        Nota per la revisione: nomi committente, superfici e località sono dati verificati.
-        Le immagini sono fotografie reali di cantieri Moioli, ma l'abbinamento fotografia ↔
-        commessa non è documentato negli archivi forniti ed è da confermare. Nella versione
-        finale ogni progetto avrà la propria scheda di dettaglio.
-      </p>
+      <ul class="prj-grid stagger">
+        {
+          conNome.map((r) => (
+            <li class="prj-card">
+              <a href={`/progetti/${r.slug}`}>
+                <Picture
+                  id={r.cover}
+                  alt={`${etichetta(r)} — struttura prefabbricata realizzata da Moioli`}
+                  ratio="4/3.5"
+                  sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
+                />
+                <div class="tint" aria-hidden="true" />
+                <span class="prj-arrow"><Icon nome="freccia-dx" dim={18} /></span>
+                <div class="info">
+                  <h3>{etichetta(r)}</h3>
+                  <p class="mq">{r.totaleFoto} fotografie</p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- ============ DA NOMINARE ============ -->
+      <div class="grp-h grp-h2 reveal">
+        <h2>Nome da assegnare</h2>
+        <span class="grp-n">{daNominare.length}</span>
+        <p class="grp-t">
+          Realizzazioni reali, fotografate. L’archivio non riporta la denominazione:
+          quando arriva, sostituisce il segnaposto.
+        </p>
+      </div>
+
+      <ul class="prj-grid stagger">
+        {
+          daNominare.map((r) => (
+            <li class="prj-card is-anon">
+              <a href={`/progetti/${r.slug}`}>
+                <Picture
+                  id={r.cover}
+                  alt="Struttura prefabbricata realizzata da Prefabbricati Moioli"
+                  ratio="4/3.5"
+                  sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
+                />
+                <div class="tint" aria-hidden="true" />
+                <span class="prj-arrow"><Icon nome="freccia-dx" dim={18} /></span>
+                <div class="info">
+                  <h3>{etichetta(r)}</h3>
+                  <span class="spec spec-dark">NOME — da assegnare</span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="ph-note prj-note">{paginaProgetti.nota}</p>
     </div>
   </section>
 
@@ -82,7 +100,7 @@ import Icon from '../../components/Icon.astro';
       <div class="cta-inner reveal">
         <div>
           <p class="eyebrow">Il prossimo</p>
-          <h2>Il tuo progetto può essere il prossimo.</h2>
+          <h2>Il tuo stabilimento può essere il prossimo.</h2>
           <p class="cta-p">
             Dalla progettazione strutturale alla consegna, con un solo interlocutore.
           </p>
@@ -100,7 +118,42 @@ import Icon from '../../components/Icon.astro';
     background: var(--bg1);
   }
 
+  /* --- Testate di gruppo ------------------------------------------------ */
+  .grp-h {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .grp-h2 {
+    margin-top: 72px;
+  }
+  .grp-h h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(22px, 2.6vw, 30px);
+    letter-spacing: -0.02em;
+  }
+  .grp-n {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+  }
+  .grp-t {
+    flex-basis: 100%;
+    font-size: 14.5px;
+    color: var(--text-2);
+    max-width: 62ch;
+    margin-top: 4px;
+  }
+
+  /* --- Griglia ----------------------------------------------------------- */
   .prj-grid {
+    list-style: none;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 22px;
@@ -112,15 +165,18 @@ import Icon from '../../components/Icon.astro';
     overflow: hidden;
     background: var(--navy);
   }
+  .prj-card a {
+    display: block;
+  }
   .prj-card :global(.frame) {
     border-radius: var(--r-md);
   }
   .prj-card :global(.frame img) {
     transition: transform 0.9s var(--ease);
-    filter: saturate(0.82);
+    filter: saturate(0.9);
   }
   .prj-card:hover :global(.frame img) {
-    transform: scale(1.07);
+    transform: scale(1.06);
   }
 
   .prj-card .tint {
@@ -128,19 +184,12 @@ import Icon from '../../components/Icon.astro';
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(22, 32, 58, 0.18) 0%,
-      rgba(22, 32, 58, 0.1) 40%,
-      rgba(15, 22, 42, 0.93) 100%
+      rgba(22, 32, 58, 0.14) 0%,
+      rgba(22, 32, 58, 0.08) 38%,
+      rgba(15, 22, 42, 0.9) 100%
     );
     transition: background 0.5s;
-  }
-  .prj-card:hover .tint {
-    background: linear-gradient(
-      180deg,
-      rgba(22, 32, 58, 0.05) 0%,
-      rgba(22, 32, 58, 0.05) 40%,
-      rgba(15, 22, 42, 0.95) 100%
-    );
+    pointer-events: none;
   }
 
   .prj-card .info {
@@ -149,59 +198,32 @@ import Icon from '../../components/Icon.astro';
     right: 0;
     bottom: 0;
     z-index: 3;
-    padding: 24px;
-    transform: translateY(8px);
+    padding: 22px;
+    transform: translateY(6px);
     transition: transform 0.45s var(--ease);
+    pointer-events: none;
   }
   .prj-card:hover .info {
     transform: translateY(0);
   }
 
-  .prj-card .cat {
-    font-family: var(--brand);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    font-weight: 600;
-  }
-  .prj-card h2 {
+  .prj-card h3 {
     font-family: var(--brand);
     font-weight: 600;
     color: #fff;
-    font-size: 21px;
-    margin: 8px 0 4px;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
   }
   .prj-card .mq {
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 14px;
-    font-weight: 500;
-  }
-  .prj-card .loc {
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 255, 255, 0.68);
     font-size: 13px;
+    font-variant-numeric: tabular-nums;
   }
 
-  /* --- Scheda modello ---------------------------------------------------- */
-  .is-model {
-    outline: 2px solid var(--red);
-    outline-offset: -2px;
-  }
-
-  .prj-badge {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    z-index: 4;
-    background: var(--red);
-    color: #fff;
-    font-family: var(--brand);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 6px 11px;
-    border-radius: 2px;
+  /* Le schede senza nome restano riconoscibili anche a colpo d'occhio */
+  .is-anon h3 {
+    color: rgba(255, 255, 255, 0.9);
   }
 
   .prj-arrow {
@@ -221,15 +243,16 @@ import Icon from '../../components/Icon.astro';
     transition: 0.45s var(--ease);
     background: rgba(15, 22, 42, 0.3);
     backdrop-filter: blur(4px);
+    pointer-events: none;
   }
-  .is-model:hover .prj-arrow,
-  .is-model a:focus-visible .prj-arrow {
+  .prj-card:hover .prj-arrow,
+  .prj-card a:focus-visible ~ .prj-arrow {
     opacity: 1;
     transform: rotate(0);
   }
 
   .prj-note {
-    margin-top: 40px;
+    margin-top: 48px;
   }
 
   /* --- CTA --------------------------------------------------------------- */
@@ -259,6 +282,9 @@ import Icon from '../../components/Icon.astro';
   @media (max-width: 920px) {
     .prj-grid {
       grid-template-columns: 1fr 1fr;
+    }
+    .grp-h2 {
+      margin-top: 52px;
     }
   }
   @media (max-width: 600px) {

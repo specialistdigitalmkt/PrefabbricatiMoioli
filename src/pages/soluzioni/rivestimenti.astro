@@ -1,0 +1,226 @@
+---
+/**
+ * /soluzioni/rivestimenti — le finiture di facciata.
+ *
+ * Non è una tipologia di copertura: è la finitura del pannello. Sta dentro
+ * Soluzioni ma in un gruppo suo, perché un progettista sceglie struttura e
+ * finitura nello stesso momento.
+ *
+ * I 74 campioni vengono dalle pagine di catalogo fornite dal cliente. Sono
+ * fotografie di superficie reali; NON hanno però né nome né codice, e senza
+ * quelli un campione non è ordinabile. La pagina lo dichiara.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Picture from '../../components/Picture.astro';
+import Icon from '../../components/Icon.astro';
+import { rivestimenti } from '../../data/progetti';
+---
+
+<BaseLayout
+  title="Rivestimenti e finiture — Prefabbricati Moioli"
+  description="Le finiture di facciata dei pannelli prefabbricati Moioli: graniglie, lavati, superfici a vista. Campionario completo."
+>
+  <PageHero
+    eyebrow="Soluzioni · Finiture"
+    title="La facciata non è solo una chiusura."
+    lead="Il pannello prefabbricato arriva finito dallo stabilimento: la superficie che si vede è quella che esce dal cassero. Qui il campionario delle finiture disponibili."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Soluzioni', href: '/soluzioni' },
+      { label: 'Rivestimenti' },
+    ]}
+  />
+
+  <section class="block riv">
+    <div class="wrap">
+      <div class="riv-h reveal">
+        <div>
+          <h2>Campionario</h2>
+          <p>
+            Ogni riquadro è una fotografia di superficie reale, ripresa dal campionario
+            aziendale. La resa definitiva dipende da granulometria, lavorazione e
+            orientamento del pannello in opera.
+          </p>
+        </div>
+        <span class="riv-n">{rivestimenti.length} finiture</span>
+      </div>
+
+      <ul class="riv-grid stagger">
+        {
+          rivestimenti.map((r, i) => (
+            <li class="riv-card">
+              <Picture
+                id={r.id}
+                alt={`Campione di finitura ${String(i + 1).padStart(2, '0')}`}
+                ratio="1/1"
+                sizes="(max-width: 600px) 45vw, (max-width: 1000px) 30vw, 16vw"
+              />
+              <div class="riv-lab">
+                <span class="riv-i">{String(i + 1).padStart(2, '0')}</span>
+                <span class="spec riv-spec">NOME — da catalogo</span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="ph-note riv-nota">
+        Nota per la revisione: i campioni sono fotografie reali del campionario Moioli,
+        ma l’archivio non riporta né la denominazione né il codice di ciascuna finitura.
+        Senza quelli un campione non è ordinabile: prima della messa online serve
+        l’elenco dall’ufficio tecnico, con l’eventuale raggruppamento per famiglia
+        (graniglia, lavato, sabbiato e simili).
+      </p>
+    </div>
+  </section>
+
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">Campioni</p>
+          <h2>Vuoi vedere la finitura dal vero?</h2>
+          <p class="cta-p">
+            Il colore a monitor non è il colore in cantiere. Su richiesta forniamo i
+            campioni fisici.
+          </p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Richiedi i campioni <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .riv {
+    background: var(--bg1);
+  }
+
+  .riv-h {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding-bottom: 22px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .riv-h h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(24px, 2.8vw, 32px);
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .riv-h p {
+    font-size: 15px;
+    color: var(--text-2);
+    max-width: 60ch;
+  }
+  .riv-n {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--red);
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Muro di campioni: la griglia fitta è il punto — si confrontano a colpo
+     d'occhio, come sfogliando un campionario fisico. */
+  .riv-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+  }
+
+  .riv-card {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+  .riv-card:hover {
+    border-color: var(--navy);
+    box-shadow: var(--sh-lift);
+    transform: translateY(-3px);
+  }
+  .riv-card :global(.frame) {
+    border-radius: 0;
+  }
+
+  .riv-lab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 10px 12px 12px;
+  }
+  .riv-i {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--navy);
+    font-variant-numeric: tabular-nums;
+  }
+  .riv-spec {
+    font-size: 10px;
+    padding: 1px 5px;
+  }
+
+  .riv-nota {
+    margin-top: 44px;
+  }
+
+  /* --- CTA --------------------------------------------------------------- */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 1100px) {
+    .riv-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  @media (max-width: 700px) {
+    .riv-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .riv-spec {
+      display: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .riv-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

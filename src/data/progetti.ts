@@ -1,137 +1,78 @@
 /**
- * Portfolio.
+ * Realizzazioni.
  *
- * Nomi cliente, superfici e località: dati confermati come verificati.
- * L'ABBINAMENTO FOTO ↔ PROGETTO è invece da confermare: le immagini sono
- * fotografie reali di cantieri Moioli, ma la corrispondenza con la singola
- * commessa non è documentata negli asset forniti.
- * La cosa è dichiarata in pagina e tracciata in CONTENT-STATUS.md.
+ * Le schede sono costruite sul materiale fotografico fornito dal cliente
+ * (`CARTELLA IMMAGINI/REALIZZAZIONI/da catalogo`), elaborato da
+ * `npm run realizzazioni`. L'elenco tecnico — quali immagini, in quali
+ * tagli — sta in `realizzazioni-generate.json` e NON si modifica a mano:
+ * si rigenera.
+ *
+ * Qui si tiene solo ciò che è redazionale: titoli, settori, dati di commessa.
+ *
+ * STATO DEI CONTENUTI
+ * - Sei realizzazioni hanno un nome di cartella (Autoindustriale, Centro
+ *   Ufficio, Cingol Car, Frigor Trasporti, K22, Sacar). Il nome è quello
+ *   dato dall'archivio: va confermato che sia la denominazione da esporre.
+ * - Diciannove non hanno ancora un nome: la scheda lo dichiara con un
+ *   segnaposto visibile invece di inventarlo.
+ * - NESSUNA ha superficie, località o anno: quei dati non sono stati
+ *   forniti e restano segnaposto.
+ *
+ * I committenti con dati verificati (Sanpellegrino, Arcese, Metelli, Ravago,
+ * SIAE, Pneumax) vivono in /azienda/referenze, dove il dato è il nome. Qui
+ * vive il costruito, dove il dato è la fotografia.
  */
+import generate from './realizzazioni-generate.json';
 
-export type Progetto = {
+export type FotoGalleria = { id: string; ratio: number };
+
+export type Realizzazione = {
   slug: string;
-  cliente: string;
-  settore: string;
-  superficie: string;
-  localita: string;
-  img: string;
-  alt: string;
-  /** true = scheda dimostrativa, non una commessa reale. */
-  dimostrativo?: boolean;
+  /** null = nome non ancora assegnato, la pagina lo dichiara */
+  titolo: string | null;
+  numerata: boolean;
+  cover: string;
+  coverRatio: number;
+  galleria: FotoGalleria[];
+  totaleFoto: number;
 };
 
-export const progetti: Progetto[] = [
-  {
-    slug: 'sanpellegrino',
-    cliente: 'Sanpellegrino',
-    settore: 'Industria alimentare',
-    superficie: '65.000 mq',
-    localita: 'Madone (BG)',
-    img: 'prj-01',
-    alt: 'Vista aerea di uno stabilimento industriale prefabbricato',
-  },
-  {
-    slug: 'arcese-logistica',
-    cliente: 'Arcese Logistica',
-    settore: 'Logistica',
-    superficie: '51.000 mq',
-    localita: 'Basiano (MI)',
-    img: 'prj-03',
-    alt: 'Capannone logistico prefabbricato in cemento armato',
-  },
-  {
-    slug: 'metelli',
-    cliente: 'Metelli S.p.A.',
-    settore: 'Automotive',
-    superficie: '25.968 mq',
-    localita: 'Cologne (BS)',
-    img: 'prj-04',
-    alt: 'Struttura industriale prefabbricata a più campate',
-  },
-  {
-    slug: 'ravago-italia',
-    cliente: 'Ravago Italia',
-    settore: 'Chimica',
-    superficie: '14.000 mq',
-    localita: 'Mornico al Serio (BG)',
-    img: 'prj-02',
-    alt: 'Edificio produttivo prefabbricato visto dall’alto',
-  },
-  {
-    slug: 'siae-microelettronica',
-    cliente: 'SIAE Microelettronica',
-    settore: 'Elettronica',
-    superficie: '7.000 mq',
-    localita: 'Cologno Monzese (MI)',
-    img: 'prj-07',
-    alt: 'Interno di un edificio industriale prefabbricato',
-  },
-  {
-    slug: 'pneumax',
-    cliente: 'Pneumax S.p.A.',
-    settore: 'Meccanica',
-    superficie: '5.500 mq',
-    localita: 'Lurano (BG)',
-    img: 'prj-08',
-    alt: 'Copertura industriale prefabbricata in fase di completamento',
-  },
-];
+export const realizzazioni: Realizzazione[] = generate.realizzazioni;
+
+/** Campioni di rivestimento, dalle pagine di catalogo. */
+export const rivestimenti: { id: string }[] = generate.rivestimenti;
+
+export const getRealizzazione = (slug: string) =>
+  realizzazioni.find((r) => r.slug === slug);
+
+/** Etichetta da mostrare: il nome vero, oppure la sua assenza dichiarata. */
+export const etichetta = (r: Realizzazione) =>
+  r.titolo ?? `Realizzazione ${r.slug.replace('realizzazione-', '')}`;
 
 /**
- * Scheda modello.
- * Progetto FITTIZIO, dichiarato tale in pagina. Serve a mostrare il formato
- * della scheda di dettaglio, non a rappresentare una commessa reale.
- * Nessun dato numerico: tutto placeholder.
+ * Testi della pagina indice.
  */
-export const progettoModello = {
-  slug: 'scheda-modello',
-  cliente: 'Committente dimostrativo',
-  titolo: 'Nuovo polo produttivo',
-  settore: 'Progetto dimostrativo',
-  localita: 'Provincia di Bergamo',
-  anno: 'ANNO',
-  soluzione: 'Tecnoshed',
-  soluzioneHref: '/soluzioni/tecnoshed',
-  intro:
-    'Questa scheda è un modello di impaginazione. I contenuti descrittivi mostrano come si presenta un progetto completo; tutti i valori tecnici sono segnaposto in attesa dei dati reali.',
-  descrizione: [
-    'La commessa riguarda un edificio produttivo a campata unica con annesso corpo uffici, realizzato con struttura prefabbricata in cemento armato precompresso e copertura a shed.',
-    'La scelta della copertura nasce da una richiesta precisa della committenza: portare luce naturale uniforme sul piano di lavoro riducendo il ricorso all’illuminazione artificiale nelle ore centrali della giornata.',
-    'La fornitura è stata gestita in modalità chiavi in mano, con un unico interlocutore dalla progettazione strutturale al collaudo.',
-  ],
-  scheda: [
+export const paginaProgetti = {
+  eyebrow: 'Realizzazioni',
+  titolo: 'Oltre 700.000 mq costruiti.',
+  lead: 'Più di cento aziende ci hanno affidato i loro stabilimenti. Qui il costruito: capannoni industriali, poli logistici, sedi direzionali.',
+  nota: 'Nota per la revisione: le fotografie sono di archivio Moioli e le realizzazioni sono reali. Per sei di esse l’archivio riporta già il nome; per le altre il nome è da assegnare. Superficie, località e anno non sono stati forniti per nessuna e restano segnaposto.',
+} as const;
+
+/**
+ * Testi della scheda di dettaglio.
+ * Gli stessi per tutte: finché non arrivano i dati di commessa, ogni scheda
+ * dice le stesse cose e mostra le proprie fotografie.
+ */
+export const schedaDettaglio = {
+  datiTitolo: 'Dati di progetto',
+  dati: [
+    { label: 'Committente', spec: 'NOME — da archivio' },
+    { label: 'Località', spec: 'COMUNE — da commessa' },
+    { label: 'Anno', spec: 'ANNO — da commessa' },
     { label: 'Superficie coperta', spec: 'SUPERFICIE — da commessa' },
-    { label: 'Luce netta', spec: 'LUCE NETTA — da catalogo' },
-    { label: 'Altezza sottotrave', spec: 'ALTEZZA — da verifica geometra' },
-    { label: 'Interasse pilastri', spec: 'INTERASSE — da catalogo' },
-    { label: 'Tempi di montaggio', spec: 'DURATA — da commessa' },
-    { label: 'Classificazione', spec: 'DA VERIFICA GEOMETRA' },
+    { label: 'Soluzione impiegata', spec: 'TIPOLOGIA — da ufficio tecnico' },
+    { label: 'Rivestimento', spec: 'FINITURA — da ufficio tecnico' },
   ],
-  fasi: [
-    {
-      num: '01',
-      titolo: 'Progettazione',
-      testo:
-        'Dimensionamento strutturale e verifica dei vincoli urbanistici insieme al progettista incaricato.',
-    },
-    {
-      num: '02',
-      titolo: 'Produzione',
-      testo:
-        'Realizzazione degli elementi nello stabilimento di Bagnatica, con controllo dimensionale in linea.',
-    },
-    {
-      num: '03',
-      titolo: 'Montaggio',
-      testo:
-        'Posa in opera con maestranze interne e coordinamento delle lavorazioni di completamento.',
-    },
-    {
-      num: '04',
-      titolo: 'Consegna',
-      testo: 'Verifica finale, documentazione e consegna della struttura al committente.',
-    },
-  ],
-  gallery: ['prj-05', 'prj-06', 'prj-09'],
-  cover: 'shed-cantiere',
+  nota: 'Nota per la revisione: le fotografie sono reali. I dati di commessa non sono stati forniti — ogni riquadro in monospazio indica esattamente il dato che serve.',
 } as const;

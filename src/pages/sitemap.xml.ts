@@ -3,18 +3,27 @@
  * Elenca solo le route realmente esistenti: niente pagine fantasma.
  */
 import type { APIRoute } from 'astro';
+import { realizzazioni } from '../data/progetti';
 
 const ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'monthly' },
   { path: '/soluzioni', priority: '0.9', changefreq: 'monthly' },
   { path: '/soluzioni/tecnoshed', priority: '0.9', changefreq: 'monthly' },
   { path: '/soluzioni/stegos', priority: '0.9', changefreq: 'monthly' },
+  { path: '/soluzioni/rivestimenti', priority: '0.8', changefreq: 'yearly' },
   { path: '/progetti', priority: '0.8', changefreq: 'monthly' },
   { path: '/azienda', priority: '0.8', changefreq: 'yearly' },
   { path: '/azienda/referenze', priority: '0.6', changefreq: 'yearly' },
   { path: '/azienda/riconoscimenti', priority: '0.5', changefreq: 'yearly' },
-  { path: '/progetti/scheda-modello', priority: '0.5', changefreq: 'yearly' },
   { path: '/contatti', priority: '0.7', changefreq: 'yearly' },
+
+  /* Le schede di realizzazione si aggiungono da sé: nessun elenco da tenere
+     allineato a mano quando ne arriva una nuova. */
+  ...realizzazioni.map((r) => ({
+    path: `/progetti/${r.slug}`,
+    priority: r.numerata ? '0.4' : '0.6',
+    changefreq: 'yearly',
+  })),
 ];
 
 export const GET: APIRoute = ({ site }) => {

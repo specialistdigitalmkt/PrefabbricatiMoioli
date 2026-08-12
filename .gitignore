@@ -14,6 +14,13 @@ node_modules/
 .DS_Store
 Thumbs.db
 
+# Materiale sorgente fornito dal cliente: centinaia di MB di originali.
+# Le derivate ottimizzate finiscono in public/img e sono quelle versionate.
+CARTELLA IMMAGINI/
+Cataloghi tecnici/
+Brand kit/
+brand-kit-moioli.zip
+
 # Le derivate delle immagini si rigenerano con `npm run images` dagli
 # originali in ../moioli-site/assets, che NON stanno in questo repository.
 # Restano però versionate: senza, un deploy da CI non avrebbe le immagini,

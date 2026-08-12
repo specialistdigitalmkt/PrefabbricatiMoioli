@@ -1,0 +1,947 @@
+{
+  "realizzazioni": [
+    {
+      "slug": "autoindustriale",
+      "cartella": "autoindustriale",
+      "titolo": "Autoindustriale",
+      "numerata": false,
+      "cover": "prj-autoindustriale-cover",
+      "coverRatio": 1.5,
+      "galleria": [
+        {
+          "id": "prj-autoindustriale-1",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-autoindustriale-2",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-autoindustriale-3",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-autoindustriale-4",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-autoindustriale-5",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-autoindustriale-6",
+          "ratio": 1.5
+        }
+      ],
+      "totaleFoto": 18
+    },
+    {
+      "slug": "centro-ufficio",
+      "cartella": "centro ufficio",
+      "titolo": "Centro Ufficio",
+      "numerata": false,
+      "cover": "prj-centro-ufficio-cover",
+      "coverRatio": 1.5,
+      "galleria": [
+        {
+          "id": "prj-centro-ufficio-1",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-centro-ufficio-2",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-centro-ufficio-3",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-centro-ufficio-4",
+          "ratio": 1.4987
+        },
+        {
+          "id": "prj-centro-ufficio-5",
+          "ratio": 1.4987
+        },
+        {
+          "id": "prj-centro-ufficio-6",
+          "ratio": 1.4987
+        }
+      ],
+      "totaleFoto": 13
+    },
+    {
+      "slug": "cingol-car",
+      "cartella": "cingol car",
+      "titolo": "Cingol Car",
+      "numerata": false,
+      "cover": "prj-cingol-car-cover",
+      "coverRatio": 1.5,
+      "galleria": [
+        {
+          "id": "prj-cingol-car-1",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-cingol-car-2",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-cingol-car-3",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-cingol-car-4",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-cingol-car-5",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-cingol-car-6",
+          "ratio": 1.5
+        }
+      ],
+      "totaleFoto": 18
+    },
+    {
+      "slug": "frigor-trasporti",
+      "cartella": "frigor trasporti",
+      "titolo": "Frigor Trasporti",
+      "numerata": false,
+      "cover": "prj-frigor-trasporti-cover",
+      "coverRatio": 1.5,
+      "galleria": [
+        {
+          "id": "prj-frigor-trasporti-1",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-frigor-trasporti-2",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-frigor-trasporti-3",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-frigor-trasporti-4",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-frigor-trasporti-5",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-frigor-trasporti-6",
+          "ratio": 1.5
+        }
+      ],
+      "totaleFoto": 20
+    },
+    {
+      "slug": "k22",
+      "cartella": "k22",
+      "titolo": "K22",
+      "numerata": false,
+      "cover": "prj-k22-cover",
+      "coverRatio": 1.5,
+      "galleria": [
+        {
+          "id": "prj-k22-1",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-k22-2",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-k22-3",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-k22-4",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-k22-5",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-k22-6",
+          "ratio": 1.5
+        }
+      ],
+      "totaleFoto": 31
+    },
+    {
+      "slug": "sacar",
+      "cartella": "sacar",
+      "titolo": "Sacar",
+      "numerata": false,
+      "cover": "prj-sacar-cover",
+      "coverRatio": 1.5,
+      "galleria": [
+        {
+          "id": "prj-sacar-1",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-sacar-2",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-sacar-3",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-sacar-4",
+          "ratio": 1.5
+        },
+        {
+          "id": "prj-sacar-5",
+          "ratio": 1.4987
+        },
+        {
+          "id": "prj-sacar-6",
+          "ratio": 1.4987
+        }
+      ],
+      "totaleFoto": 22
+    },
+    {
+      "slug": "realizzazione-01",
+      "cartella": "1-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-01-cover",
+      "coverRatio": 1.3943,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-01-1",
+          "ratio": 1.3941
+        },
+        {
+          "id": "prj-realizzazione-01-2",
+          "ratio": 1.3941
+        },
+        {
+          "id": "prj-realizzazione-01-3",
+          "ratio": 2.6276
+        },
+        {
+          "id": "prj-realizzazione-01-4",
+          "ratio": 1.7225
+        },
+        {
+          "id": "prj-realizzazione-01-5",
+          "ratio": 0.4013
+        },
+        {
+          "id": "prj-realizzazione-01-6",
+          "ratio": 2.7038
+        }
+      ],
+      "totaleFoto": 7
+    },
+    {
+      "slug": "realizzazione-02",
+      "cartella": "2-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-02-cover",
+      "coverRatio": 1.3752,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-02-1",
+          "ratio": 1.3656
+        },
+        {
+          "id": "prj-realizzazione-02-2",
+          "ratio": 1.7224
+        }
+      ],
+      "totaleFoto": 3
+    },
+    {
+      "slug": "realizzazione-03",
+      "cartella": "3-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-03-cover",
+      "coverRatio": 1.3745,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-03-1",
+          "ratio": 0.6944
+        },
+        {
+          "id": "prj-realizzazione-03-2",
+          "ratio": 0.8051
+        },
+        {
+          "id": "prj-realizzazione-03-3",
+          "ratio": 0.7278
+        },
+        {
+          "id": "prj-realizzazione-03-4",
+          "ratio": 1.3912
+        },
+        {
+          "id": "prj-realizzazione-03-5",
+          "ratio": 1.3155
+        },
+        {
+          "id": "prj-realizzazione-03-6",
+          "ratio": 1.3155
+        }
+      ],
+      "totaleFoto": 8
+    },
+    {
+      "slug": "realizzazione-04",
+      "cartella": "4-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-04-cover",
+      "coverRatio": 1.3837,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-04-1",
+          "ratio": 1.396
+        },
+        {
+          "id": "prj-realizzazione-04-2",
+          "ratio": 1.3956
+        },
+        {
+          "id": "prj-realizzazione-04-3",
+          "ratio": 0.8599
+        },
+        {
+          "id": "prj-realizzazione-04-4",
+          "ratio": 1.4462
+        }
+      ],
+      "totaleFoto": 5
+    },
+    {
+      "slug": "realizzazione-05",
+      "cartella": "5-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-05-cover",
+      "coverRatio": 1.3736,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-05-1",
+          "ratio": 1.3585
+        },
+        {
+          "id": "prj-realizzazione-05-2",
+          "ratio": 1.392
+        },
+        {
+          "id": "prj-realizzazione-05-3",
+          "ratio": 1.3952
+        },
+        {
+          "id": "prj-realizzazione-05-4",
+          "ratio": 1.3633
+        },
+        {
+          "id": "prj-realizzazione-05-5",
+          "ratio": 1.9499
+        }
+      ],
+      "totaleFoto": 6
+    },
+    {
+      "slug": "realizzazione-06",
+      "cartella": "6-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-06-cover",
+      "coverRatio": 1.4052,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-06-1",
+          "ratio": 0.8181
+        },
+        {
+          "id": "prj-realizzazione-06-2",
+          "ratio": 1.4052
+        }
+      ],
+      "totaleFoto": 3
+    },
+    {
+      "slug": "realizzazione-07",
+      "cartella": "7-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-07-cover",
+      "coverRatio": 1.3734,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-07-1",
+          "ratio": 1.3635
+        },
+        {
+          "id": "prj-realizzazione-07-2",
+          "ratio": 1.9779
+        },
+        {
+          "id": "prj-realizzazione-07-3",
+          "ratio": 1.3941
+        },
+        {
+          "id": "prj-realizzazione-07-4",
+          "ratio": 1.3941
+        }
+      ],
+      "totaleFoto": 5
+    },
+    {
+      "slug": "realizzazione-08",
+      "cartella": "8-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-08-cover",
+      "coverRatio": 1.3716,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-08-1",
+          "ratio": 0.9487
+        },
+        {
+          "id": "prj-realizzazione-08-2",
+          "ratio": 2.4493
+        },
+        {
+          "id": "prj-realizzazione-08-3",
+          "ratio": 2.5944
+        }
+      ],
+      "totaleFoto": 4
+    },
+    {
+      "slug": "realizzazione-09",
+      "cartella": "9-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-09-cover",
+      "coverRatio": 1.3835,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-09-1",
+          "ratio": 1.3952
+        },
+        {
+          "id": "prj-realizzazione-09-2",
+          "ratio": 1.3097
+        },
+        {
+          "id": "prj-realizzazione-09-3",
+          "ratio": 2.6483
+        },
+        {
+          "id": "prj-realizzazione-09-4",
+          "ratio": 1.2305
+        },
+        {
+          "id": "prj-realizzazione-09-5",
+          "ratio": 1.2297
+        },
+        {
+          "id": "prj-realizzazione-09-6",
+          "ratio": 0.6342
+        }
+      ],
+      "totaleFoto": 7
+    },
+    {
+      "slug": "realizzazione-10",
+      "cartella": "10-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-10-cover",
+      "coverRatio": 1.3746,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-10-1",
+          "ratio": 1.9461
+        },
+        {
+          "id": "prj-realizzazione-10-2",
+          "ratio": 0.6317
+        },
+        {
+          "id": "prj-realizzazione-10-3",
+          "ratio": 0.7041
+        },
+        {
+          "id": "prj-realizzazione-10-4",
+          "ratio": 0.4907
+        },
+        {
+          "id": "prj-realizzazione-10-5",
+          "ratio": 3.0955
+        },
+        {
+          "id": "prj-realizzazione-10-6",
+          "ratio": 1.4454
+        }
+      ],
+      "totaleFoto": 11
+    },
+    {
+      "slug": "realizzazione-11",
+      "cartella": "11-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-11-cover",
+      "coverRatio": 1.372,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-11-1",
+          "ratio": 2.6878
+        },
+        {
+          "id": "prj-realizzazione-11-2",
+          "ratio": 2.683
+        }
+      ],
+      "totaleFoto": 3
+    },
+    {
+      "slug": "realizzazione-12",
+      "cartella": "12-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-12-cover",
+      "coverRatio": 1.3945,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-12-1",
+          "ratio": 1.3846
+        },
+        {
+          "id": "prj-realizzazione-12-2",
+          "ratio": 1.9495
+        },
+        {
+          "id": "prj-realizzazione-12-3",
+          "ratio": 0.4948
+        },
+        {
+          "id": "prj-realizzazione-12-4",
+          "ratio": 0.9059
+        }
+      ],
+      "totaleFoto": 5
+    },
+    {
+      "slug": "realizzazione-13",
+      "cartella": "13-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-13-cover",
+      "coverRatio": 1.3702,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-13-1",
+          "ratio": 2.6244
+        },
+        {
+          "id": "prj-realizzazione-13-2",
+          "ratio": 1.5278
+        }
+      ],
+      "totaleFoto": 3
+    },
+    {
+      "slug": "realizzazione-14",
+      "cartella": "14-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-14-cover",
+      "coverRatio": 1.37,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-14-1",
+          "ratio": 1.3635
+        },
+        {
+          "id": "prj-realizzazione-14-2",
+          "ratio": 1.9799
+        },
+        {
+          "id": "prj-realizzazione-14-3",
+          "ratio": 2.625
+        },
+        {
+          "id": "prj-realizzazione-14-4",
+          "ratio": 1.3719
+        }
+      ],
+      "totaleFoto": 5
+    },
+    {
+      "slug": "realizzazione-15",
+      "cartella": "15-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-15-cover",
+      "coverRatio": 1.3939,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-15-1",
+          "ratio": 0.8052
+        },
+        {
+          "id": "prj-realizzazione-15-2",
+          "ratio": 1.385
+        },
+        {
+          "id": "prj-realizzazione-15-3",
+          "ratio": 1.7425
+        },
+        {
+          "id": "prj-realizzazione-15-4",
+          "ratio": 1.9495
+        }
+      ],
+      "totaleFoto": 5
+    },
+    {
+      "slug": "realizzazione-16",
+      "cartella": "16-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-16-cover",
+      "coverRatio": 1.3711,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-16-1",
+          "ratio": 0.6829
+        },
+        {
+          "id": "prj-realizzazione-16-2",
+          "ratio": 2.449
+        },
+        {
+          "id": "prj-realizzazione-16-3",
+          "ratio": 1.6088
+        },
+        {
+          "id": "prj-realizzazione-16-4",
+          "ratio": 2.6258
+        },
+        {
+          "id": "prj-realizzazione-16-5",
+          "ratio": 1.2291
+        },
+        {
+          "id": "prj-realizzazione-16-6",
+          "ratio": 1.314
+        }
+      ],
+      "totaleFoto": 7
+    },
+    {
+      "slug": "realizzazione-17",
+      "cartella": "17-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-17-cover",
+      "coverRatio": 1.3753,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-17-1",
+          "ratio": 2.6258
+        },
+        {
+          "id": "prj-realizzazione-17-2",
+          "ratio": 2.6278
+        },
+        {
+          "id": "prj-realizzazione-17-3",
+          "ratio": 1.5295
+        },
+        {
+          "id": "prj-realizzazione-17-4",
+          "ratio": 1.3837
+        }
+      ],
+      "totaleFoto": 5
+    },
+    {
+      "slug": "realizzazione-18",
+      "cartella": "18-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-18-cover",
+      "coverRatio": 1.3736,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-18-1",
+          "ratio": 1.7436
+        },
+        {
+          "id": "prj-realizzazione-18-2",
+          "ratio": 1.9521
+        }
+      ],
+      "totaleFoto": 3
+    },
+    {
+      "slug": "realizzazione-19",
+      "cartella": "19-gruppo",
+      "titolo": null,
+      "numerata": true,
+      "cover": "prj-realizzazione-19-cover",
+      "coverRatio": 1.3721,
+      "galleria": [
+        {
+          "id": "prj-realizzazione-19-1",
+          "ratio": 3.1581
+        },
+        {
+          "id": "prj-realizzazione-19-2",
+          "ratio": 1.6548
+        },
+        {
+          "id": "prj-realizzazione-19-3",
+          "ratio": 1.4388
+        }
+      ],
+      "totaleFoto": 4
+    }
+  ],
+  "rivestimenti": [
+    {
+      "id": "riv-01"
+    },
+    {
+      "id": "riv-02"
+    },
+    {
+      "id": "riv-03"
+    },
+    {
+      "id": "riv-04"
+    },
+    {
+      "id": "riv-05"
+    },
+    {
+      "id": "riv-06"
+    },
+    {
+      "id": "riv-07"
+    },
+    {
+      "id": "riv-08"
+    },
+    {
+      "id": "riv-09"
+    },
+    {
+      "id": "riv-10"
+    },
+    {
+      "id": "riv-11"
+    },
+    {
+      "id": "riv-12"
+    },
+    {
+      "id": "riv-13"
+    },
+    {
+      "id": "riv-14"
+    },
+    {
+      "id": "riv-15"
+    },
+    {
+      "id": "riv-16"
+    },
+    {
+      "id": "riv-17"
+    },
+    {
+      "id": "riv-18"
+    },
+    {
+      "id": "riv-19"
+    },
+    {
+      "id": "riv-20"
+    },
+    {
+      "id": "riv-21"
+    },
+    {
+      "id": "riv-22"
+    },
+    {
+      "id": "riv-23"
+    },
+    {
+      "id": "riv-24"
+    },
+    {
+      "id": "riv-25"
+    },
+    {
+      "id": "riv-26"
+    },
+    {
+      "id": "riv-27"
+    },
+    {
+      "id": "riv-28"
+    },
+    {
+      "id": "riv-29"
+    },
+    {
+      "id": "riv-30"
+    },
+    {
+      "id": "riv-31"
+    },
+    {
+      "id": "riv-32"
+    },
+    {
+      "id": "riv-33"
+    },
+    {
+      "id": "riv-34"
+    },
+    {
+      "id": "riv-35"
+    },
+    {
+      "id": "riv-36"
+    },
+    {
+      "id": "riv-37"
+    },
+    {
+      "id": "riv-38"
+    },
+    {
+      "id": "riv-39"
+    },
+    {
+      "id": "riv-40"
+    },
+    {
+      "id": "riv-41"
+    },
+    {
+      "id": "riv-42"
+    },
+    {
+      "id": "riv-43"
+    },
+    {
+      "id": "riv-44"
+    },
+    {
+      "id": "riv-45"
+    },
+    {
+      "id": "riv-46"
+    },
+    {
+      "id": "riv-47"
+    },
+    {
+      "id": "riv-48"
+    },
+    {
+      "id": "riv-49"
+    },
+    {
+      "id": "riv-50"
+    },
+    {
+      "id": "riv-51"
+    },
+    {
+      "id": "riv-52"
+    },
+    {
+      "id": "riv-53"
+    },
+    {
+      "id": "riv-54"
+    },
+    {
+      "id": "riv-55"
+    },
+    {
+      "id": "riv-56"
+    },
+    {
+      "id": "riv-57"
+    },
+    {
+      "id": "riv-58"
+    },
+    {
+      "id": "riv-59"
+    },
+    {
+      "id": "riv-60"
+    },
+    {
+      "id": "riv-61"
+    },
+    {
+      "id": "riv-62"
+    },
+    {
+      "id": "riv-63"
+    },
+    {
+      "id": "riv-64"
+    },
+    {
+      "id": "riv-65"
+    },
+    {
+      "id": "riv-66"
+    },
+    {
+      "id": "riv-67"
+    },
+    {
+      "id": "riv-68"
+    },
+    {
+      "id": "riv-69"
+    },
+    {
+      "id": "riv-70"
+    },
+    {
+      "id": "riv-71"
+    },
+    {
+      "id": "riv-72"
+    },
+    {
+      "id": "riv-73"
+    },
+    {
+      "id": "riv-74"
+    }
+  ]
+}

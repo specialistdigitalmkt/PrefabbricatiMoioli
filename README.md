@@ -24,6 +24,7 @@ npm run dev
 | `npm run build` | Build statico in `dist/` |
 | `npm run preview` | Anteprima del build |
 | `npm run images` | Rigenera le derivate WebP dagli originali |
+| `npm run realizzazioni` | Elabora realizzazioni e rivestimenti da `CARTELLA IMMAGINI` |
 | `node scripts/fetch-fonts.mjs` | Riscarica i font in locale (solo se cambiano famiglie o pesi) |
 
 ---
@@ -74,8 +75,9 @@ Solo queste sei. Il menu contiene solo ciò che è navigabile e finito.
 | `/soluzioni` | Indice delle tipologie |
 | `/soluzioni/tecnoshed` | Pagina vetrina |
 | `/soluzioni/stegos` | Scheda prodotto |
-| `/progetti` | Portfolio |
-| `/progetti/scheda-modello` | Scheda di dettaglio (progetto dimostrativo) |
+| `/soluzioni/rivestimenti` | Campionario delle finiture di facciata |
+| `/progetti` | Le 25 realizzazioni fotografate |
+| `/progetti/[slug]` | Scheda di ogni realizzazione, con galleria |
 | `/azienda` | Profilo aziendale |
 | `/azienda/referenze` | Committenti, filtrabili per settore |
 | `/azienda/riconoscimenti` | Certificazioni e network |

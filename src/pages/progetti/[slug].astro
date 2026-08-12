@@ -1,36 +1,53 @@
 ---
 /**
- * /progetti/[slug] — scheda di dettaglio.
+ * /progetti/[slug] — scheda di una realizzazione.
  *
- * Nella demo esiste una sola scheda ed è un PROGETTO FITTIZIO, dichiarato
- * tale in pagina: serve a mostrare il formato, non a rappresentare una
- * commessa reale. Nessun dato tecnico: tutti i valori sono segnaposto.
+ * Una pagina per ciascuna delle 25 realizzazioni fotografate.
+ * Le fotografie sono reali; i dati di commessa non sono stati forniti e
+ * restano segnaposto dichiarati, uno per riga, così in presentazione si vede
+ * esattamente cosa manca.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Picture from '../../components/Picture.astro';
-import { progettoModello as p } from '../../data/progetti';
 import Icon from '../../components/Icon.astro';
+import { realizzazioni, schedaDettaglio, etichetta } from '../../data/progetti';
+import images from '../../data/images.json';
 
 export function getStaticPaths() {
-  return [{ params: { slug: 'scheda-modello' } }];
+  return realizzazioni.map((r) => ({ params: { slug: r.slug }, props: { r } }));
 }
+
+const { r } = Astro.props;
+const nome = etichetta(r);
+
+/* Le larghezze si leggono dal manifesto, non si scrivono a mano: le
+   sorgenti hanno dimensioni diverse fra loro e dichiarare un taglio che non
+   esiste manda l'immagine in errore. */
+const cover = (images as Record<string, { widths: number[] }>)[r.cover];
+const coverSrcset = cover.widths.map((w) => `/img/${r.cover}-${w}.webp ${w}w`).join(', ');
+const coverSrc = `/img/${r.cover}-${cover.widths.at(-1)}.webp`;
+
+/* Navigazione fra schede: chi guarda le realizzazioni le sfoglia, non torna
+   ogni volta all'indice. */
+const i = realizzazioni.findIndex((x) => x.slug === r.slug);
+const prec = realizzazioni[i - 1] ?? realizzazioni[realizzazioni.length - 1];
+const succ = realizzazioni[i + 1] ?? realizzazioni[0];
 ---
 
 <BaseLayout
-  title="Scheda progetto (modello dimostrativo) — Prefabbricati Moioli"
-  description="Modello di scheda progetto: struttura della pagina di dettaglio di una realizzazione Prefabbricati Moioli. Contenuti dimostrativi."
-  preloadImage="shed-cantiere"
+  title={`${nome} — Realizzazioni | Prefabbricati Moioli`}
+  description={`${nome}: struttura prefabbricata in cemento armato realizzata da Prefabbricati Moioli, Bagnatica (BG).`}
+  preloadImage={r.cover}
 >
-  <!-- ==================== HERO ==================== -->
-  <!-- on-dark: vedi nota in tecnoshed.astro — serve al breadcrumb -->
+  <!-- ==================== APERTURA ==================== -->
   <section class="pd-hero on-dark">
     <div class="pd-hero-img">
       <img
-        src="/img/shed-cantiere-1800.webp"
-        srcset="/img/shed-cantiere-480.webp 480w, /img/shed-cantiere-768.webp 768w, /img/shed-cantiere-1200.webp 1200w, /img/shed-cantiere-1800.webp 1800w"
+        src={coverSrc}
+        srcset={coverSrcset}
         sizes="100vw"
-        alt="Cantiere di montaggio di una struttura prefabbricata"
+        alt={`${nome} — vista d'insieme`}
         fetchpriority="high"
         decoding="sync"
       />
@@ -41,119 +58,88 @@ export function getStaticPaths() {
       <Breadcrumb
         items={[
           { label: 'Home', href: '/' },
-          { label: 'Progetti', href: '/progetti' },
-          { label: 'Scheda modello' },
+          { label: 'Realizzazioni', href: '/progetti' },
+          { label: nome },
         ]}
       />
 
-      <p class="pd-flag">Progetto dimostrativo — non è una commessa reale</p>
-      <p class="eyebrow pd-eyebrow">{p.settore}</p>
-      <h1>{p.titolo}</h1>
-      <p class="pd-client">{p.cliente} — {p.localita}</p>
+      {r.numerata && <p class="pd-flag">Denominazione da assegnare</p>}
+      <p class="eyebrow pd-eyebrow">Realizzazione</p>
+      <h1>{nome}</h1>
+      <p class="pd-conta">{r.totaleFoto} fotografie d’archivio</p>
     </div>
   </section>
 
-  <!-- ==================== SCHEDA ==================== -->
-  <section class="block pd-body">
+  <!-- ==================== DATI ==================== -->
+  <section class="block pd-dati">
     <div class="wrap">
-      <p class="ph-note pd-note">
-        Questa pagina è un modello di impaginazione. Il committente è fittizio e ogni
-        valore tecnico è un segnaposto: nella versione finale i dati arrivano dall'ufficio
-        tecnico, verificati dal geometra.
-      </p>
-
-      <div class="pd-grid">
-        <div class="pd-text reveal">
-          <p class="pd-intro">{p.intro}</p>
-          {p.descrizione.map((t) => <p>{t}</p>)}
-
-          <a href={p.soluzioneHref} class="btn btn-ghost pd-btn">
-            Soluzione impiegata: {p.soluzione} <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
-          </a>
-        </div>
-
-        <aside class="pd-side reveal" aria-label="Dati tecnici del progetto">
-          <h2 class="pd-side-h">Dati di progetto</h2>
-          <dl class="pd-dl">
-            <div>
-              <dt>Committente</dt>
-              <dd>{p.cliente}</dd>
-            </div>
-            <div>
-              <dt>Località</dt>
-              <dd>{p.localita}</dd>
-            </div>
-            <div>
-              <dt>Anno</dt>
-              <dd><span class="spec">{p.anno} — da commessa</span></dd>
-            </div>
+      <div class="dati-grid">
+        <div class="reveal">
+          <h2 class="dati-t">{schedaDettaglio.datiTitolo}</h2>
+          <dl class="dati-l">
             {
-              p.scheda.map((r) => (
+              schedaDettaglio.dati.map((d) => (
                 <div>
-                  <dt>{r.label}</dt>
-                  <dd><span class="spec">{r.spec}</span></dd>
+                  <dt>{d.label}</dt>
+                  <dd><span class="spec">{d.spec}</span></dd>
                 </div>
               ))
             }
           </dl>
-        </aside>
+        </div>
+
+        <div class="reveal dati-nota">
+          <p class="ph-note">{schedaDettaglio.nota}</p>
+          <a href="/contatti" class="btn btn-ghost dati-btn">
+            Chiedi informazioni su questa realizzazione
+            <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+          </a>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ==================== FASI ==================== -->
-  <section class="block pd-fasi on-dark">
+  <!-- ==================== GALLERIA ==================== -->
+  {
+    r.galleria.length > 0 && (
+      <section class="block pd-gal on-dark">
+        <div class="wrap">
+          <div class="sec-head reveal">
+            <p class="eyebrow">Immagini</p>
+            <h2>Come si presenta.</h2>
+          </div>
+
+          <div class="gal-grid stagger">
+            {r.galleria.map((g, n) => (
+              <figure class:list={['gal-item', { wide: g.ratio >= 1.6 }]}>
+                <Picture
+                  id={g.id}
+                  alt={`${nome} — fotografia ${n + 1}`}
+                  ratio={g.ratio >= 1.6 ? '16/9' : g.ratio >= 1.1 ? '3/2' : '3/4'}
+                  sizes="(max-width: 700px) 100vw, 50vw"
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ==================== SFOGLIA ==================== -->
+  <section class="block pd-nav">
     <div class="wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Come è andata</p>
-        <h2>Dalla progettazione alla consegna.</h2>
-      </div>
+      <div class="nav-grid">
+        <a href={`/progetti/${prec.slug}`} class="nav-l">
+          <span class="nav-lab"><span class="arr-l"><Icon nome="freccia-sx" dim={15} /></span> Precedente</span>
+          <span class="nav-n">{etichetta(prec)}</span>
+        </a>
 
-      <ol class="fasi-grid stagger">
-        {
-          p.fasi.map((f) => (
-            <li>
-              <span class="num">{f.num}</span>
-              <h3>{f.titolo}</h3>
-              <p>{f.testo}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+        <a href="/progetti" class="nav-c">Tutte le realizzazioni</a>
 
-  <!-- ==================== GALLERY ==================== -->
-  <section class="block pd-gal">
-    <div class="wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">Immagini</p>
-        <h2>Il cantiere.</h2>
-      </div>
-
-      <div class="gal-grid stagger">
-        {
-          p.gallery.map((id, i) => (
-            <figure class:list={['gal-item', { wide: i === 0 }]}>
-              <Picture
-                id={id}
-                alt="Fotografia di cantiere di una struttura prefabbricata Moioli"
-                ratio={i === 0 ? '16/9' : '4/3'}
-                sizes="(max-width: 700px) 100vw, 50vw"
-              />
-            </figure>
-          ))
-        }
-      </div>
-
-      <p class="ph-note gal-note">
-        Nota per la revisione: fotografie dall'archivio Moioli, usate qui come esempio.
-        Nella scheda reale saranno le immagini della commessa.
-      </p>
-
-      <div class="pd-back reveal">
-        <a href="/progetti" class="btn btn-ghost">
-          <span class="arr-l"><Icon nome="freccia-sx" dim={17} /></span> Tutti i progetti
+        <a href={`/progetti/${succ.slug}`} class="nav-r">
+          <span class="nav-lab">Successiva <span class="arr"><Icon nome="freccia-dx" dim={15} /></span></span>
+          <span class="nav-n">{etichetta(succ)}</span>
         </a>
       </div>
     </div>
@@ -177,10 +163,10 @@ export function getStaticPaths() {
 </BaseLayout>
 
 <style>
-  /* ==================== HERO ==================== */
+  /* ==================== APERTURA ==================== */
   .pd-hero {
     position: relative;
-    min-height: 72svh;
+    min-height: 78svh;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
@@ -202,9 +188,9 @@ export function getStaticPaths() {
     inset: 0;
     background: linear-gradient(
       180deg,
-      rgba(22, 32, 58, 0.74) 0%,
-      rgba(29, 42, 68, 0.4) 38%,
-      rgba(22, 32, 58, 0.9) 84%,
+      rgba(22, 32, 58, 0.72) 0%,
+      rgba(29, 42, 68, 0.34) 38%,
+      rgba(22, 32, 58, 0.88) 84%,
       var(--navy) 100%
     );
   }
@@ -216,14 +202,11 @@ export function getStaticPaths() {
     width: 100%;
   }
 
-  /* Etichetta esplicita: in presentazione deve essere impossibile
-     scambiare questa scheda per una commessa reale. */
   .pd-flag {
     display: inline-block;
     margin-top: 24px;
     font-family: var(--mono);
     font-size: 12px;
-    letter-spacing: 0.02em;
     color: #fff;
     background: var(--red);
     padding: 6px 12px;
@@ -239,63 +222,32 @@ export function getStaticPaths() {
     font-family: var(--brand);
     font-weight: 600;
     font-size: clamp(36px, 5.6vw, 72px);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     line-height: 1.02;
     margin: 14px 0 12px;
     color: #fff;
   }
 
-  .pd-client {
-    font-size: 17px;
-    color: rgba(255, 255, 255, 0.72);
+  .pd-conta {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    font-variant-numeric: tabular-nums;
   }
 
-  /* ==================== CORPO ==================== */
-  .pd-body {
+  /* ==================== DATI ==================== */
+  .pd-dati {
     background: var(--white);
+    padding-top: 88px;
+    padding-bottom: 96px;
   }
-
-  .pd-note {
-    margin-bottom: 48px;
-  }
-
-  .pd-grid {
+  .dati-grid {
     display: grid;
-    grid-template-columns: 1.25fr 0.75fr;
+    grid-template-columns: 1.05fr 0.95fr;
     gap: 64px;
     align-items: start;
   }
-
-  .pd-intro {
-    font-family: var(--brand);
-    font-weight: 500;
-    font-size: clamp(19px, 2.2vw, 24px);
-    line-height: 1.4;
-    color: var(--navy);
-    margin-bottom: 26px;
-    max-width: 40ch;
-  }
-
-  .pd-text p {
-    font-size: 16.5px;
-    margin-bottom: 16px;
-    max-width: 62ch;
-  }
-
-  .pd-btn {
-    margin-top: 18px;
-  }
-
-  .pd-side {
-    background: var(--bg1);
-    border: 1px solid var(--bg2);
-    border-radius: var(--r-md);
-    padding: 30px 28px;
-    position: sticky;
-    top: 110px;
-  }
-
-  .pd-side-h {
+  .dati-t {
     font-family: var(--brand);
     font-size: 11.5px;
     font-weight: 600;
@@ -304,78 +256,30 @@ export function getStaticPaths() {
     color: var(--red);
     margin-bottom: 22px;
   }
-
-  .pd-dl {
+  .dati-l > div {
     display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .pd-dl > div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 14px 0;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 15px 0;
     border-bottom: 1px solid var(--bg2);
   }
-  .pd-dl > div:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
+  .dati-l > div:first-child {
+    border-top: 1px solid var(--bg2);
   }
-  .pd-dl dt {
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-2);
-  }
-  .pd-dl dd {
+  .dati-l dt {
     font-size: 15px;
     color: var(--navy);
     font-weight: 500;
   }
-
-  /* ==================== FASI ==================== */
-  .pd-fasi {
-    background: var(--navy);
-  }
-  .fasi-grid {
-    list-style: none;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--r-md);
-    overflow: hidden;
-  }
-  .fasi-grid li {
-    background: var(--navy);
-    padding: 36px 26px;
-    transition: background 0.4s var(--ease);
-  }
-  .fasi-grid li:hover {
-    background: var(--navy-deep);
-  }
-  .fasi-grid .num {
-    font-family: var(--brand);
-    font-weight: 700;
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    color: var(--red-soft);
-  }
-  .fasi-grid h3 {
-    font-family: var(--brand);
-    font-weight: 600;
-    font-size: 18px;
-    margin: 14px 0 8px;
-  }
-  .fasi-grid p {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.65);
+  .dati-btn {
+    margin-top: 24px;
   }
 
-  /* ==================== GALLERY ==================== */
+  /* ==================== GALLERIA ==================== */
   .pd-gal {
-    background: var(--bg1);
+    background: var(--navy-ink);
   }
   .gal-grid {
     display: grid;
@@ -396,18 +300,80 @@ export function getStaticPaths() {
   .gal-item:hover :global(.frame img) {
     transform: scale(1.04);
   }
-  .gal-note {
-    margin-top: 30px;
+
+  /* ==================== SFOGLIA ==================== */
+  .pd-nav {
+    background: var(--bg1);
+    padding-top: 56px;
+    padding-bottom: 56px;
   }
-  .pd-back {
-    margin-top: 36px;
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 24px;
+    align-items: center;
   }
-  .arr-l {
-    transition: transform 0.35s var(--ease);
-    display: inline-block;
+  .nav-l,
+  .nav-r {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0;
+    min-height: 56px;
+    justify-content: center;
   }
-  .pd-back .btn:hover .arr-l {
-    transform: translateX(-5px);
+  .nav-r {
+    text-align: right;
+    align-items: flex-end;
+  }
+  .nav-lab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .nav-n {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+  }
+  .nav-l:hover .nav-n,
+  .nav-r:hover .nav-n {
+    color: var(--red);
+  }
+  .nav-l .arr-l,
+  .nav-r .arr {
+    display: inline-flex;
+    transition: transform 0.3s var(--ease);
+  }
+  .nav-l:hover .arr-l {
+    transform: translateX(-4px);
+  }
+  .nav-r:hover .arr {
+    transform: translateX(4px);
+  }
+  .nav-c {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-sm);
+    padding: 12px 20px;
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    background: #fff;
+    transition: border-color 0.25s var(--ease), color 0.25s var(--ease);
+  }
+  .nav-c:hover {
+    border-color: var(--navy);
+    color: var(--navy);
   }
 
   /* ==================== CTA ==================== */
@@ -436,15 +402,9 @@ export function getStaticPaths() {
 
   /* ==================== RESPONSIVE ==================== */
   @media (max-width: 920px) {
-    .pd-grid {
+    .dati-grid {
       grid-template-columns: 1fr;
       gap: 40px;
-    }
-    .pd-side {
-      position: static;
-    }
-    .fasi-grid {
-      grid-template-columns: 1fr 1fr;
     }
   }
 
@@ -456,12 +416,30 @@ export function getStaticPaths() {
       padding-top: 122px;
       padding-bottom: 44px;
     }
-    .fasi-grid,
+    .pd-dati {
+      padding-top: 56px;
+      padding-bottom: 64px;
+    }
     .gal-grid {
       grid-template-columns: 1fr;
     }
     .gal-item.wide {
       grid-column: span 1;
+    }
+    /* Lo sfoglia diventa una colonna: affiancare tre elementi a 360px
+       spezza i nomi su piu righe e non si legge piu niente. */
+    .nav-grid {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .nav-r {
+      text-align: left;
+      align-items: flex-start;
+    }
+    .nav-c {
+      order: 3;
+      justify-content: center;
+      margin-top: 12px;
     }
     .cta-band {
       padding: 64px 0;

@@ -9,12 +9,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Picture from '../components/Picture.astro';
 import { azienda, clienti, numeri, timeline, metodo } from '../data/site';
 import { soluzioni } from '../data/soluzioni';
-import { progetti } from '../data/progetti';
+import { realizzazioni, etichetta } from '../data/progetti';
 import Icon from '../components/Icon.astro';
 
 const inEvidenza = soluzioni.filter((s) => s.inEvidenza);
 const altre = soluzioni.filter((s) => !s.inEvidenza);
-const primiProgetti = progetti.slice(0, 3);
+/* In home vanno le tre realizzazioni con nome: sono quelle presentabili
+   senza segnaposto. */
+const primiProgetti = realizzazioni.filter((r) => !r.numerata).slice(0, 3);
 ---
 
 <BaseLayout
@@ -278,20 +280,21 @@ const primiProgetti = progetti.slice(0, 3);
         {
           primiProgetti.map((p) => (
             <article class="work-card">
-              <Picture
-                id={p.img}
-                alt={p.alt}
-                ratio="4/3.5"
-                sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 30vw"
-                class="wc-img"
-              />
-              <div class="tint" aria-hidden="true" />
-              <div class="info">
-                <p class="cat">{p.settore}</p>
-                <h3>{p.cliente}</h3>
-                <p class="mq">{p.superficie}</p>
-                <p class="loc">{p.localita}</p>
-              </div>
+              <a href={`/progetti/${p.slug}`}>
+                <Picture
+                  id={p.cover}
+                  alt={`${etichetta(p)} — struttura prefabbricata realizzata da Moioli`}
+                  ratio="4/3.5"
+                  sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 30vw"
+                  class="wc-img"
+                />
+                <div class="tint" aria-hidden="true" />
+                <div class="info">
+                  <p class="cat">Realizzazione</p>
+                  <h3>{etichetta(p)}</h3>
+                  <p class="mq">{p.totaleFoto} fotografie</p>
+                </div>
+              </a>
             </article>
           ))
         }
