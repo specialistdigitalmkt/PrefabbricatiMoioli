@@ -26,8 +26,10 @@ export const pagina = {
     'Il chiavi in mano Moioli nasce con CMB Costruzioni, società del gruppo. La struttura prefabbricata esce dallo stabilimento di Bagnatica; tutto il resto — opere civili, involucro, finiture — arriva dallo stesso contratto.',
 
   video: {
-    /* Timelapse del cantiere di Bonate, fornito dal cliente. Tagliato a 41",
-       senza audio: è sfondo, non contenuto. */
+    /* Timelapse del cantiere di Bonate, fornito dal cliente. Materiale utile
+       fino a 41", accelerato 2,2× per stare in 22" tenendo l'arco intero:
+       scavo, struttura, facciata, edificio consegnato. Senza audio: è
+       sfondo, non contenuto. */
     src: '/video/chiavi-in-mano.mp4',
     poster: 'cim-hero-poster',
     alt: 'Timelapse di un cantiere Moioli: dalle fondazioni all’edificio finito con impianto fotovoltaico in copertura',

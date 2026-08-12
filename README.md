@@ -101,18 +101,31 @@ Per accenderla basta darle un `href` in `src/data/soluzioni.ts` e una voce in
 ciclo, `aria-hidden`. Non parte da solo se `prefers-reduced-motion` è attivo,
 se il viewport è sotto i 760 px, o prima che la pagina abbia finito di
 caricare — e in tutti e tre i casi resta il poster, quindi non manca niente.
-C'è un comando di pausa perché un ciclo di 41 secondi supera i 5 oltre i quali
+C'è un comando di pausa perché un ciclo di 22 secondi supera i 5 oltre i quali
 la WCAG 2.2.2 chiede di poterlo fermare.
 
 Per rifare il file dal timelapse originale:
 
 ```bash
-ffmpeg -i "sorgente.mp4" -map 0:v:0 -t 41 -vf "scale=1280:720" -c:v libx264 -preset veryslow -crf 35 -pix_fmt yuv420p -movflags +faststart -write_tmcd 0 public/video/chiavi-in-mano.mp4
+ffmpeg -i "sorgente.mp4" -map 0:v:0 -t 41 -vf "scale=1920:1080,setpts=PTS/2.2,fps=24" -c:v libx264 -preset veryslow -crf 32 -pix_fmt yuv420p -movflags +faststart -write_tmcd 0 public/video/chiavi-in-mano.mp4
 ```
 
 `-map 0:v:0` è quello che toglie l'audio, `-write_tmcd 0` la traccia di
-timecode che il muxer mp4 aggiungerebbe da sé. Il risultato pesa 4,4 MB: è
-molto, ed è il motivo per cui si carica solo dove serve.
+timecode che il muxer mp4 aggiungerebbe da sé.
+
+**Perché accelerato invece che accorciato.** Il materiale utile finisce a 41″,
+ma un ciclo di 41 secondi in una hero non lo guarda nessuno per intero e a
+1080p pesava 11,8 MB. Tagliarlo a metà avrebbe risparmiato peso perdendo però
+l'edificio finito, che è il finale. `setpts=PTS/2.2` accelera: restano 22
+secondi e l'arco completo — scavo, struttura, facciata, edificio consegnato.
+
+**Non provare a guadagnare con un codec più moderno: è già stato provato.**
+Su questo filmato AV1 e VP9 producono file *più grandi* di H.264, anche di
+molto. Un timelapse da drone cambia troppo fra un fotogramma e il successivo,
+e la predizione temporale — da cui i codec nuovi traggono quasi tutto il loro
+vantaggio — qui rende poco. Le uniche leve reali sono risoluzione, durata e
+qualità. Il file pesa 8,1 MB: è tanto, ed è il motivo per cui si carica solo
+dove serve davvero.
 
 **Azienda** è una sezione a tre pagine con sottomenu. Le voci si definiscono in
 `src/data/site.ts` (`nav`, campo `voci`): la testata costruisce da lì il
