@@ -296,6 +296,45 @@ Ordinate per impatto.
 
 ---
 
+## 7-bis. Chiavi in mano — `src/data/chiavi-in-mano.ts`
+
+**Questa pagina è quasi interamente redazionale, ed è la più esposta del sito.**
+Del chiavi in mano è stato fornito un solo dato: che nasce con CMB Costruzioni,
+società del gruppo Moioli. Nient'altro — né prestazioni, né cantieri, né tempi.
+
+| Blocco | Stato | Note |
+|---|---|---|
+| Rapporto Moioli ↔ CMB | `ready` | Formulazione «società del gruppo Moioli» confermata dal cliente |
+| Loghi CMB | `ready` | Forniti dal cliente, in `public/cmb/` |
+| Video di apertura | `ready` | Timelapse del cantiere di Bonate, fornito dal cliente |
+| Testi di apertura e identità | `needs-client-approval` | Spiegano il termine, non attribuiscono competenze |
+| Le sei fasi del percorso | `needs-client-approval` | Sono l'arco che il timelapse mostra, non il processo interno |
+| Profilo di CMB Costruzioni | **`placeholder`** | Segnaposto dichiarato in pagina |
+| Elenco delle prestazioni incluse | **`placeholder`** | Segnaposto dichiarato in pagina |
+| Portfolio chiavi in mano | **`placeholder`** | Sei riquadri dichiarati, da riempire uno alla volta |
+
+### Regole seguite nello scrivere questa pagina
+
+1. **Nessun numero.** Non compaiono cantieri realizzati, tempi di consegna,
+   superfici o anni: non ne è stato fornito nessuno.
+2. **Nessuna competenza attribuita.** Non si dice che Moioli o CMB facciano
+   progettazione, direzione lavori o impiantistica. Si dice cosa significa
+   «chiavi in mano», che è una definizione, non un'affermazione sull'azienda.
+3. **Le fasi sono descrittive, non organizzative.** Le sei fasi sono quelle
+   che attraversa qualunque edificio e che il filmato mostra davvero. Non
+   descrivono chi fa cosa dentro il gruppo.
+4. **Quello che manca è visibile.** Profilo CMB, elenco delle prestazioni e
+   portfolio sono riquadri dichiarati, non testo di riempimento.
+
+### Cosa serve dal cliente
+
+- Il profilo di CMB Costruzioni: cosa fa, da quando, con quale ruolo nel gruppo.
+- L'elenco di cosa rientra nel chiavi in mano e cosa resta fuori.
+- Le realizzazioni chiavi in mano, con foto e nome del committente.
+- Conferma che il cantiere del timelapse (Bonate) sia citabile per nome.
+
+---
+
 ## 8. Cosa NON è stato inserito, volutamente
 
 Nessuno di questi elementi compare nel sito, né come pagina né come voce di menu:

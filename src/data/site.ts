@@ -3,6 +3,7 @@
  * Tutti i valori qui dentro sono stati confermati come verificati dal cliente.
  * Stato: ready — vedi CONTENT-STATUS.md
  */
+import { soluzioni } from './soluzioni';
 
 export const azienda = {
   nome: 'Prefabbricati Moioli',
@@ -49,8 +50,28 @@ export type VoceMenu = {
   voci?: { label: string; href: string; nota: string }[];
 };
 
+/* Le voci della tendina Soluzioni si costruiscono dai dati: una soluzione
+   entra nel menu solo quando ha davvero una pagina. Coverplan resta fuori
+   finché non arriva il materiale, e il giorno che arriva non c'è niente da
+   ricordarsi di aggiungere qui. */
+const vociSoluzioni = [
+  /* Deve restare la prima: la testata la usa come destinazione del genitore
+     e il menu mobile salta proprio questa voce, perché lì il link «Soluzioni»
+     ce l'ha già sopra. */
+  { label: 'Tutte le soluzioni', href: '/soluzioni', nota: 'L’indice delle sette tipologie' },
+  ...soluzioni
+    .filter((s) => s.href)
+    .map((s) => ({ label: s.nome, href: s.href!, nota: s.nota ?? s.alias ?? '' })),
+  {
+    label: 'Rivestimenti',
+    href: '/soluzioni/rivestimenti',
+    nota: 'Le finiture di facciata',
+  },
+];
+
 export const nav: VoceMenu[] = [
-  { label: 'Soluzioni', href: '/soluzioni' },
+  { label: 'Soluzioni', href: '/soluzioni', voci: vociSoluzioni },
+  { label: 'Chiavi in mano', href: '/chiavi-in-mano' },
   { label: 'Progetti', href: '/progetti' },
   {
     label: 'Azienda',

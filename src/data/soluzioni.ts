@@ -32,6 +32,8 @@ export type Soluzione = {
   alt: string;
   /** Etichette dei dati tecnici da compilare. Il valore resta placeholder. */
   specs: string[];
+  /** Riga di servizio nel menu a tendina: deve stare su una riga sola. */
+  nota?: string;
   /** Solo le schede con pagina dedicata hanno href. */
   href?: string;
   /** Evidenzia la tipologia nell'indice. */
@@ -48,6 +50,7 @@ export const soluzioni: Soluzione[] = [
     img: 'sol-tecnoshed-cover',
     alt: 'Vista dall’alto di una copertura Tecnoshed: file parallele di finestrature verticali',
     specs: ['LUCE NETTA', 'ALTEZZA FINESTRA', 'LARGHEZZA MODULO'],
+    nota: 'Luce naturale da nord',
     href: '/soluzioni/tecnoshed',
     inEvidenza: true,
   },
@@ -60,6 +63,7 @@ export const soluzioni: Soluzione[] = [
     img: 'sol-stegos-cover',
     alt: 'Interno di una struttura Moioli in cemento a vista, con solai piani su pilastri',
     specs: ['ELEMENTO DISTINTIVO', 'LUCE NETTA', 'GEOMETRIA'],
+    nota: 'L’elemento esclusivo Moioli',
     href: '/soluzioni/stegos',
     inEvidenza: true,
   },
@@ -73,6 +77,7 @@ export const soluzioni: Soluzione[] = [
     img: 'sol-tecnowing-cover',
     alt: 'Vista aerea di un edificio con copertura alare Tecnowing',
     specs: ['LARGHEZZA MODULO', 'ALTEZZA TRAVE', 'RESISTENZA AL FUOCO'],
+    nota: 'Copertura alare',
     href: '/soluzioni/tecnowing',
   },
   {
@@ -85,6 +90,7 @@ export const soluzioni: Soluzione[] = [
     img: 'sol-tegolo-tt-cover',
     alt: 'Interno di un edificio a copertura piana con tegoli TT e scaffalature',
     specs: ['LUCE NETTA', 'ALTEZZA TEGOLO', 'LARGHEZZA MODULO'],
+    nota: 'Solaio e copertura pluripiano',
     href: '/soluzioni/tegolo-tt',
   },
   {
@@ -96,6 +102,7 @@ export const soluzioni: Soluzione[] = [
     img: 'sol-bacacier-cover',
     alt: 'Intradosso di una copertura Bacacier in lamiera grecata su travi e arcarecci',
     specs: ['ALTEZZA TRAVE', 'ALTEZZA ARCARECCIO', 'PENDENZA'],
+    nota: 'Grandi luci, pochi pilastri',
     href: '/soluzioni/bacacier',
   },
   {
@@ -108,6 +115,7 @@ export const soluzioni: Soluzione[] = [
     img: 'sol-doppia-falda-cover',
     alt: 'Edificio industriale Moioli a doppia falda con fronte in laterizio e portoni',
     specs: ['LUCI LIBERE', 'PENDENZA COPERTURA', 'ALTEZZA TRAVE'],
+    nota: 'La geometria più diffusa',
     href: '/soluzioni/doppia-falda',
   },
   {

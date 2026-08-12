@@ -78,6 +78,7 @@ Solo queste sei. Il menu contiene solo ciò che è navigabile e finito.
 | `/soluzioni/stegos` | Scheda prodotto |
 | `/soluzioni/[slug]` | Schede di Tecnowing, Tegolo TT, Bacacier, Doppia falda |
 | `/soluzioni/rivestimenti` | Campionario delle finiture di facciata |
+| `/chiavi-in-mano` | Il chiavi in mano con CMB Costruzioni |
 | `/progetti` | Le 25 realizzazioni fotografate |
 | `/progetti/[slug]` | Scheda di ogni realizzazione, con galleria |
 | `/azienda` | Profilo aziendale |
@@ -95,6 +96,23 @@ convivono senza conflitti — in Astro una route statica vince su una dinamica.
 tecnico né fotografie. Resta nell'indice come scheda con riquadro dichiarato.
 Per accenderla basta darle un `href` in `src/data/soluzioni.ts` e una voce in
 `src/data/soluzioni-tecniche.ts`: sitemap e collegamenti si aggiornano da sé.
+
+**Il video della pagina chiavi in mano** è sfondo, non contenuto: muto, in
+ciclo, `aria-hidden`. Non parte da solo se `prefers-reduced-motion` è attivo,
+se il viewport è sotto i 760 px, o prima che la pagina abbia finito di
+caricare — e in tutti e tre i casi resta il poster, quindi non manca niente.
+C'è un comando di pausa perché un ciclo di 41 secondi supera i 5 oltre i quali
+la WCAG 2.2.2 chiede di poterlo fermare.
+
+Per rifare il file dal timelapse originale:
+
+```bash
+ffmpeg -i "sorgente.mp4" -map 0:v:0 -t 41 -vf "scale=1280:720" -c:v libx264 -preset veryslow -crf 35 -pix_fmt yuv420p -movflags +faststart -write_tmcd 0 public/video/chiavi-in-mano.mp4
+```
+
+`-map 0:v:0` è quello che toglie l'audio, `-write_tmcd 0` la traccia di
+timecode che il muxer mp4 aggiungerebbe da sé. Il risultato pesa 4,4 MB: è
+molto, ed è il motivo per cui si carica solo dove serve.
 
 **Azienda** è una sezione a tre pagine con sottomenu. Le voci si definiscono in
 `src/data/site.ts` (`nav`, campo `voci`): la testata costruisce da lì il

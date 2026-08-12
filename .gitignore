@@ -20,6 +20,9 @@ CARTELLA IMMAGINI/
 Cataloghi tecnici/
 Brand kit/
 brand-kit-moioli.zip
+# Contiene il timelapse originale: 112 MB, HEVC con audio. Quello che il sito
+# serve è public/video/chiavi-in-mano.mp4 — 41", muto, 4,4 MB — ed è versionato.
+PROGETTO CHIAVI IN MANO/
 
 # Le derivate delle immagini si rigenerano con `npm run images` dagli
 # originali in ../moioli-site/assets, che NON stanno in questo repository.

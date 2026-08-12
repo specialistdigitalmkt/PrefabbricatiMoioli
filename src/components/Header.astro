@@ -51,7 +51,9 @@ const isActive = (href: string) => {
                 </span>
               </button>
 
-              <div class="sub-panel" hidden>
+              {/* Oltre le quattro voci una colonna sola diventa una lista
+                  troppo lunga da percorrere: si passa a due. */}
+              <div class:list={['sub-panel', { 'sub-panel--due': v.voci.length > 4 }]} hidden>
                 <ul>
                   {v.voci.map((s) => (
                     <li>
@@ -314,6 +316,22 @@ const isActive = (href: string) => {
     list-style: none;
   }
 
+  .sub-panel--due {
+    min-width: 520px;
+  }
+  .sub-panel--due ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 4px;
+  }
+  /* La voce d'indice apre l'elenco e vale per entrambe le colonne. */
+  .sub-panel--due li:first-child {
+    grid-column: 1 / -1;
+    border-bottom: 1px solid var(--bg2);
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+  }
+
   .sub-panel a {
     display: flex;
     flex-direction: column;
@@ -426,7 +444,11 @@ const isActive = (href: string) => {
     background: var(--navy-deep);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* `safe`: quando le voci ci stanno, il menu resta centrato; quando non ci
+       stanno, torna allineato in alto invece di sbordare da entrambi i lati.
+       Con il semplice `center` un contenuto più alto del viewport esce anche
+       sopra, e la parte sopra non si raggiunge nemmeno scorrendo. */
+    justify-content: safe center;
     padding: 72px 9vw 40px;
     gap: 6px;
     /* Con le voci di secondo livello il menu è più alto: su uno schermo
@@ -518,17 +540,39 @@ const isActive = (href: string) => {
     border-left: 1px solid rgba(255, 255, 255, 0.16);
     margin: 4px 0 10px;
   }
+  /* Con sette voci sotto Soluzioni il secondo livello è la parte che pesa di
+     più in altezza: sta stretto quanto basta a restare sopra i 24 px di
+     bersaglio richiesti, non un pixel meno. */
   .mnav-sub a {
     font-family: var(--ui-font) !important;
-    font-size: 16px !important;
+    font-size: 15.5px !important;
     font-weight: 500 !important;
     color: rgba(255, 255, 255, 0.72) !important;
     border-bottom: none !important;
-    padding: 9px 0 !important;
-    min-height: 40px;
+    padding: 6px 0 !important;
+    min-height: 34px;
   }
   .mnav-sub a[aria-current] {
     color: var(--red-soft) !important;
+  }
+
+  /* Su qualunque telefono le voci principali si stringono, per far entrare
+     anche l'ultima — che è il pulsante del preventivo. La soglia è alta
+     apposta: un iPhone recente è 844 px, e con quindici voci a misura piena
+     non ci arriverebbe. Sotto i 700 px non c'è misura che basti e il menu
+     scorre: con `safe center` la prima voce resta comunque raggiungibile. */
+  @media (max-height: 900px) {
+    .mnav {
+      padding-top: 64px;
+      gap: 2px;
+    }
+    .mnav > a {
+      font-size: clamp(24px, 6vw, 32px);
+      padding: 7px 0;
+    }
+    .mnav-sub {
+      margin: 2px 0 6px;
+    }
   }
 
   .mnav-cta {

@@ -2456,5 +2456,15 @@
     ],
     "ratio": 1.5,
     "source": "SOLUZIONI/Tegolo TT/CMB_Martignoni_25PAN_8336.jpg"
+  },
+  "cim-hero-poster": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.7778,
+    "source": "PROGETTO CHIAVI IN MANO/VIDEO TEST HERO/Bonate LP review 24fps.mp4 @00:00.3"
   }
 }

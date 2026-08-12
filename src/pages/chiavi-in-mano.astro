@@ -1,0 +1,712 @@
+---
+/**
+ * /chiavi-in-mano
+ *
+ * IL VIDEO
+ * Il timelapse è sfondo, non contenuto: muto, in ciclo, `aria-hidden`.
+ * Non parte da solo in tre casi, e in tutti e tre resta il poster:
+ *   1. `prefers-reduced-motion` attivo;
+ *   2. viewport stretta — 4,4 MB su rete cellulare non si scaricano di
+ *      nascosto per un fondale;
+ *   3. finché la pagina non ha finito di caricare, così non toglie banda a
+ *      quello che serve per leggere.
+ * C'è un comando di pausa: un ciclo di 41 secondi supera i 5 oltre i quali
+ * la WCAG 2.2.2 chiede di poterlo fermare.
+ *
+ * I CONTENUTI
+ * Del chiavi in mano è stato fornito un solo dato — che nasce con CMB
+ * Costruzioni, società del gruppo. Tutto il resto è redazionale e non
+ * attribuisce competenze specifiche a nessuno. Dove serve un contenuto vero
+ * c'è un segnaposto dichiarato. Vedi src/data/chiavi-in-mano.ts.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Icon from '../components/Icon.astro';
+import { pagina } from '../data/chiavi-in-mano';
+import images from '../data/images.json';
+
+const poster = (images as Record<string, { widths: number[] }>)[pagina.video.poster];
+const posterSrc = `/img/${pagina.video.poster}-${poster.widths.at(-1)}.webp`;
+const posterSrcset = poster.widths.map((w) => `/img/${pagina.video.poster}-${w}.webp ${w}w`).join(', ');
+
+const BASE = 'https://www.prefabbricatimoioli.it';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Chiavi in mano' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Chiavi in mano — Dall'area libera all'edificio pronto | Prefabbricati Moioli"
+  description="Il chiavi in mano di Prefabbricati Moioli, con CMB Costruzioni società del gruppo: un solo contratto dalle opere civili alla consegna dell'edificio finito."
+  preloadImage={pagina.video.poster}
+  jsonLd={jsonLd}
+>
+  <!-- ==================== 1. APERTURA ==================== -->
+  <section class="cim-hero on-dark">
+    <div class="cim-hero-media">
+      <img
+        src={posterSrc}
+        srcset={posterSrcset}
+        sizes="100vw"
+        alt={pagina.video.alt}
+        fetchpriority="high"
+        decoding="sync"
+        class="cim-poster"
+      />
+      {/* Il src arriva dallo script: senza, il video si scaricherebbe anche
+          dove abbiamo deciso di non mostrarlo. */}
+      <video
+        class="cim-video"
+        data-video-hero
+        data-src={pagina.video.src}
+        muted
+        loop
+        playsinline
+        preload="none"
+        aria-hidden="true"
+        tabindex="-1"></video>
+    </div>
+    <div class="cim-hero-grad" aria-hidden="true"></div>
+
+    <div class="wrap cim-hero-body">
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Chiavi in mano' }]} />
+      <p class="eyebrow cim-eyebrow">{pagina.eyebrow}</p>
+      <h1>{pagina.titolo}</h1>
+      <p class="cim-claim">{pagina.claim}</p>
+      <p class="lead cim-lead">{pagina.lead}</p>
+
+      <div class="cim-hero-cta">
+        <a href="#percorso" class="btn btn-red">
+          Come funziona
+          <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
+        </a>
+        <a href="/contatti" class="btn btn-light">Parlane con noi</a>
+      </div>
+    </div>
+
+    {/* Comando di pausa: compare solo quando il video sta davvero girando. */}
+    <button type="button" class="cim-pausa" data-video-pausa hidden>
+      <span class="cim-pausa-i" aria-hidden="true"></span>
+      <span data-video-etichetta>Metti in pausa il filmato</span>
+    </button>
+
+    <p class="cim-didascalia">{pagina.video.didascalia}</p>
+  </section>
+
+  <!-- ==================== 2. DI COSA SI TRATTA ==================== -->
+  <section class="block cim-id">
+    <div class="sec-num" aria-hidden="true">01</div>
+    <div class="wrap">
+      <div class="cim-id-grid">
+        <div class="reveal">
+          <p class="eyebrow">{pagina.identita.eyebrow}</p>
+          <h2>{pagina.identita.titolo}</h2>
+        </div>
+        <div class="cim-id-text reveal">
+          {pagina.identita.paragrafi.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+
+      <ul class="cim-van stagger">
+        {
+          pagina.vantaggi.map((v) => (
+            <li>
+              <h3>{v.titolo}</h3>
+              <p>{v.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 3. IL PERCORSO ==================== -->
+  <section class="block cim-perc on-dark" id="percorso">
+    <div class="sec-num" aria-hidden="true">02</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.percorso.eyebrow}</p>
+        <h2>{pagina.percorso.titolo}</h2>
+        <p>{pagina.percorso.intro}</p>
+      </div>
+
+      <ol class="cim-fasi stagger">
+        {
+          pagina.percorso.fasi.map((f) => (
+            <li>
+              <span class="cim-fase-n">{f.num}</span>
+              <h3>{f.titolo}</h3>
+              <p>{f.testo}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ==================== 4. CMB COSTRUZIONI ==================== -->
+  <section class="block cim-cmb">
+    <div class="sec-num" aria-hidden="true">03</div>
+    <div class="wrap">
+      <div class="cim-cmb-grid">
+        <div class="reveal">
+          <p class="eyebrow">{pagina.cmb.eyebrow}</p>
+          <h2>{pagina.cmb.titolo}</h2>
+          <p class="cim-cmb-t">{pagina.cmb.testo}</p>
+        </div>
+
+        <div class="cim-cmb-lato reveal">
+          <div class="cim-logo">
+            <img
+              src={pagina.cmb.logo.scuro}
+              alt={pagina.cmb.logo.alt}
+              width={pagina.cmb.logo.larghezza}
+              height={pagina.cmb.logo.altezza}
+              loading="lazy"
+            />
+          </div>
+          <div class="cim-slot">
+            <span class="spec">{pagina.cmb.segnaposto}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 5. COSA COMPRENDE ==================== -->
+  <section class="block cim-compr">
+    <div class="sec-num" aria-hidden="true">04</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.comprende.eyebrow}</p>
+        <h2>{pagina.comprende.titolo}</h2>
+        <p>{pagina.comprende.testo}</p>
+      </div>
+
+      <div class="cim-slot cim-slot--largo reveal">
+        <span class="spec">{pagina.comprende.segnaposto}</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 6. PORTFOLIO (segnaposto) ==================== -->
+  <section class="block cim-port on-dark">
+    <div class="sec-num" aria-hidden="true">05</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{pagina.portfolio.eyebrow}</p>
+        <h2>{pagina.portfolio.titolo}</h2>
+        <p>{pagina.portfolio.intro}</p>
+      </div>
+
+      <ul class="cim-port-grid stagger">
+        {
+          Array.from({ length: pagina.portfolio.posti }, (_, i) => (
+            <li>
+              <div class="cim-port-img">
+                <span class="spec">FOTO — da recuperare</span>
+              </div>
+              <p class="cim-port-n">{String(i + 1).padStart(2, '0')}</p>
+              <p class="cim-port-t">Realizzazione da inserire</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="ph-note cim-port-nota">{pagina.portfolio.nota}</p>
+    </div>
+  </section>
+
+  <!-- ==================== 7. CTA ==================== -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">{pagina.cta.eyebrow}</p>
+          <h2>{pagina.cta.titolo}</h2>
+          <p class="cta-p">{pagina.cta.testo}</p>
+        </div>
+        <a href="/contatti" class="btn btn-red">
+          Richiedi una valutazione <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  /**
+   * Il fondale si carica solo se ha senso caricarlo.
+   * Il poster resta sotto: se il video non parte, non manca niente.
+   */
+  const video = document.querySelector<HTMLVideoElement>('[data-video-hero]');
+  const pausa = document.querySelector<HTMLButtonElement>('[data-video-pausa]');
+  const etichetta = document.querySelector<HTMLElement>('[data-video-etichetta]');
+
+  if (video && pausa && etichetta) {
+    const menoMoto = matchMedia('(prefers-reduced-motion: reduce)');
+    const schermoStretto = matchMedia('(max-width: 760px)');
+
+    const avvia = () => {
+      if (menoMoto.matches || schermoStretto.matches || video.src) return;
+      video.src = video.dataset.src ?? '';
+      video.load();
+      video
+        .play()
+        .then(() => {
+          video.classList.add('vis');
+          pausa.hidden = false;
+        })
+        .catch(() => {
+          /* Autoplay negato: resta il poster, e il comando non serve. */
+        });
+    };
+
+    /* Dopo il `load`: il fondale non deve rubare banda al primo disegno. */
+    if (document.readyState === 'complete') avvia();
+    else addEventListener('load', avvia, { once: true });
+
+    pausa.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+        etichetta.textContent = 'Metti in pausa il filmato';
+        pausa.classList.remove('fermo');
+      } else {
+        video.pause();
+        etichetta.textContent = 'Riprendi il filmato';
+        pausa.classList.add('fermo');
+      }
+    });
+
+    /* Se l'utente attiva la riduzione del movimento a video già partito,
+       il filmato si ferma senza aspettare un ricaricamento. */
+    menoMoto.addEventListener('change', (e) => {
+      if (e.matches) {
+        video.pause();
+        video.classList.remove('vis');
+        pausa.hidden = true;
+      }
+    });
+  }
+</script>
+
+<style>
+  /* ==================== 1. APERTURA ==================== */
+  .cim-hero {
+    position: relative;
+    min-height: 92svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--navy);
+    color: #fff;
+  }
+  .cim-hero-media {
+    position: absolute;
+    inset: 0;
+  }
+  .cim-poster,
+  .cim-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 58%;
+  }
+  /* Il video sfuma sopra il poster quando parte: nessuno stacco. */
+  .cim-video {
+    opacity: 0;
+    transition: opacity 0.9s var(--ease);
+  }
+  .cim-video.vis {
+    opacity: 1;
+  }
+  .cim-hero-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.78) 0%,
+      rgba(29, 42, 68, 0.4) 32%,
+      rgba(22, 32, 58, 0.88) 78%,
+      var(--navy) 100%
+    );
+  }
+  .cim-hero-body {
+    position: relative;
+    z-index: 2;
+    padding-top: 150px;
+    padding-bottom: 72px;
+    width: 100%;
+  }
+  .cim-eyebrow {
+    margin-top: 24px;
+    color: var(--red-soft);
+  }
+  .cim-hero h1 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(46px, 7.6vw, 100px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 16px 0 14px;
+    color: #fff;
+  }
+  .cim-claim {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(19px, 2.4vw, 28px);
+    color: #fff;
+    line-height: 1.25;
+    max-width: 26ch;
+  }
+  .cim-lead {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 60ch;
+  }
+  .cim-hero-cta {
+    display: flex;
+    gap: 14px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+  }
+
+  /* Comando di pausa e didascalia: in alto a destra, fuori dal testo. */
+  .cim-pausa {
+    position: absolute;
+    top: 108px;
+    right: 32px;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 34px;
+    padding: 8px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    border-radius: var(--r-sm);
+    background: rgba(17, 25, 46, 0.5);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .cim-pausa:hover {
+    background: rgba(17, 25, 46, 0.78);
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  /* Due barre = pausa; un triangolo = riprendi. Nessun carattere usato
+     come icona: sono forme costruite con i bordi. */
+  .cim-pausa-i {
+    width: 9px;
+    height: 11px;
+    border-left: 3px solid currentColor;
+    border-right: 3px solid currentColor;
+  }
+  .cim-pausa.fermo .cim-pausa-i {
+    width: 0;
+    height: 0;
+    border-left: 9px solid currentColor;
+    border-right: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+  }
+
+  .cim-didascalia {
+    position: absolute;
+    right: 32px;
+    bottom: 24px;
+    z-index: 2;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ==================== 2. DI COSA SI TRATTA ==================== */
+  .cim-id {
+    background: var(--white);
+    padding-top: 96px;
+    padding-bottom: 104px;
+  }
+  .cim-id-grid {
+    display: grid;
+    grid-template-columns: 0.72fr 1.28fr;
+    gap: 52px;
+    align-items: start;
+    margin-bottom: 52px;
+  }
+  .cim-id-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .cim-id-text p {
+    font-size: 17px;
+    margin-bottom: 18px;
+    max-width: 62ch;
+  }
+  .cim-id-text p:last-child {
+    margin-bottom: 0;
+  }
+  .cim-van {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--bg2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .cim-van li {
+    background: #fff;
+    padding: 28px 24px 30px;
+  }
+  .cim-van h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .cim-van p {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 3. IL PERCORSO ==================== */
+  .cim-perc {
+    background: var(--navy-deep);
+  }
+  .cim-fasi {
+    list-style: none;
+    counter-reset: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 44px;
+  }
+  .cim-fasi li {
+    padding: 26px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .cim-fase-n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red-soft);
+  }
+  .cim-fasi h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 19px;
+    margin: 12px 0 8px;
+  }
+  .cim-fasi p {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.66);
+    max-width: 40ch;
+  }
+
+  /* ==================== 4. CMB ==================== */
+  .cim-cmb {
+    background: var(--bg1);
+  }
+  .cim-cmb-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: start;
+  }
+  .cim-cmb-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .cim-cmb-t {
+    margin-top: 20px;
+    font-size: 17px;
+    max-width: 56ch;
+  }
+  /* Il marchio di un'altra società sta nel suo riquadro, con aria attorno:
+     non si mescola alla grafica Moioli. */
+  .cim-logo {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 40px 44px;
+    display: grid;
+    place-items: center;
+  }
+  .cim-logo img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+  }
+
+  /* ==================== SEGNAPOSTO ==================== */
+  .cim-slot {
+    margin-top: 22px;
+    border: 1px dashed var(--ph-border);
+    background: var(--ph-bg);
+    border-radius: var(--r-md);
+    padding: 40px 24px;
+    display: grid;
+    place-items: center;
+    text-align: center;
+  }
+  .cim-slot--largo {
+    padding: 72px 24px;
+    margin-top: 8px;
+  }
+
+  /* ==================== 5. COSA COMPRENDE ==================== */
+  .cim-compr {
+    background: var(--white);
+  }
+
+  /* ==================== 6. PORTFOLIO ==================== */
+  .cim-port {
+    background: var(--navy-ink);
+  }
+  .cim-port-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .cim-port-img {
+    aspect-ratio: 4 / 3;
+    border: 1px dashed rgba(255, 255, 255, 0.26);
+    border-radius: var(--r-md);
+    background: rgba(255, 255, 255, 0.04);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+  }
+  .cim-port-img .spec {
+    color: rgba(255, 255, 255, 0.62);
+  }
+  .cim-port-n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red-soft);
+    margin-top: 14px;
+  }
+  .cim-port-t {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.72);
+    margin-top: 4px;
+  }
+  .cim-port-nota {
+    margin-top: 32px;
+  }
+
+  /* ==================== 7. CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+    max-width: 20ch;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==================== RESPONSIVE ==================== */
+  @media (max-width: 1000px) {
+    .cim-van {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .cim-fasi {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .cim-port-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 920px) {
+    .cim-id-grid,
+    .cim-cmb-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .cim-hero {
+      min-height: auto;
+    }
+    .cim-hero-body {
+      padding-top: 122px;
+      padding-bottom: 56px;
+    }
+    .cim-hero-cta {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    /* Su telefono il filmato non parte: il comando non ha nulla da comandare
+       e la didascalia toglie spazio al titolo. */
+    .cim-pausa,
+    .cim-didascalia {
+      display: none;
+    }
+    .cim-van,
+    .cim-fasi,
+    .cim-port-grid {
+      grid-template-columns: 1fr;
+    }
+    .cim-id {
+      padding-top: 64px;
+      padding-bottom: 72px;
+    }
+    .cim-id-grid {
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .cim-id-text p {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+    .cim-logo {
+      padding: 32px 28px;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

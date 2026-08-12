@@ -18,6 +18,7 @@ const ROUTES = [
     .map((s) => ({ path: s.href!, priority: '0.9', changefreq: 'monthly' })),
 
   { path: '/soluzioni/rivestimenti', priority: '0.8', changefreq: 'yearly' },
+  { path: '/chiavi-in-mano', priority: '0.9', changefreq: 'monthly' },
   { path: '/progetti', priority: '0.8', changefreq: 'monthly' },
   { path: '/azienda', priority: '0.8', changefreq: 'yearly' },
   { path: '/azienda/referenze', priority: '0.6', changefreq: 'yearly' },
