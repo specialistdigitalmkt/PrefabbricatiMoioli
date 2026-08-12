@@ -9,7 +9,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "images": "node scripts/build-images.mjs",
-    "realizzazioni": "node scripts/build-realizzazioni.mjs"
+    "realizzazioni": "node scripts/build-realizzazioni.mjs",
+    "soluzioni-foto": "node scripts/build-soluzioni-foto.mjs"
   },
   "dependencies": {
     "astro": "^5.14.1"

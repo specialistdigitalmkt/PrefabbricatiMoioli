@@ -2108,5 +2108,353 @@
     ],
     "ratio": 1.4987,
     "source": "sacar/DSC00191.jpg"
+  },
+  "sol-bacacier-cover": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/IMG_6804.JPG"
+  },
+  "sol-bacacier-1": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/006 (2).jpg"
+  },
+  "sol-bacacier-2": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/007 (2).jpg"
+  },
+  "sol-bacacier-3": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/013.JPG"
+  },
+  "sol-bacacier-4": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/IMG_6806.JPG"
+  },
+  "sol-bacacier-5": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/IMG_6807.JPG"
+  },
+  "sol-bacacier-6": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/IMG_6812.JPG"
+  },
+  "sol-bacacier-7": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/IMG_6813.JPG"
+  },
+  "sol-bacacier-8": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.3333,
+    "source": "SOLUZIONI/Bacacier/IMG_6831.JPG"
+  },
+  "sol-doppia-falda-cover": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0734.TIF"
+  },
+  "sol-doppia-falda-1": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0735.TIF"
+  },
+  "sol-doppia-falda-2": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4999,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0738.TIF"
+  },
+  "sol-doppia-falda-3": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0740.TIF"
+  },
+  "sol-doppia-falda-4": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0749.TIF"
+  },
+  "sol-doppia-falda-5": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5001,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0752.TIF"
+  },
+  "sol-doppia-falda-6": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0755.TIF"
+  },
+  "sol-doppia-falda-7": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0758.TIF"
+  },
+  "sol-doppia-falda-8": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 0.6668,
+    "source": "SOLUZIONI/Doppia Pendenza/_MG_0760.TIF"
+  },
+  "sol-stegos-cover": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.503,
+    "source": "SOLUZIONI/Stegos/LeCorne_36PAZ_5929.jpg"
+  },
+  "sol-tecnoshed-cover": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 2.7132,
+    "source": "SOLUZIONI/Tecnoshed/Viemme09_DJI_0068pan.tif"
+  },
+  "sol-tecnowing-cover": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.4998,
+    "source": "SOLUZIONI/Tecnowing/Senago_73DJI_0862.jpg"
+  },
+  "sol-tecnowing-1": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 0.6669,
+    "source": "SOLUZIONI/Tecnowing/3.jpg"
+  },
+  "sol-tecnowing-2": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4987,
+    "source": "SOLUZIONI/Tecnowing/4.jpg"
+  },
+  "sol-tecnowing-3": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Tecnowing/DJI_0211.jpg"
+  },
+  "sol-tecnowing-4": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4987,
+    "source": "SOLUZIONI/Tecnowing/DSC00679.jpg"
+  },
+  "sol-tecnowing-5": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4987,
+    "source": "SOLUZIONI/Tecnowing/DSC00685.jpg"
+  },
+  "sol-tecnowing-6": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4987,
+    "source": "SOLUZIONI/Tecnowing/DSC00691.jpg"
+  },
+  "sol-tecnowing-7": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 0.6669,
+    "source": "SOLUZIONI/Tecnowing/DSC00697.jpg"
+  },
+  "sol-tecnowing-8": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 0.6669,
+    "source": "SOLUZIONI/Tecnowing/DSC00706.jpg"
+  },
+  "sol-tegolo-tt-cover": {
+    "widths": [
+      480,
+      768,
+      1200,
+      1800
+    ],
+    "ratio": 1.4979,
+    "source": "SOLUZIONI/Tegolo TT/13-PAN_0782.jpg"
+  },
+  "sol-tegolo-tt-1": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4979,
+    "source": "SOLUZIONI/Tegolo TT/09-PAN_0783 copia.jpg"
+  },
+  "sol-tegolo-tt-2": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4979,
+    "source": "SOLUZIONI/Tegolo TT/09-PAN_0783.jpg"
+  },
+  "sol-tegolo-tt-3": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5028,
+    "source": "SOLUZIONI/Tegolo TT/10-PAZ_9849.jpg"
+  },
+  "sol-tegolo-tt-4": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4981,
+    "source": "SOLUZIONI/Tegolo TT/11-PAN_0780.jpg"
+  },
+  "sol-tegolo-tt-5": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4982,
+    "source": "SOLUZIONI/Tegolo TT/12-PAN_0781 copia.jpg"
+  },
+  "sol-tegolo-tt-6": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.4982,
+    "source": "SOLUZIONI/Tegolo TT/12-PAN_0781.jpg"
+  },
+  "sol-tegolo-tt-7": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5001,
+    "source": "SOLUZIONI/Tegolo TT/CMB_Martignoni_24PAN_8335.jpg"
+  },
+  "sol-tegolo-tt-8": {
+    "widths": [
+      480,
+      768,
+      1200
+    ],
+    "ratio": 1.5,
+    "source": "SOLUZIONI/Tegolo TT/CMB_Martignoni_25PAN_8336.jpg"
   }
 }

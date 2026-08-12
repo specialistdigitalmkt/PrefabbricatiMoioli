@@ -4,12 +4,19 @@
  */
 import type { APIRoute } from 'astro';
 import { realizzazioni } from '../data/progetti';
+import { soluzioni } from '../data/soluzioni';
 
 const ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'monthly' },
   { path: '/soluzioni', priority: '0.9', changefreq: 'monthly' },
-  { path: '/soluzioni/tecnoshed', priority: '0.9', changefreq: 'monthly' },
-  { path: '/soluzioni/stegos', priority: '0.9', changefreq: 'monthly' },
+
+  /* Le schede di soluzione si aggiungono da sé: `href` esiste solo dove la
+     pagina esiste davvero, quindi Coverplan — che è senza materiale — resta
+     fuori dalla sitemap senza bisogno di ricordarselo. */
+  ...soluzioni
+    .filter((s) => s.href)
+    .map((s) => ({ path: s.href!, priority: '0.9', changefreq: 'monthly' })),
+
   { path: '/soluzioni/rivestimenti', priority: '0.8', changefreq: 'yearly' },
   { path: '/progetti', priority: '0.8', changefreq: 'monthly' },
   { path: '/azienda', priority: '0.8', changefreq: 'yearly' },

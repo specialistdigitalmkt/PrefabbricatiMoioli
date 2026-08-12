@@ -1,0 +1,170 @@
+{
+  "bacacier": {
+    "cover": "sol-bacacier-cover",
+    "coverRatio": 1.3333,
+    "galleria": [
+      {
+        "id": "sol-bacacier-1",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-2",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-3",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-4",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-5",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-6",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-7",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-bacacier-8",
+        "ratio": 1.3333
+      }
+    ],
+    "totale": 11
+  },
+  "doppia-falda": {
+    "cover": "sol-doppia-falda-cover",
+    "coverRatio": 1.5,
+    "galleria": [
+      {
+        "id": "sol-doppia-falda-1",
+        "ratio": 1.5
+      },
+      {
+        "id": "sol-doppia-falda-2",
+        "ratio": 1.4999
+      },
+      {
+        "id": "sol-doppia-falda-3",
+        "ratio": 1.5
+      },
+      {
+        "id": "sol-doppia-falda-4",
+        "ratio": 1.5
+      },
+      {
+        "id": "sol-doppia-falda-5",
+        "ratio": 1.5001
+      },
+      {
+        "id": "sol-doppia-falda-6",
+        "ratio": 1.5
+      },
+      {
+        "id": "sol-doppia-falda-7",
+        "ratio": 1.5
+      },
+      {
+        "id": "sol-doppia-falda-8",
+        "ratio": 0.6668
+      }
+    ],
+    "totale": 15
+  },
+  "stegos": {
+    "cover": "sol-stegos-cover",
+    "coverRatio": 1.503,
+    "galleria": [],
+    "totale": 12
+  },
+  "tecnoshed": {
+    "cover": "sol-tecnoshed-cover",
+    "coverRatio": 2.7132,
+    "galleria": [],
+    "totale": 8
+  },
+  "tecnowing": {
+    "cover": "sol-tecnowing-cover",
+    "coverRatio": 1.4998,
+    "galleria": [
+      {
+        "id": "sol-tecnowing-1",
+        "ratio": 0.6669
+      },
+      {
+        "id": "sol-tecnowing-2",
+        "ratio": 1.4987
+      },
+      {
+        "id": "sol-tecnowing-3",
+        "ratio": 1.5
+      },
+      {
+        "id": "sol-tecnowing-4",
+        "ratio": 1.4987
+      },
+      {
+        "id": "sol-tecnowing-5",
+        "ratio": 1.4987
+      },
+      {
+        "id": "sol-tecnowing-6",
+        "ratio": 1.4987
+      },
+      {
+        "id": "sol-tecnowing-7",
+        "ratio": 0.6669
+      },
+      {
+        "id": "sol-tecnowing-8",
+        "ratio": 0.6669
+      }
+    ],
+    "totale": 64
+  },
+  "tegolo-tt": {
+    "cover": "sol-tegolo-tt-cover",
+    "coverRatio": 1.4979,
+    "galleria": [
+      {
+        "id": "sol-tegolo-tt-1",
+        "ratio": 1.4979
+      },
+      {
+        "id": "sol-tegolo-tt-2",
+        "ratio": 1.4979
+      },
+      {
+        "id": "sol-tegolo-tt-3",
+        "ratio": 1.5028
+      },
+      {
+        "id": "sol-tegolo-tt-4",
+        "ratio": 1.4981
+      },
+      {
+        "id": "sol-tegolo-tt-5",
+        "ratio": 1.4982
+      },
+      {
+        "id": "sol-tegolo-tt-6",
+        "ratio": 1.4982
+      },
+      {
+        "id": "sol-tegolo-tt-7",
+        "ratio": 1.5001
+      },
+      {
+        "id": "sol-tegolo-tt-8",
+        "ratio": 1.5
+      }
+    ],
+    "totale": 14
+  }
+}

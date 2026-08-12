@@ -1,0 +1,129 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione trasversale della copertura alare Tecnowing.
+ *
+ * NON è un disegno esecutivo e NON riproduce la tavola di catalogo: è uno
+ * schema costruito dalla sola descrizione testuale del sistema (tegoli alari
+ * ripetuti, interposti opachi o luminosi fra un tegolo e il successivo,
+ * geometria a "V" che scarica verso l'esterno, travi a "U" e a "I", pilastri).
+ * Geometria neutra, quote sostituite da segnaposto.
+ *
+ * SOSTITUZIONE
+ * Rimpiazzare il contenuto di questo file mantenendo `viewBox="0 0 1200 700"`
+ * e l'orientamento. Le coordinate dei punti caldi stanno in
+ * src/data/soluzioni-tecniche.ts in percentuale del viewBox: nessuna logica
+ * dipende da questo SVG.
+ */
+import '../../styles/disegno.css';
+
+/* I tre tegoli si ripetono identici: le geometrie si generano invece di
+   essere ricopiate tre volte a mano. */
+const TEGOLI = [
+  { da: 104, a: 384 },
+  { da: 460, a: 740 },
+  { da: 816, a: 1096 },
+];
+
+/** Profilo alare: bordi bassi, colmo al centro, spessore costante. */
+const tegolo = ({ da, a }: { da: number; a: number }) => {
+  const c = (da + a) / 2;
+  return `M${da},330 Q${c},238 ${a},330 L${a},356 Q${c},264 ${da},356 Z`;
+};
+
+/** Linea del coibente: stessa curva, alzata di 12. */
+const coibente = ({ da, a }: { da: number; a: number }) => {
+  const c = (da + a) / 2;
+  return `M${da},318 Q${c},226 ${a},318`;
+};
+---
+
+<svg
+  class="dt"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="twTitle twDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="twTitle">Sezione trasversale segnaposto della copertura alare Tecnowing</title>
+  <desc id="twDesc">
+    Disegno schematico: tre tegoli alari a profilo curvo, separati da due
+    interposti — uno luminoso e uno opaco — appoggiati su una trave a “U” di
+    raccolta a sinistra e una trave a “I” a destra, sostenute da pilastri su
+    plinti. Le quote sono segnaposto in attesa del disegno definitivo.
+  </desc>
+
+  <defs>
+    <pattern id="twGround" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" class="ln-hatch" />
+    </pattern>
+    <pattern id="twVetro" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="9" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ TERRENO ============ -->
+  <g>
+    <line x1="0" y1="612" x2="1200" y2="612" class="ln-strong" />
+    <rect x="0" y="612" width="1200" height="16" fill="url(#twGround)" stroke="none" />
+  </g>
+
+  <!-- ============ FONDAZIONI E PILASTRI ============ -->
+  <g>
+    <rect x="118" y="612" width="104" height="34" class="ln-solid" />
+    <rect x="978" y="612" width="104" height="34" class="ln-solid" />
+    <rect x="146" y="430" width="48" height="182" class="ln-struct" />
+    <rect x="1006" y="430" width="48" height="182" class="ln-struct" />
+  </g>
+
+  <!-- ============ TRAVI ============ -->
+  <g>
+    <!-- Sinistra: trave a "U", l'invaso raccoglie l'acqua che scende dal tegolo -->
+    <path d="M104,356 H128 V414 H212 V356 H236 V430 H104 Z" class="ln-struct" />
+    <!-- Destra: trave a "I" per impieghi centrali -->
+    <path
+      d="M964,356 H1096 V378 H1050 V408 H1096 V430 H964 V408 H1010 V378 H964 Z"
+      class="ln-struct"
+    />
+  </g>
+
+  <!-- ============ TEGOLI ALARI ============ -->
+  <g>
+    {TEGOLI.map((t) => <path d={tegolo(t)} class="ln-solid" />)}
+    {TEGOLI.map((t) => <path d={coibente(t)} class="ln-thin" />)}
+  </g>
+
+  <!-- ============ INTERPOSTI ============ -->
+  <g>
+    <!-- Luminoso: è la variante che porta luce naturale in campata -->
+    <rect x="384" y="330" width="76" height="18" fill="url(#twVetro)" class="ln-thin" />
+    <rect x="384" y="330" width="76" height="18" class="ln-strong" />
+    <!-- Opaco: stessa sede, chiusura piena -->
+    <rect x="740" y="330" width="76" height="18" class="ln-getto" />
+  </g>
+
+  <!-- ============ LUCE NATURALE ============ -->
+  <!-- Raggi e cono: indicano la direzione della luce, non sono elementi costruttivi -->
+  <g class="g-raggi">
+    <line x1="422" y1="258" x2="422" y2="290" />
+    <line x1="396" y1="272" x2="406" y2="300" />
+    <line x1="448" y1="272" x2="438" y2="300" />
+  </g>
+  <g>
+    <line x1="386" y1="350" x2="342" y2="472" class="ln-dash" />
+    <line x1="458" y1="350" x2="502" y2="472" class="ln-dash" />
+  </g>
+
+  <!-- ============ QUOTE (segnaposto) ============ -->
+  <g>
+    <line x1="460" y1="676" x2="740" y2="676" class="ln-dim" />
+    <line x1="460" y1="664" x2="460" y2="688" class="ln-dim" />
+    <line x1="740" y1="664" x2="740" y2="688" class="ln-dim" />
+    <text x="600" y="658" class="tx-dim" text-anchor="middle">LARGHEZZA MODULO</text>
+
+    <line x1="72" y1="356" x2="72" y2="430" class="ln-dim" />
+    <line x1="60" y1="356" x2="84" y2="356" class="ln-dim" />
+    <line x1="60" y1="430" x2="84" y2="430" class="ln-dim" />
+    {/* Ruotata: orizzontale finirebbe sotto il bordo del tegolo. */}
+    <text x="52" y="393" class="tx-dim" text-anchor="middle" transform="rotate(-90 52 393)">ALT. TRAVE</text>
+  </g>
+</svg>

@@ -1,0 +1,126 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione longitudinale della copertura Bacacier.
+ *
+ * NON è un disegno esecutivo e NON riproduce la tavola di catalogo: è uno
+ * schema costruito dalla sola descrizione testuale del sistema (pilastri,
+ * trave principale a "I", arcarecci precompressi, copertura in lamiera
+ * grecata con pendenza 4%, canale di raccolta). Il taglio è lungo la trave,
+ * così gli arcarecci si vedono in sezione a intervalli regolari.
+ * Geometria neutra, quote sostituite da segnaposto.
+ *
+ * SOSTITUZIONE
+ * Rimpiazzare il contenuto mantenendo `viewBox="0 0 1200 700"` e
+ * l'orientamento. I punti caldi stanno in src/data/soluzioni-tecniche.ts.
+ */
+import '../../styles/disegno.css';
+
+/* Geometria della falda. La pendenza reale è il 4%: su 940 px di campata
+   sono 38 px, cioè quasi piatta. È giusto che si veda così. */
+const X0 = 130;
+const X1 = 1070;
+const Y0 = 360; // estradosso trave all'estremo basso
+const DISLIVELLO = 38;
+
+const quota = (x: number) => Y0 - ((x - X0) / (X1 - X0)) * DISLIVELLO;
+
+/* Arcarecci in sezione, appoggiati sull'estradosso della trave. */
+const ARCARECCI = [200, 340, 480, 620, 760, 900].map((x) => ({
+  x: x - 17,
+  y: quota(x) - 30,
+}));
+
+/* Lamiera grecata: onda quadra che segue la falda. Generata invece di
+   essere disegnata a mano, così resta regolare. */
+const PASSO = 24;
+const GRECA = 8;
+let manto = `M${X0},${quota(X0) - 30}`;
+for (let x = X0; x < X1; x += PASSO) {
+  const a = Math.min(x + PASSO / 2, X1);
+  const b = Math.min(x + PASSO, X1);
+  manto += ` L${x},${quota(x) - 30 - GRECA} L${a},${quota(a) - 30 - GRECA} L${a},${quota(a) - 30} L${b},${quota(b) - 30}`;
+}
+---
+
+<svg
+  class="dt"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="bcTitle bcDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="bcTitle">Sezione segnaposto della copertura Bacacier</title>
+  <desc id="bcDesc">
+    Disegno schematico: due pilastri su plinti reggono una trave principale a
+    “I”; sopra la trave sei arcarecci in sezione sostengono la copertura in
+    lamiera grecata, con pendenza del quattro per cento verso il canale di
+    raccolta a sinistra. Le quote sono segnaposto in attesa del disegno
+    definitivo.
+  </desc>
+
+  <defs>
+    <pattern id="bcGround" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ TERRENO ============ -->
+  <g>
+    <line x1="0" y1="612" x2="1200" y2="612" class="ln-strong" />
+    <rect x="0" y="612" width="1200" height="16" fill="url(#bcGround)" stroke="none" />
+  </g>
+
+  <!-- ============ FONDAZIONI E PILASTRI ============ -->
+  <g>
+    <rect x="118" y="612" width="104" height="34" class="ln-solid" />
+    <rect x="978" y="612" width="104" height="34" class="ln-solid" />
+    <rect x="146" y="430" width="48" height="182" class="ln-struct" />
+    <rect x="1006" y="392" width="48" height="220" class="ln-struct" />
+  </g>
+
+  <!-- ============ TRAVE PRINCIPALE A "I" (in prospetto) ============ -->
+  <g>
+    <path d={`M${X0},${Y0} L${X1},${Y0 - DISLIVELLO} L${X1},${Y0 - DISLIVELLO + 70} L${X0},${Y0 + 70} Z`} class="ln-struct" />
+    <!-- ali: le due linee sottili che rendono riconoscibile la "I" -->
+    <line x1={X0} y1={Y0 + 14} x2={X1} y2={Y0 - DISLIVELLO + 14} class="ln-thin" />
+    <line x1={X0} y1={Y0 + 56} x2={X1} y2={Y0 - DISLIVELLO + 56} class="ln-thin" />
+  </g>
+
+  <!-- ============ ARCARECCI (in sezione) ============ -->
+  <g>
+    {ARCARECCI.map((a) => <rect x={a.x} y={a.y} width="34" height="30" class="ln-solid" />)}
+  </g>
+
+  <!-- ============ COPERTURA IN LAMIERA GRECATA ============ -->
+  <g>
+    <path d={manto} class="ln-strong" />
+    <!-- coibente, appena sotto il manto -->
+    <line x1={X0} y1={quota(X0) - 26} x2={X1} y2={quota(X1) - 26} class="ln-dash" />
+  </g>
+
+  <!-- ============ CANALE DI RACCOLTA (estremo basso) ============ -->
+  <!-- Sta fuori dalla campata, accostato alla trave: è la gronda, non un
+       elemento portante, e non deve leggersi sovrapposta alla struttura. -->
+  <g>
+    <path d="M44,346 H64 V412 H110 V346 H130 V430 H44 Z" class="ln-struct" />
+    <!-- bordo della falda che scarica nel canale -->
+    <line x1={X0} y1={quota(X0) - 30} x2="100" y2="344" class="ln-thin" />
+  </g>
+
+  <!-- ============ QUOTE (segnaposto) ============ -->
+  <g>
+    <!-- maglia strutturale -->
+    <line x1="170" y1="676" x2="1030" y2="676" class="ln-dim" />
+    <line x1="170" y1="664" x2="170" y2="688" class="ln-dim" />
+    <line x1="1030" y1="664" x2="1030" y2="688" class="ln-dim" />
+    <text x="600" y="658" class="tx-dim" text-anchor="middle">MAGLIA STRUTTURALE</text>
+
+    {/* Pendenza: riferimento orizzontale preso sull'estradosso al punto basso
+        e risalita fino all'estradosso al punto alto. Il triangolo che ne esce
+        è piccolo perché il 4% è piccolo: è giusto che si veda così. */}
+    <line x1="600" y1={quota(600) - 86} x2="1010" y2={quota(600) - 86} class="ln-dim" />
+    <line x1="1010" y1={quota(600) - 86} x2="1010" y2={quota(1010) - 86} class="ln-dim" />
+    <line x1="600" y1={quota(600) - 86} x2="1010" y2={quota(1010) - 86} class="ln-dim" stroke-dasharray="5 5" />
+    <text x="805" y={quota(600) - 116} class="tx-dim" text-anchor="middle">PENDENZA 4%</text>
+  </g>
+</svg>

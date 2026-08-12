@@ -1,10 +1,21 @@
 /**
  * Le sette tipologie di copertura.
- * Nomi prodotto: forniti dal cliente, verificati. Non modificare.
+ * Nomi prodotto: forniti dal cliente, verificati.
+ *
+ * NOTA SUL NOME «DOPPIA FALDA»
+ * Nell'elenco iniziale la soluzione era indicata come «Doppia pendenza», ma il
+ * catalogo ufficiale intitola il sistema «Copertura a doppia falda» e riserva
+ * «doppia pendenza» alla trave. Si è scelto il nome del catalogo, con la trave
+ * come alias. Lo slug è cambiato di conseguenza: `doppia-pendenza` non è mai
+ * stato pubblicato, quindi non serve un reindirizzamento.
  *
  * I testi descrittivi sono redazionali e restano da validare
  * (CONTENT-STATUS.md → needs-client-approval).
  * NESSUN dato tecnico è inventato: dove serve un numero c'è un placeholder.
+ *
+ * Le copertine `sol-*-cover` sono generate da `npm run soluzioni-foto`
+ * leggendo le cartelle che il cliente ha ordinato per soluzione: l'abbinamento
+ * foto ↔ tipologia viene da lì, non da una scelta redazionale.
  */
 
 export type Soluzione = {
@@ -21,7 +32,7 @@ export type Soluzione = {
   alt: string;
   /** Etichette dei dati tecnici da compilare. Il valore resta placeholder. */
   specs: string[];
-  /** Solo la scheda con pagina dedicata ha href. */
+  /** Solo le schede con pagina dedicata hanno href. */
   href?: string;
   /** Evidenzia la tipologia nell'indice. */
   inEvidenza?: boolean;
@@ -34,9 +45,9 @@ export const soluzioni: Soluzione[] = [
     claim: 'Luce naturale costante, senza abbagliamento.',
     intro:
       'Copertura a shed: la superficie vetrata orientata a nord porta luce diffusa e uniforme sul piano di lavoro per tutta la giornata. La soluzione di riferimento dove il capannone è anche un ambiente in cui si sta.',
-    img: 'sol-tecnoshed',
-    alt: 'Vista aerea di un edificio industriale Moioli con copertura a shed',
-    specs: ['LUCE NETTA', 'INTERASSE', 'SUPERFICIE VETRATA'],
+    img: 'sol-tecnoshed-cover',
+    alt: 'Vista dall’alto di una copertura Tecnoshed: file parallele di finestrature verticali',
+    specs: ['LUCE NETTA', 'ALTEZZA FINESTRA', 'LARGHEZZA MODULO'],
     href: '/soluzioni/tecnoshed',
     inEvidenza: true,
   },
@@ -46,8 +57,8 @@ export const soluzioni: Soluzione[] = [
     claim: 'Un elemento che non ha equivalenti sul mercato.',
     intro:
       'Il pezzo più caratteristico della produzione Moioli, sviluppato internamente e senza corrispettivi diretti tra i sistemi concorrenti.',
-    img: 'sol-stegos',
-    alt: 'Struttura prefabbricata Moioli con copertura Stegos',
+    img: 'sol-stegos-cover',
+    alt: 'Interno di una struttura Moioli in cemento a vista, con solai piani su pilastri',
     specs: ['ELEMENTO DISTINTIVO', 'LUCE NETTA', 'GEOMETRIA'],
     href: '/soluzioni/stegos',
     inEvidenza: true,
@@ -55,44 +66,49 @@ export const soluzioni: Soluzione[] = [
   {
     slug: 'tecnowing',
     nome: 'Tecnowing',
-    alias: 'Tegolo alare',
-    claim: 'Il tegolo alare della gamma Moioli.',
+    alias: 'Copertura alare',
+    claim: 'La forma a “V” porta la luce e scarica l’acqua.',
     intro:
-      'Elemento di copertura a sezione alare, impiegato dove servono grandi superfici continue con un numero ridotto di appoggi.',
-    img: 'sol-tecnowing',
-    alt: 'Dettaglio costruttivo di un tegolo alare Tecnowing',
-    specs: ['LUCE NETTA', 'INTERASSE', 'SEZIONE'],
+      'Copertura alare per edifici industriali, commerciali e logistici. Fra un tegolo e il successivo si alternano elementi opachi o luminosi, lucernari continui o a shed, scelti in base alla destinazione d’uso.',
+    img: 'sol-tecnowing-cover',
+    alt: 'Vista aerea di un edificio con copertura alare Tecnowing',
+    specs: ['LARGHEZZA MODULO', 'ALTEZZA TRAVE', 'RESISTENZA AL FUOCO'],
+    href: '/soluzioni/tecnowing',
   },
   {
     slug: 'tegolo-tt',
     nome: 'Tegolo TT',
     alias: 'Copertura piana a tegoli',
-    claim: 'Copertura piana, praticabile e predisposta agli impianti.',
+    claim: 'Più livelli, fino a 33 metri di luce.',
     intro:
-      'La soluzione a tegoli TT per coperture piane: superficie regolare, adatta a ospitare impianti tecnici e campi fotovoltaici.',
-    img: 'sol-tegolo-tt',
-    alt: 'Interno di un edificio con copertura piana a tegoli TT',
-    specs: ['LUCE NETTA', 'INTERASSE', 'CARICO AMMISSIBILE'],
+      'Il sistema mono e pluripiano “TT”: la soluzione per edifici prefabbricati su più livelli, centri commerciali, edifici polivalenti e direzionali.',
+    img: 'sol-tegolo-tt-cover',
+    alt: 'Interno di un edificio a copertura piana con tegoli TT e scaffalature',
+    specs: ['LUCE NETTA', 'ALTEZZA TEGOLO', 'LARGHEZZA MODULO'],
+    href: '/soluzioni/tegolo-tt',
   },
   {
     slug: 'bacacier',
     nome: 'Bacacier',
-    claim: 'Manto metallico su struttura prefabbricata.',
+    claim: 'Grandi luci libere, pochi pilastri in mezzo.',
     intro:
-      'Sistema di copertura che abbina la struttura portante in cemento armato precompresso a un manto di finitura in acciaio.',
-    img: 'sol-bacacier',
-    alt: 'Copertura Bacacier realizzata da Prefabbricati Moioli',
-    specs: ['LUCE NETTA', 'PENDENZA', 'STRATIGRAFIA'],
+      'La risposta per edifici logistici a grande luce libera: struttura in pilastri, travi a “I”, arcarecci e canali precompressi, con copertura in lamiera grecata.',
+    img: 'sol-bacacier-cover',
+    alt: 'Intradosso di una copertura Bacacier in lamiera grecata su travi e arcarecci',
+    specs: ['ALTEZZA TRAVE', 'ALTEZZA ARCARECCIO', 'PENDENZA'],
+    href: '/soluzioni/bacacier',
   },
   {
-    slug: 'doppia-pendenza',
-    nome: 'Doppia pendenza',
-    claim: 'La geometria classica del capannone industriale.',
+    slug: 'doppia-falda',
+    nome: 'Doppia falda',
+    alias: 'Trave a doppia pendenza',
+    claim: 'La geometria più collaudata, fino a 40 metri di luce.',
     intro:
-      'Copertura a due falde: la soluzione più diretta ed economica quando la priorità è coprire grandi superfici in tempi rapidi.',
-    img: null,
-    alt: '',
-    specs: ['LUCE NETTA', 'PENDENZA FALDE', 'INTERASSE'],
+      'La soluzione più diffusa per edifici industriali, commerciali e logistici. Semplice nella configurazione geometrica, resta attuale per la flessibilità progettuale e la versatilità di utilizzo.',
+    img: 'sol-doppia-falda-cover',
+    alt: 'Edificio industriale Moioli a doppia falda con fronte in laterizio e portoni',
+    specs: ['LUCI LIBERE', 'PENDENZA COPERTURA', 'ALTEZZA TRAVE'],
+    href: '/soluzioni/doppia-falda',
   },
   {
     slug: 'coverplan',
@@ -100,6 +116,8 @@ export const soluzioni: Soluzione[] = [
     claim: 'Copertura piana continua.',
     intro:
       'Sistema di copertura piana della gamma Moioli, pensato per edifici dove la quinta facciata deve restare pulita e regolare.',
+    /* Unica soluzione senza materiale: né catalogo tecnico né fotografie.
+       Resta in elenco con segnaposto dichiarato, senza pagina dedicata. */
     img: null,
     alt: '',
     specs: ['LUCE NETTA', 'INTERASSE', 'STRATIGRAFIA'],

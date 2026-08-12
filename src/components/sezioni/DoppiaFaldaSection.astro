@@ -1,0 +1,151 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione trasversale della struttura a doppia falda.
+ *
+ * NON è un disegno esecutivo e NON riproduce la tavola di catalogo: è uno
+ * schema costruito dalla sola descrizione testuale del sistema (trave a
+ * doppia pendenza con intradosso orizzontale e pendenza 10% in estradosso,
+ * elementi di copertura sopra la trave, travi canale in gronda, mensola per
+ * soppalchi o carroponte, plinto a pozzetto).
+ * Geometria neutra, quote sostituite da segnaposto.
+ *
+ * SOSTITUZIONE
+ * Rimpiazzare il contenuto mantenendo `viewBox="0 0 1200 700"` e
+ * l'orientamento. I punti caldi stanno in src/data/soluzioni-tecniche.ts.
+ */
+import '../../styles/disegno.css';
+
+/* Falde: il 10% dichiarato dal catalogo su una semicampata di 480 px fa
+   48 px di dislivello. La pendenza disegnata è quella vera, non enfatizzata. */
+const SX = 120;
+const DX = 1080;
+const COLMO = 600;
+const Y_GRONDA = 344;
+const Y_COLMO = 296;
+
+/** Nervature dei tegoli viste in prospetto, distribuite sulle due falde. */
+const passiFalda = (da: number, a: number, yDa: number, yA: number) => {
+  const n = 6;
+  return Array.from({ length: n }, (_, i) => {
+    const t = (i + 0.5) / n;
+    return { x: da + (a - da) * t, y: yDa + (yA - yDa) * t };
+  });
+};
+
+const NERVATURE = [
+  ...passiFalda(SX, COLMO, Y_GRONDA, Y_COLMO),
+  ...passiFalda(COLMO, DX, Y_COLMO, Y_GRONDA),
+];
+---
+
+<svg
+  class="dt"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="dfTitle dfDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="dfTitle">Sezione trasversale segnaposto della struttura a doppia falda</title>
+  <desc id="dfDesc">
+    Disegno schematico: due pilastri su plinti a pozzetto reggono una trave a
+    doppia pendenza con intradosso orizzontale e colmo al centro; sopra la
+    trave il pacchetto di copertura scende con pendenza del dieci per cento
+    verso le travi canale di gronda, con due lucernari sulla falda sinistra e
+    una mensola sul pilastro destro. Le quote sono segnaposto in attesa del
+    disegno definitivo.
+  </desc>
+
+  <defs>
+    <pattern id="dfGround" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" class="ln-hatch" />
+    </pattern>
+    <pattern id="dfVetro" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(35)">
+      <line x1="0" y1="0" x2="0" y2="9" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ TERRENO ============ -->
+  <g>
+    <line x1="0" y1="612" x2="1200" y2="612" class="ln-strong" />
+    <rect x="0" y="612" width="1200" height="16" fill="url(#dfGround)" stroke="none" />
+  </g>
+
+  <!-- ============ PLINTI A POZZETTO ============ -->
+  <!-- Il pilastro si incastra nel pozzetto: la linea tratteggiata è la parte
+       annegata, quella che da fuori non si vede. -->
+  <g>
+    <rect x="112" y="612" width="116" height="48" class="ln-solid" />
+    <rect x="972" y="612" width="116" height="48" class="ln-solid" />
+    <line x1="146" y1="612" x2="146" y2="654" class="ln-dash" />
+    <line x1="194" y1="612" x2="194" y2="654" class="ln-dash" />
+    <line x1="1006" y1="612" x2="1006" y2="654" class="ln-dash" />
+    <line x1="1054" y1="612" x2="1054" y2="654" class="ln-dash" />
+  </g>
+
+  <!-- ============ PILASTRI ============ -->
+  <g>
+    <rect x="146" y="430" width="48" height="182" class="ln-struct" />
+    <rect x="1006" y="430" width="48" height="182" class="ln-struct" />
+    <!-- mensola: per impalcati intermedi o scorrimento carroponte -->
+    <path d="M1006,462 H952 L964,496 H1006 Z" class="ln-solid" />
+  </g>
+
+  <!-- ============ TRAVE A DOPPIA PENDENZA ============ -->
+  <!-- Intradosso orizzontale, estradosso a due falde: la pendenza è nel pezzo. -->
+  <g>
+    <path
+      d={`M${SX},430 L${SX},${Y_GRONDA} L${COLMO},${Y_COLMO} L${DX},${Y_GRONDA} L${DX},430 Z`}
+      class="ln-struct"
+    />
+  </g>
+
+  <!-- ============ ELEMENTI DI COPERTURA ============ -->
+  <!-- Tegoli "TT" o Stegos: qui in prospetto, con le nervature accennate. -->
+  <g>
+    <path
+      d={`M${SX},${Y_GRONDA} L${COLMO},${Y_COLMO} L${DX},${Y_GRONDA} L${DX},${Y_GRONDA - 24} L${COLMO},${Y_COLMO - 24} L${SX},${Y_GRONDA - 24} Z`}
+      class="ln-solid"
+    />
+    {NERVATURE.map((n) => <line x1={n.x} y1={n.y} x2={n.x} y2={n.y - 24} class="ln-thin" />)}
+  </g>
+
+  <!-- ============ TRAVI CANALE DI GRONDA ============ -->
+  <!-- Accostate agli estremi della trave, non sovrapposte: sono gli elementi
+       di gronda, e devono leggersi come pezzi distinti dalla struttura. -->
+  <g>
+    <path d="M24,340 H44 V400 H100 V340 H120 V420 H24 Z" class="ln-struct" />
+    <path d="M1080,340 H1100 V400 H1156 V340 H1176 V420 H1080 Z" class="ln-struct" />
+  </g>
+
+  <!-- ============ LUCERNARI IN FALDA ============ -->
+  <g>
+    <path d="M268,306 L316,301 L316,283 L268,288 Z" fill="url(#dfVetro)" class="ln-thin" />
+    <path d="M268,306 L316,301 L316,283 L268,288 Z" class="ln-strong" />
+    <path d="M404,292 L452,287 L452,269 L404,274 Z" fill="url(#dfVetro)" class="ln-thin" />
+    <path d="M404,292 L452,287 L452,269 L404,274 Z" class="ln-strong" />
+  </g>
+  <g class="g-raggi">
+    <line x1="292" y1="252" x2="292" y2="286" />
+    <line x1="428" y1="238" x2="428" y2="272" />
+    <line x1="352" y1="250" x2="360" y2="282" />
+  </g>
+
+  <!-- ============ QUOTE (segnaposto) ============ -->
+  <g>
+    <!-- luce libera, la misura che decide tutto il resto -->
+    <line x1="170" y1="676" x2="1030" y2="676" class="ln-dim" />
+    <line x1="170" y1="664" x2="170" y2="688" class="ln-dim" />
+    <line x1="1030" y1="664" x2="1030" y2="688" class="ln-dim" />
+    <text x="600" y="658" class="tx-dim" text-anchor="middle">LUCE LIBERA</text>
+
+    {/* Pendenza: orizzontale dal colmo, verticale fino all'estradosso in
+        gronda. 400 di base contro 40 di altezza, cioè il 10% dichiarato. */}
+    <line x1="600" y1="272" x2="1000" y2="272" class="ln-dim" />
+    <line x1="1000" y1="272" x2="1000" y2="312" class="ln-dim" />
+    <text x="800" y="260" class="tx-dim" text-anchor="middle">PENDENZA 10%</text>
+
+    <!-- altezza della trave al colmo -->
+    <line x1="600" y1={Y_COLMO} x2="600" y2="430" class="ln-dim" stroke-dasharray="5 5" />
+    <text x="612" y="418" class="tx-dim" text-anchor="start">ALT. AL COLMO</text>
+  </g>
+</svg>

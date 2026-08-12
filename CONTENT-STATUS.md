@@ -55,15 +55,36 @@ tenue, riconoscibile a colpo d'occhio in presentazione.
 I **nomi prodotto** sono quelli forniti e sono `ready`. Tutto il resto è
 redazionale.
 
-| Tipologia | Nome | Claim + intro | Immagine | Dati tecnici |
-|---|---|---|---|---|
-| Tecnoshed | `ready` | `needs-client-approval` | `needs-client-approval` (abbinamento da confermare) | `needs-geometra` |
-| Stegos | `ready` | `needs-client-approval` | `needs-client-approval` | `needs-geometra` |
-| Tecnowing | `ready` | `needs-client-approval` | `needs-client-approval` | `needs-geometra` |
-| Tegolo TT | `ready` | `needs-client-approval` | `needs-client-approval` | `needs-geometra` |
-| Bacacier | `ready` | `needs-client-approval` | `needs-client-approval` | `needs-geometra` |
-| Doppia pendenza | `ready` | `needs-client-approval` | **`placeholder`** — nessuna foto utilizzabile | `needs-geometra` |
-| Coverplan | `ready` | `needs-client-approval` | **`placeholder`** — nessuna foto utilizzabile | `needs-geometra` |
+| Tipologia | Nome | Claim + intro | Immagine | Dati tecnici | Pagina |
+|---|---|---|---|---|---|
+| Tecnoshed | `ready` | `needs-client-approval` | `ready` | `needs-client-approval` (da catalogo) | scritta a mano |
+| Stegos | `ready` | `needs-client-approval` | `ready` | `needs-client-approval` (da catalogo) | scritta a mano |
+| Tecnowing | `ready` | `needs-client-approval` | `ready` | `needs-client-approval` (da catalogo) | `[slug].astro` |
+| Tegolo TT | `ready` | `needs-client-approval` | `ready` | `needs-client-approval` (da catalogo) | `[slug].astro` |
+| Bacacier | `ready` | `needs-client-approval` | `ready` | `needs-client-approval` (da catalogo) | `[slug].astro` |
+| Doppia falda | `ready` | `needs-client-approval` | `ready` | `needs-client-approval` (da catalogo) | `[slug].astro` |
+| Coverplan | `ready` | `needs-client-approval` | **`placeholder`** — nessun materiale | **`manca`** | nessuna |
+
+Le fotografie vengono ora dalle cartelle di `CARTELLA IMMAGINI/SOLUZIONI`, che
+il cliente ha ordinato per soluzione: l'abbinamento foto ↔ tipologia arriva da
+lì e non è più una scelta redazionale. Restano da identificare i singoli
+edifici e da scrivere le didascalie.
+
+### Il nome «Doppia falda»
+
+Nell'elenco iniziale la soluzione era indicata come **Doppia pendenza**, ma il
+catalogo ufficiale intitola il sistema **«Copertura a doppia falda»** e riserva
+«doppia pendenza» alla trave. Su indicazione del cliente vale il nome del
+catalogo, con la trave come sottotitolo. Lo slug è passato da
+`doppia-pendenza` a `doppia-falda`: non era mai stato pubblicato, quindi non
+serve un reindirizzamento.
+
+### Coverplan resta senza pagina
+
+È l'unica delle sette senza alcun materiale: nessun catalogo fra i sei PDF,
+nessuna fotografia, la cartella dedicata è vuota. Su indicazione del cliente
+resta in elenco come scheda con riquadro dichiarato, senza pagina tecnica e
+fuori dalla sitemap. Quando arriva il materiale si accende come le altre.
 
 ### Punti aperti sulle soluzioni
 
@@ -76,14 +97,22 @@ redazionale.
    **senza riduzione di portata**. Più la flessibilità modulare: lo stesso
    elemento come solaio, in pluripiano e in copertura.
    La pagina è stata rifatta su questi contenuti — vedi §4-bis.
-2. **Doppia pendenza e Coverplan non hanno fotografie utilizzabili.**
-   La cartella `DOPPIA PENDENZA` contiene solo file `.TIF`, esclusi dalla
-   lavorazione come concordato; per Coverplan esistono solo PDF di disegno.
-   In pagina compare un riquadro dichiarato al posto dell'immagine.
-3. **L'abbinamento foto ↔ tipologia è da confermare.** Le cartelle sono
-   organizzate per prodotto ma alcune contengono materiale misto: la cartella
-   `tegolo alare contenuti` include per esempio fotografie di coperture a shed.
-   Nessuna foto è stata attribuita con certezza. Dichiarato in pagina.
+2. ~~**Doppia pendenza e Coverplan non hanno fotografie utilizzabili.**~~
+   **Risolto per Doppia falda.** La sua cartella contiene solo `.TIF`, che in
+   una fase precedente erano stati esclusi perché altrove c'erano alternative
+   in JPG. Qui alternative non ce n'erano, e sono sorgenti ottime — fino a
+   6144 px — quindi ora vengono elaborate. Coverplan resta senza materiale.
+3. ~~**L'abbinamento foto ↔ tipologia è da confermare.**~~
+   **Risolto per le soluzioni.** Le fotografie arrivano dalle cartelle che il
+   cliente ha ordinato per soluzione, non più da un fondo misto. Restano da
+   identificare i singoli edifici e da scrivere le didascalie.
+4. **I sei cataloghi tecnici vanno confermati come versione validata.**
+   Portano tutti la stessa data di impaginazione, 22/11/19, e derivano tutti
+   dallo stesso file InDesign, `4-ante-Tecnowing FINAL.indd`. Contengono anche
+   un refuso ricorrente («Spinkler» per sprinkler). Vale la stessa riserva già
+   annotata per Stegos: i numeri pubblicati — classi REI, luci libere,
+   pendenze, altezze — restano `needs-client-approval` finché non arriva
+   conferma esplicita che quei PDF sono la versione buona.
 
 ---
 

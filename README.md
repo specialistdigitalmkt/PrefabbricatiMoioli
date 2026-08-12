@@ -25,6 +25,7 @@ npm run dev
 | `npm run preview` | Anteprima del build |
 | `npm run images` | Rigenera le derivate WebP dagli originali |
 | `npm run realizzazioni` | Elabora realizzazioni e rivestimenti da `CARTELLA IMMAGINI` |
+| `npm run soluzioni-foto` | Elabora le fotografie per soluzione da `CARTELLA IMMAGINI/SOLUZIONI` |
 | `node scripts/fetch-fonts.mjs` | Riscarica i font in locale (solo se cambiano famiglie o pesi) |
 
 ---
@@ -75,6 +76,7 @@ Solo queste sei. Il menu contiene solo ciò che è navigabile e finito.
 | `/soluzioni` | Indice delle tipologie |
 | `/soluzioni/tecnoshed` | Pagina vetrina |
 | `/soluzioni/stegos` | Scheda prodotto |
+| `/soluzioni/[slug]` | Schede di Tecnowing, Tegolo TT, Bacacier, Doppia falda |
 | `/soluzioni/rivestimenti` | Campionario delle finiture di facciata |
 | `/progetti` | Le 25 realizzazioni fotografate |
 | `/progetti/[slug]` | Scheda di ogni realizzazione, con galleria |
@@ -82,6 +84,17 @@ Solo queste sei. Il menu contiene solo ciò che è navigabile e finito.
 | `/azienda/referenze` | Committenti, filtrabili per settore |
 | `/azienda/riconoscimenti` | Certificazioni e network |
 | `/contatti` | Modulo, dati, mappa |
+
+**Le schede di soluzione sono di due tipi.** Tecnoshed e Stegos hanno una
+pagina scritta a mano, già approvata. Le altre quattro condividono
+`soluzioni/[slug].astro`, perché condividono la stessa struttura di contenuto:
+una correzione di impaginazione le sistema tutte insieme. Le due forme
+convivono senza conflitti — in Astro una route statica vince su una dinamica.
+
+**Coverplan non ha pagina.** È l'unica soluzione senza materiale: né catalogo
+tecnico né fotografie. Resta nell'indice come scheda con riquadro dichiarato.
+Per accenderla basta darle un `href` in `src/data/soluzioni.ts` e una voce in
+`src/data/soluzioni-tecniche.ts`: sitemap e collegamenti si aggiornano da sé.
 
 **Azienda** è una sezione a tre pagine con sottomenu. Le voci si definiscono in
 `src/data/site.ts` (`nav`, campo `voci`): la testata costruisce da lì il
@@ -100,14 +113,33 @@ insieme ai file `public/fonts/archivo-*` e alla riga corrispondente in
 
 **Un testo:** `src/data/*.ts`. Il markup non va toccato.
 
-**Un punto caldo del disegno in sezione:** `src/data/tecnoshed.ts`, array
-`hotspots`. Aggiungerne, toglierne o spostarne uno è una modifica di contenuto.
-`x` e `y` sono percentuali del viewBox del disegno (1200 × 700).
+**Un punto caldo del disegno in sezione:** array `hotspots` in
+`src/data/tecnoshed.ts`, `stegos.ts` o `soluzioni-tecniche.ts`. Aggiungerne,
+toglierne o spostarne uno è una modifica di contenuto. `x` e `y` sono
+percentuali del viewBox del disegno (1200 × 700).
 
-**Un disegno in sezione:** sostituire il contenuto di
-`src/components/ShedSection.astro` (Tecnoshed) o `StegosSection.astro` (Stegos)
+**Un disegno in sezione:** sostituire il contenuto del file corrispondente,
 mantenendo `viewBox="0 0 1200 700"` e l'orientamento. Nessuna logica dipende
 dall'SVG.
+
+| Soluzione | File |
+|---|---|
+| Tecnoshed | `components/ShedSection.astro` |
+| Stegos | `components/StegosSection.astro` |
+| Tecnowing | `components/sezioni/TecnowingSection.astro` |
+| Bacacier | `components/sezioni/BacacierSection.astro` |
+| Doppia falda | `components/sezioni/DoppiaFaldaSection.astro` |
+| Tegolo TT | `components/sezioni/TegoloTTSection.astro` |
+
+I quattro disegni in `sezioni/` condividono lo stile di
+`src/styles/disegno.css` (classi `ln-*` per i tratti, `tx-dim` per le sigle).
+I due della prima fase hanno il proprio stile scoped e sono rimasti come
+stanno, per non toccare pagine già approvate.
+
+**Tutti i disegni sono segnaposto dichiarati.** Sono schemi costruiti dalla
+descrizione testuale dei cataloghi, non tavole esecutive: nessun disegno dei
+PDF è riprodotto. Le quote portano l'etichetta senza il valore — i numeri
+stanno nella tabella dei dati, dove si possono correggere in un posto solo.
 
 **Una nuova sezione interattiva:** `HotspotExplainer.astro` è generico — riceve
 i punti caldi come dato e il disegno come contenuto:

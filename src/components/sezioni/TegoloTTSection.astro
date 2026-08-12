@@ -1,0 +1,132 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione trasversale del sistema pluripiano a tegoli "TT".
+ *
+ * NON è un disegno esecutivo e NON riproduce la tavola di catalogo: è uno
+ * schema costruito dalla sola descrizione testuale del sistema (tegoli a
+ * doppio "TT" con due nervature, piano di calpestio all'estradosso, travi a
+ * "L" di bordo, pilastri monolitici che attraversano i livelli).
+ * Geometria neutra, quote sostituite da segnaposto.
+ *
+ * SOSTITUZIONE
+ * Rimpiazzare il contenuto mantenendo `viewBox="0 0 1200 700"` e
+ * l'orientamento. I punti caldi stanno in src/data/soluzioni-tecniche.ts.
+ */
+import '../../styles/disegno.css';
+
+const SX = 200;
+const DX = 1000;
+const MODULI = 3;
+const LARG = (DX - SX) / MODULI;
+
+/* Due nervature per modulo: è quello che rende il tegolo un doppio "TT". */
+const nervature = (yPiano: number, altezza: number) =>
+  Array.from({ length: MODULI }, (_, i) => SX + LARG * i).flatMap((x0) => [
+    { x: x0 + LARG * 0.25 - 8, y: yPiano, h: altezza },
+    { x: x0 + LARG * 0.75 - 8, y: yPiano, h: altezza },
+  ]);
+
+/** Un livello completo: getto, soletta del tegolo, nervature. */
+const LIVELLI = [
+  { getto: 178, soletta: 196, spessore: 22, nervatura: 84 }, // copertura
+  { getto: 388, soletta: 406, spessore: 22, nervatura: 84 }, // solaio intermedio
+];
+---
+
+<svg
+  class="dt"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="ttTitle ttDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="ttTitle">Sezione trasversale segnaposto del sistema pluripiano a tegoli “TT”</title>
+  <desc id="ttDesc">
+    Disegno schematico: due pilastri monolitici attraversano senza interruzione
+    due livelli; a ciascun livello i tegoli a doppio “TT” — soletta piana con
+    due nervature discendenti — appoggiano su travi a “L” di bordo, con il
+    piano di calpestio realizzato all'estradosso. Le quote sono segnaposto in
+    attesa del disegno definitivo.
+  </desc>
+
+  <defs>
+    <pattern id="ttGround" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ TERRENO ============ -->
+  <g>
+    <line x1="0" y1="612" x2="1200" y2="612" class="ln-strong" />
+    <rect x="0" y="612" width="1200" height="16" fill="url(#ttGround)" stroke="none" />
+  </g>
+
+  <!-- ============ FONDAZIONI ============ -->
+  <g>
+    <rect x="118" y="612" width="116" height="44" class="ln-solid" />
+    <rect x="966" y="612" width="116" height="44" class="ln-solid" />
+  </g>
+
+  <!-- ============ PILASTRI MONOLITICI ============ -->
+  <!-- Un solo pezzo dalla fondazione alla copertura: nessun nodo di ripresa
+       fra un piano e l'altro. È il punto del sistema. -->
+  <g>
+    <rect x="152" y="178" width="48" height="434" class="ln-struct" />
+    <rect x="1000" y="178" width="48" height="434" class="ln-struct" />
+  </g>
+
+  <!-- ============ LIVELLI ============ -->
+  {
+    LIVELLI.map((liv) => (
+      <g>
+        {/* travi a "L" di bordo: anima verticale e mensola che riceve il tegolo */}
+        <path
+          d={`M${SX - 52},${liv.soletta} H${SX} V${liv.soletta + liv.spessore} H${SX - 22} V${liv.soletta + liv.nervatura} H${SX - 52} Z`}
+          class="ln-struct"
+        />
+        <path
+          d={`M${DX + 52},${liv.soletta} H${DX} V${liv.soletta + liv.spessore} H${DX + 22} V${liv.soletta + liv.nervatura} H${DX + 52} Z`}
+          class="ln-struct"
+        />
+
+        {/* soletta del tegolo */}
+        <rect x={SX} y={liv.soletta} width={DX - SX} height={liv.spessore} class="ln-solid" />
+
+        {/* nervature: le due gambe del doppio "TT" */}
+        {nervature(liv.soletta + liv.spessore, liv.nervatura - liv.spessore).map((n) => (
+          <rect x={n.x} y={n.y} width="16" height={n.h} class="ln-solid" />
+        ))}
+
+        {/* piano di calpestio all'estradosso */}
+        <rect x={SX - 52} y={liv.getto} width={DX - SX + 104} height={liv.soletta - liv.getto} class="ln-getto" />
+      </g>
+    ))
+  }
+
+  <!-- ============ QUOTE (segnaposto) ============ -->
+  <g>
+    <!-- luce netta: quanti pilastri restano in mezzo dipende da questa -->
+    <line x1={SX - 52} y1="676" x2={DX + 52} y2="676" class="ln-dim" />
+    <line x1={SX - 52} y1="664" x2={SX - 52} y2="688" class="ln-dim" />
+    <line x1={DX + 52} y1="664" x2={DX + 52} y2="688" class="ln-dim" />
+    <text x="600" y="658" class="tx-dim" text-anchor="middle">LUCE NETTA</text>
+
+    <!-- altezza del tegolo, nervatura compresa -->
+    <line x1="118" y1="196" x2="118" y2="280" class="ln-dim" />
+    <line x1="106" y1="196" x2="130" y2="196" class="ln-dim" />
+    <line x1="106" y1="280" x2="130" y2="280" class="ln-dim" />
+    <text x="106" y="170" class="tx-dim" text-anchor="start">ALT. TEGOLO</text>
+
+    <!-- interpiano -->
+    <line x1="1130" y1="196" x2="1130" y2="406" class="ln-dim" />
+    <line x1="1118" y1="196" x2="1142" y2="196" class="ln-dim" />
+    <line x1="1118" y1="406" x2="1142" y2="406" class="ln-dim" />
+    <text x="1142" y="306" class="tx-dim" text-anchor="end" transform="rotate(-90 1142 306)">INTERPIANO</text>
+
+    <!-- larghezza del modulo, su una campata sola -->
+    <line x1={SX} y1="522" x2={SX + LARG} y2="522" class="ln-dim" />
+    <line x1={SX} y1="512" x2={SX} y2="532" class="ln-dim" />
+    <line x1={SX + LARG} y1="512" x2={SX + LARG} y2="532" class="ln-dim" />
+    <text x={SX + LARG / 2} y="550" class="tx-dim" text-anchor="middle">LARGH. MODULO</text>
+  </g>
+</svg>

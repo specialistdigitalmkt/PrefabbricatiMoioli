@@ -1,0 +1,103 @@
+/**
+ * Stile comune ai disegni in sezione.
+ *
+ * I due disegni della prima fase (ShedSection, StegosSection) hanno il proprio
+ * stile scoped: sono rimasti come stanno per non toccare pagine già approvate.
+ * Da qui in avanti i disegni usano queste classi.
+ *
+ * Tutto è definito in bianco a opacità diverse perché i disegni vivono su
+ * fondo navy: cambiare il fondo non rompe niente. L'unico colore è --red-soft,
+ * riservato alle quote e a ciò che segnala la luce.
+ */
+
+.dt {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Elementi in cemento: contorno pieno e campitura appena accennata. */
+.dt .ln-solid {
+  fill: rgba(255, 255, 255, 0.06);
+  stroke: rgba(255, 255, 255, 0.62);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+/* Elementi strutturali secondari: stessa linea, campitura più scura. */
+.dt .ln-struct {
+  fill: rgba(255, 255, 255, 0.04);
+  stroke: rgba(255, 255, 255, 0.62);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+/* Getti e completamenti: campitura più chiara per distinguerli dal prefabbricato. */
+.dt .ln-getto {
+  fill: rgba(255, 255, 255, 0.12);
+  stroke: rgba(255, 255, 255, 0.62);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+
+.dt .ln-strong {
+  stroke: rgba(255, 255, 255, 0.48);
+  stroke-width: 2;
+  fill: none;
+}
+
+.dt .ln-thin {
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 1.25;
+  fill: none;
+}
+
+.dt .ln-dash {
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 1.25;
+  stroke-dasharray: 6 5;
+  fill: none;
+}
+
+.dt .ln-hatch {
+  stroke: rgba(255, 255, 255, 0.24);
+  stroke-width: 1;
+}
+
+.dt .ln-hatch-f {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.22);
+  stroke-width: 1;
+}
+
+/* La luce è l'unica cosa che prende colore: nei sistemi Moioli è il prodotto. */
+.dt .g-raggi line {
+  stroke: var(--red-soft);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
+.dt .ln-dim {
+  stroke: var(--red-soft);
+  stroke-width: 1.25;
+  fill: none;
+  opacity: 0.85;
+}
+
+.dt .tx-dim {
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  fill: var(--red-soft);
+  opacity: 0.9;
+}
+
+/* Sotto gli 860px il disegno si rimpicciolisce ma le sigle devono restare
+   leggibili: crescono in proporzione inversa. */
+@media (max-width: 860px) {
+  .dt .tx-dim {
+    font-size: 22px;
+  }
+}

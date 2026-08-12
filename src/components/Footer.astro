@@ -90,7 +90,13 @@ const { indirizzo } = azienda;
     color: rgba(255, 255, 255, 0.55);
   }
 
+  /* Telefono e mail stanno ognuno sulla propria riga: sono bersagli a sé, non
+     collegamenti dentro una frase, quindi l'eccezione «inline» della 2.5.8 non
+     vale. Il riempimento verticale li porta da 18 a 26 px senza spostare nulla:
+     l'interlinea a 1.9 lo spazio ce l'ha già. */
   address a {
+    display: inline-block;
+    padding-block: 4px;
     transition: color 0.2s;
   }
   address a:hover {
