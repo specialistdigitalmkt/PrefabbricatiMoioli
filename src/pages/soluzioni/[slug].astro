@@ -162,6 +162,29 @@ const jsonLd = {
       <HotspotExplainer hotspots={scheda.hotspots} intro={scheda.sezione.intro}>
         <Disegno />
       </HotspotExplainer>
+
+      {/* Il modello 3D sta qui perché racconta la stessa cosa del disegno in
+          sezione, montata. Scheda nuova: è una pagina a sé, pesante, e non
+          deve rubare la posizione a questa. */}
+      {
+        scheda.modello3d && (
+          <div class="sg-3d reveal">
+            <div class="sg-3d-txt">
+              <h3>{scheda.modello3d.titolo}</h3>
+              <p>{scheda.modello3d.testo}</p>
+            </div>
+            <a
+              href={scheda.modello3d.href}
+              class="btn btn-light"
+              target="_blank"
+              rel="noopener"
+            >
+              Apri il modello 3D
+              <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+            </a>
+          </div>
+        )
+      }
     </div>
   </section>
 
@@ -486,6 +509,34 @@ const jsonLd = {
     line-height: 1.05;
   }
 
+  /* Rimando al modello 3D. Sta sotto il disegno, separato da un filo: è un
+     approfondimento, non un secondo contenuto della sezione. */
+  .sg-3d {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 56px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .sg-3d-txt {
+    max-width: 52ch;
+  }
+  .sg-3d h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(21px, 2.2vw, 27px);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    color: #fff;
+  }
+  .sg-3d p {
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
   /* ==================== 4. DATI TECNICI ==================== */
   .sg-dati-s {
     background: var(--bg1);
@@ -798,6 +849,14 @@ const jsonLd = {
   }
 
   @media (max-width: 700px) {
+    .sg-3d {
+      align-items: stretch;
+      gap: 22px;
+      margin-top: 40px;
+    }
+    .sg-3d .btn {
+      justify-content: center;
+    }
     .sg-hero {
       min-height: auto;
     }

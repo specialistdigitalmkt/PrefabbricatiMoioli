@@ -36,6 +36,12 @@ export type SchedaTecnica = {
   };
   sistema: { titolo: string; intro: string; componenti: { nome: string; testo: string }[] };
   sezione: { titolo: string; intro: string };
+  /**
+   * Modello 3D navigabile, dove esiste. È una pagina a sé in `public/`,
+   * non un componente: si accende dando questo campo alla scheda, come
+   * l'`href` accende Coverplan nell'indice. Senza campo, niente collegamento.
+   */
+  modello3d?: { href: string; titolo: string; testo: string };
   applicazioni: { num: string; titolo: string; testo: string }[];
   hotspots: Hotspot[];
 };
@@ -95,6 +101,13 @@ const tecnowing: SchedaTecnica = {
   sezione: {
     titolo: 'I punti che contano.',
     intro: 'Sezione trasversale della copertura. Seleziona un punto per vedere come è risolto.',
+  },
+
+  modello3d: {
+    href: '/soluzioni/tecnowing/configuratore-3d',
+    titolo: 'Lo stesso sistema, in tre dimensioni.',
+    testo:
+      'Il configuratore mostra la copertura montata: ruota il modello, isola un componente, cambia interposto e configurazione. Si apre in una scheda a parte perché è pesante.',
   },
 
   applicazioni: [
