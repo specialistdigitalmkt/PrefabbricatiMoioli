@@ -64,7 +64,16 @@ const {
     /* Valori del vettoriale originale */
     --lg-n: #1f2a43;
     --lg-r: #e42829;
-    transition-property: width, height, --lg-n, --lg-r;
+
+    /* I due riempimenti NON si transiscono.
+       Erano in questa lista, e da li' veniva il marchio nero: mentre la
+       custom property viene interpolata, dentro lo shadow tree di <use> il
+       valore non e' un colore scritto a mano, `fill: var(--lg-n)` risulta
+       invalido e `fill` ripiega sul proprio valore iniziale, che e' il nero.
+       Fuori dalla transizione --lg-n e' sempre e solo #1f2a43 o #ffffff,
+       quindi il nero non ha piu' una finestra in cui esistere. Il marchio
+       passa da bianco a colori insieme alla barra, senza sfumatura. */
+    transition-property: width, height;
   }
 
   .logo--light .logo-svg {
