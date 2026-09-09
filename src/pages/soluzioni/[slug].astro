@@ -561,11 +561,21 @@ const jsonLd = {
   .sg-dati.n-6 {
     grid-template-columns: repeat(3, 1fr);
   }
+  /* Ogni cella e' un subgrid di due righe: l'etichetta sta nella prima, il
+     valore nella seconda. Le righe sono quelle della griglia madre, quindi i
+     valori partono alla stessa altezza in tutti i riquadri anche quando una
+     nota o un valore a capo cambiano l'ingombro. Il gap di 1px della madre
+     disegna i separatori: dentro la cella va azzerato, altrimenti taglierebbe
+     una riga fra etichetta e valore. */
   .sg-dati > div {
     background: #fff;
     padding: 26px 22px 28px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2;
+    row-gap: 0;
+    justify-items: center;
+    text-align: center;
     min-width: 0;
   }
   .sg-dati dt {
@@ -579,9 +589,9 @@ const jsonLd = {
   .sg-dati dd {
     display: flex;
     align-items: baseline;
+    justify-content: center;
     gap: 6px;
     flex-wrap: wrap;
-    margin-top: auto;
   }
   .sg-dati .v {
     font-family: var(--brand);
@@ -884,6 +894,10 @@ const jsonLd = {
       grid-template-columns: 1fr;
     }
     .sg-dati > div {
+      display: flex;
+      grid-row: auto;
+      text-align: left;
+      justify-items: stretch;
       flex-direction: row;
       align-items: baseline;
       justify-content: space-between;
