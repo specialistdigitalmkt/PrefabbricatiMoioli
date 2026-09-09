@@ -131,7 +131,19 @@ const isActive = (href: string) => {
     left: 0;
     right: 0;
     z-index: 100;
-    transition: 0.4s var(--ease);
+    /* Il fondale si risolve in fretta, il resto no.
+       Prima erano 0,4s su tutto: entrando in .scrolled lo sfondo passava da
+       trasparente a chiaro con la stessa lentezza con cui la sigla virava da
+       bianco a navy. A meta' corsa la barra era opaca a meta' sopra la
+       fotografia scura dell'apertura e la sigla era gia' a meta' strada verso
+       il navy: scuro su scuro, e il marchio sembrava annerire per un istante.
+       Portando sfondo e sfocatura a 0,15s la finestra scura non si apre: il
+       marchio vira sui suoi 0,4s sopra una barra gia' chiara. L'ombra resta
+       lenta, non ha contrasto da reggere. */
+    transition:
+      background-color 0.15s linear,
+      backdrop-filter 0.15s linear,
+      box-shadow 0.4s var(--ease);
   }
 
   /* Velo di leggibilità.
@@ -151,7 +163,9 @@ const isActive = (href: string) => {
       transparent 100%
     );
     pointer-events: none;
-    transition: opacity 0.4s var(--ease);
+    /* Si spegne insieme allo sfondo: se restasse indietro resterebbe scuro
+       sopra una barra gia' chiara. */
+    transition: opacity 0.15s linear;
   }
 
   header.scrolled::before,
