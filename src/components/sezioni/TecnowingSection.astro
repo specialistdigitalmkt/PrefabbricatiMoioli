@@ -35,6 +35,30 @@ const coibente = ({ da, a }: { da: number; a: number }) => {
   const c = (da + a) / 2;
   return `M${da},318 Q${c},226 ${a},318`;
 };
+
+interface Props {
+  /** Lingua delle etichette del disegno. */
+  lang?: 'it' | 'en';
+}
+const { lang = 'it' } = Astro.props;
+
+/* Le sigle quotate sul disegno: poche, ma vanno lette nella lingua della
+   pagina come tutto il resto. */
+const ETICHETTE = {
+  it: {
+    titoloSvg: 'Sezione trasversale segnaposto della copertura alare Tecnowing',
+    larghezzaModulo: 'LARGHEZZA MODULO',
+    altTrave: 'ALT. TRAVE',
+    desc: 'Disegno schematico: tre tegoli alari a profilo curvo, separati da due interposti — uno luminoso e uno opaco — appoggiati su una trave a “U” di raccolta a sinistra e una trave a “I” a destra, sostenute da pilastri su plinti. Le quote sono segnaposto in attesa del disegno definitivo.',
+  },
+  en: {
+    titoloSvg: 'Placeholder cross section of the Tecnowing wing roof',
+    larghezzaModulo: 'MODULE WIDTH',
+    altTrave: 'BEAM DEPTH',
+    desc: 'Schematic drawing: three curved wing units, separated by two infill panels — one glazed and one solid — bearing on a “U” collector beam to the left and an “I” beam to the right, carried by columns on pad foundations. The dimensions are placeholders pending the final drawing.',
+  },
+};
+const t = ETICHETTE[lang];
 ---
 
 <svg
@@ -44,13 +68,8 @@ const coibente = ({ da, a }: { da: number; a: number }) => {
   aria-labelledby="twTitle twDesc"
   preserveAspectRatio="xMidYMid meet"
 >
-  <title id="twTitle">Sezione trasversale segnaposto della copertura alare Tecnowing</title>
-  <desc id="twDesc">
-    Disegno schematico: tre tegoli alari a profilo curvo, separati da due
-    interposti — uno luminoso e uno opaco — appoggiati su una trave a “U” di
-    raccolta a sinistra e una trave a “I” a destra, sostenute da pilastri su
-    plinti. Le quote sono segnaposto in attesa del disegno definitivo.
-  </desc>
+  <title id="twTitle">{t.titoloSvg}</title>
+  <desc id="twDesc">{t.desc}</desc>
 
   <defs>
     <pattern id="twGround" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -118,12 +137,12 @@ const coibente = ({ da, a }: { da: number; a: number }) => {
     <line x1="460" y1="676" x2="740" y2="676" class="ln-dim" />
     <line x1="460" y1="664" x2="460" y2="688" class="ln-dim" />
     <line x1="740" y1="664" x2="740" y2="688" class="ln-dim" />
-    <text x="600" y="658" class="tx-dim" text-anchor="middle">LARGHEZZA MODULO</text>
+    <text x="600" y="658" class="tx-dim" text-anchor="middle">{t.larghezzaModulo}</text>
 
     <line x1="72" y1="356" x2="72" y2="430" class="ln-dim" />
     <line x1="60" y1="356" x2="84" y2="356" class="ln-dim" />
     <line x1="60" y1="430" x2="84" y2="430" class="ln-dim" />
     {/* Ruotata: orizzontale finirebbe sotto il bordo del tegolo. */}
-    <text x="52" y="393" class="tx-dim" text-anchor="middle" transform="rotate(-90 52 393)">ALT. TRAVE</text>
+    <text x="52" y="393" class="tx-dim" text-anchor="middle" transform="rotate(-90 52 393)">{t.altTrave}</text>
   </g>
 </svg>

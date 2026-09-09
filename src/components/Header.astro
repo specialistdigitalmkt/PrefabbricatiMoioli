@@ -6,13 +6,29 @@
  */
 import Logo from './Logo.astro';
 import { nav } from '../data/site';
+import { navEn, percorsoAlternato, ui, type Lang } from '../i18n';
 import Icon from './Icon.astro';
 
 interface Props {
   /** La pagina apre su fondo chiaro: la testata parte già in versione scura. */
   suChiaro?: boolean;
+  /** Lingua della testata: decide voci di menu, etichette e stato dello switcher. */
+  lang?: Lang;
 }
-const { suChiaro = false } = Astro.props;
+const { suChiaro = false, lang = 'it' } = Astro.props;
+
+const t = ui[lang];
+const voci = lang === 'en' ? navEn : nav;
+const hrefContatti = lang === 'en' ? '/en/contact' : '/contatti';
+const hrefHome = lang === 'en' ? '/en' : '/';
+
+/* Lo switcher punta alla stessa pagina nell'altra lingua. Dove quella
+   pagina non esiste - la maggior parte del sito e' solo in italiano -
+   ripiega sulla home dell'altra lingua: perdere il segno e' meglio di un
+   comando che sparisce da una pagina all'altra. */
+const percorso = Astro.url.pathname;
+const altro = percorsoAlternato(percorso);
+const hrefAltraLingua = altro ?? (lang === 'it' ? '/en' : '/');
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -26,13 +42,13 @@ const isActive = (href: string) => {
 
 <header id="hdr" class:list={{ 'su-chiaro': suChiaro }}>
   <div class="bar">
-    <a href="/" class="logo-link" aria-label="Prefabbricati Moioli — home">
+    <a href={hrefHome} class="logo-link" aria-label={t.homeAria}>
       <Logo height={34} />
     </a>
 
-    <nav class="main" aria-label="Navigazione principale">
+    <nav class="main" aria-label={t.navPrincipale}>
       {
-        nav.map((v) =>
+        voci.map((v) =>
           v.voci ? (
             /* Voce con sottomenu.
                Il comando è un <button>, non un link: apre un pannello, non
@@ -79,21 +95,27 @@ const isActive = (href: string) => {
       }
     </nav>
 
-    <a href="/contatti" class="btn btn-light hdr-cta">Richiedi preventivo</a>
+    <div class="lang" aria-label={t.cambioLingua} role="group">
+      {lang === 'it' ? <span class="lang-act" aria-current="true">IT</span> : <a href={hrefAltraLingua} hreflang="it" lang="it">IT</a>}
+      <span class="lang-sep" aria-hidden="true">/</span>
+      {lang === 'en' ? <span class="lang-act" aria-current="true">EN</span> : <a href={hrefAltraLingua} hreflang="en" lang="en">EN</a>}
+    </div>
 
-    <button class="menu-tog" id="mtog" aria-label="Apri il menu" aria-expanded="false" aria-controls="mnav">
+    <a href={hrefContatti} class="btn btn-light hdr-cta">{t.ctaPreventivo}</a>
+
+    <button class="menu-tog" id="mtog" aria-label={t.menuApri} aria-expanded="false" aria-controls="mnav">
       <Icon nome="menu" dim={24} />
     </button>
   </div>
 </header>
 
-<nav class="mnav" id="mnav" aria-label="Navigazione principale (mobile)" aria-hidden="true">
-  <button class="x" id="mclose" aria-label="Chiudi il menu">
+<nav class="mnav" id="mnav" aria-label={t.navMobile} aria-hidden="true">
+  <button class="x" id="mclose" aria-label={t.menuChiudi}>
     <Icon nome="chiudi" dim={26} />
   </button>
 
   {
-    nav.map((v, i) => (
+    voci.map((v, i) => (
       <>
         <a href={v.href} aria-current={isActive(v.href) ? 'page' : undefined}>
           <span>{v.label}</span>
@@ -118,8 +140,14 @@ const isActive = (href: string) => {
     ))
   }
 
-  <a href="/contatti" class="mnav-cta">
-    <span>Richiedi preventivo</span>
+  <div class="mnav-lang" aria-label={t.cambioLingua} role="group">
+    {lang === 'it' ? <span class="lang-act" aria-current="true">Italiano</span> : <a href={hrefAltraLingua} hreflang="it" lang="it">Italiano</a>}
+    <span class="lang-sep" aria-hidden="true">/</span>
+    {lang === 'en' ? <span class="lang-act" aria-current="true">English</span> : <a href={hrefAltraLingua} hreflang="en" lang="en">English</a>}
+  </div>
+
+  <a href={hrefContatti} class="mnav-cta">
+    <span>{t.ctaPreventivo}</span>
     <small><Icon nome="freccia-dx" dim={16} /></small>
   </a>
 </nav>
@@ -407,6 +435,46 @@ const isActive = (href: string) => {
     color: #fff;
   }
 
+  /* Switcher di lingua.
+     Sta accanto al pulsante di contatto e ne segue i colori: sopra la
+     fascia scura e' bianco, allo scroll diventa navy come il resto. */
+  .lang {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: rgba(255, 255, 255, 0.72);
+    transition: 0.4s var(--ease);
+  }
+  .lang a {
+    color: inherit;
+    text-decoration: none;
+    padding: 4px 2px;
+    transition: 0.2s var(--ease);
+  }
+  .lang a:hover {
+    color: #fff;
+  }
+  .lang .lang-act {
+    color: #fff;
+  }
+  .lang .lang-sep {
+    opacity: 0.45;
+  }
+  header.scrolled .lang,
+  header.su-chiaro:not(.scrolled) .lang {
+    color: var(--text);
+  }
+  header.scrolled .lang a:hover,
+  header.scrolled .lang .lang-act,
+  header.su-chiaro:not(.scrolled) .lang a:hover,
+  header.su-chiaro:not(.scrolled) .lang .lang-act {
+    color: var(--navy);
+  }
+
   .hdr-cta {
     flex: none;
     padding: 12px 22px;
@@ -575,6 +643,26 @@ const isActive = (href: string) => {
     }
   }
 
+  /* Lingua nel menu mobile: sopra il pulsante di contatto, per esteso.
+     Due sigle di due lettere sono un bersaglio troppo piccolo li' dentro. */
+  .mnav-lang {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .mnav-lang a {
+    color: inherit;
+    text-decoration: none;
+    padding: 8px 0;
+  }
+  .mnav-lang .lang-act {
+    color: #fff;
+  }
+
   .mnav-cta {
     margin-top: 18px;
     border-bottom: none !important;
@@ -598,6 +686,7 @@ const isActive = (href: string) => {
 
   @media (max-width: 920px) {
     nav.main,
+    .lang,
     .hdr-cta {
       display: none;
     }

@@ -1,0 +1,62 @@
+---
+/**
+ * /en/contact — contatti, versione inglese.
+ *
+ * Il form resta inerte anche qui: valida i campi e non spedisce niente.
+ */
+import Contatti from '../../../components/pagine/Contatti.astro';
+
+const ui = {
+  seoTitolo: 'Contact — Prefabbricati Moioli, Bagnatica, Italy',
+  seoDescrizione:
+    'Prefabbricati Moioli — Via F.lli Kennedy 24, Bagnatica (BG), Italy. Phone +39 035 681239. Request a quote for your precast structure.',
+  home: 'Home',
+  briciola: 'Contact',
+  eyebrow: 'Contact',
+  titolo: 'Let’s talk about your project.',
+  lead: 'Tell us what you need to build: intended use, floor area and the constraints of the site. We answer with a technical proposal, not a generic quotation.',
+
+  doveSiamo: 'Where we are',
+  telefono: 'Phone',
+  email: 'Email',
+  sede: 'Head office and plant',
+  comeRaggiungerci: 'How to reach us',
+  accesso: 'A4 motorway — Seriate exit',
+  mappaTitolo:
+    'Location diagram: the Moioli site in Bagnatica, close to the A4 motorway, Seriate exit',
+  uscitaSeriate: 'Seriate exit',
+  mappaSchema: 'DIAGRAM — map not to scale',
+  apriMaps: 'Open in Google Maps',
+
+  richiediPreventivo: 'Request a quote',
+  campiObbligatori: 'Fields marked with * are required.',
+  labelNome: 'Full name *',
+  errNome: 'Please enter your full name.',
+  labelAzienda: 'Company *',
+  errAzienda: 'Please enter the company name.',
+  labelTelefono: 'Phone *',
+  errTelefono: 'Please enter a phone number.',
+  labelEmail: 'Email *',
+  errEmail: 'Please enter a valid email address.',
+  labelTipo: 'Type of work',
+  opzioni: [
+    'Not sure yet',
+    'New industrial building',
+    'Extension to an existing building',
+    'Roofing only',
+    'Something else',
+  ],
+  labelProgetto: 'The project',
+  hintProgetto:
+    'Approximate floor area, intended use and municipality: that is enough for a first technical answer.',
+  inviaRichiesta: 'Send request',
+  notaDemo:
+    'Demo: the form validates the fields but sends nothing. Before going live it has to be connected to the company mailbox and completed with the privacy notice.',
+
+  msgErrore: 'Please check the highlighted fields and try again.',
+  msgInvio: 'Sending…',
+  msgOk: 'Request registered. No email is sent in this demo.',
+};
+---
+
+<Contatti lang="en" t={ui} />

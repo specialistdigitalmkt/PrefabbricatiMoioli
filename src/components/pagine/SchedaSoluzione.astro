@@ -1,0 +1,949 @@
+---
+/**
+ * Corpo delle schede tecniche di soluzione, condiviso fra italiano e inglese.
+ *
+ * In italiano lo usano Tecnowing, Tegolo TT, Bacacier e Doppia falda dalla
+ * route dinamica /soluzioni/[slug]. In inglese lo usa la sola Tecnowing, su
+ * /en/solutions/tecnowing: e' l'unica scheda tradotta, e le altre non hanno
+ * un collegamento inglese verso cui puntare.
+ *
+ * IMPOSTAZIONE
+ * Il baricentro e' la sezione interattiva, in posizione 02: subito dopo
+ * l'introduzione, a fascia intera. Dati, sistema e applicazioni vengono dopo
+ * e la commentano.
+ *
+ * FONTI
+ * Dati tecnici dai cataloghi ufficiali (src/data/soluzioni-tecniche.ts): dai
+ * PDF si prendono SOLO LE INFORMAZIONI, nessuna tavola e' riprodotta. I
+ * disegni in sezione sono segnaposto dichiarati.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Picture from '../../components/Picture.astro';
+import Icon from '../../components/Icon.astro';
+import HotspotExplainer from '../../components/HotspotExplainer.astro';
+import TecnowingSection from '../../components/sezioni/TecnowingSection.astro';
+import BacacierSection from '../../components/sezioni/BacacierSection.astro';
+import DoppiaFaldaSection from '../../components/sezioni/DoppiaFaldaSection.astro';
+import TegoloTTSection from '../../components/sezioni/TegoloTTSection.astro';
+import type { SchedaTecnica } from '../../data/soluzioni-tecniche';
+import type { Soluzione } from '../../data/soluzioni';
+import foto from '../../data/soluzioni-foto.json';
+import images from '../../data/images.json';
+import { ui, type Lang } from '../../i18n';
+
+interface Props {
+  scheda: SchedaTecnica;
+  lang: Lang;
+  /** Elenco delle tipologie nella lingua corrente, per l'apertura e il finale. */
+  soluzioni: readonly Soluzione[];
+  t: Record<string, any>;
+}
+
+const { scheda, lang, soluzioni, t } = Astro.props;
+
+const hrefHome = lang === 'en' ? '/en' : '/';
+const hrefSoluzioni = lang === 'en' ? '/en/solutions' : '/soluzioni';
+const hrefContatti = lang === 'en' ? '/en/contact' : '/contatti';
+
+/* Ogni sistema ha una geometria sua: il disegno non e' parametrizzabile. */
+const DISEGNI = {
+  tecnowing: TecnowingSection,
+  bacacier: BacacierSection,
+  'doppia-falda': DoppiaFaldaSection,
+  'tegolo-tt': TegoloTTSection,
+} as const;
+const Disegno = DISEGNI[scheda.slug as keyof typeof DISEGNI];
+
+const galleria = (foto as Record<string, { cover: string; galleria: { id: string }[] }>)[
+  scheda.slug
+];
+const cover = galleria?.cover;
+const coverMeta = cover ? (images as Record<string, { widths: number[] }>)[cover] : undefined;
+const coverSrcset = coverMeta
+  ? coverMeta.widths.map((w) => `/img/${cover}-${w}.webp ${w}w`).join(', ')
+  : '';
+const coverSrc = coverMeta ? `/img/${cover}-${coverMeta.widths.at(-1)}.webp` : '';
+
+const scheda0 = soluzioni.find((s) => s.slug === scheda.slug);
+const altre = soluzioni.filter((s) => s.slug !== scheda.slug).slice(0, 3);
+
+const BASE = 'https://www.prefabbricatimoioli.it';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: t.home, item: `${BASE}${hrefHome}` },
+    { '@type': 'ListItem', position: 2, name: t.soluzioni, item: `${BASE}${hrefSoluzioni}` },
+    { '@type': 'ListItem', position: 3, name: scheda.nome },
+  ],
+};
+---
+
+<BaseLayout
+  title={`${scheda.nome} — ${scheda.alias ?? t.sistemaGenerico} | Prefabbricati Moioli`}
+  description={scheda.meta}
+  preloadImage={cover}
+  jsonLd={jsonLd}
+  lang={lang}
+>
+  <!-- ==================== 1. APERTURA ==================== -->
+  <section class="sg-hero on-dark">
+    {
+      coverSrc && (
+        <div class="sg-hero-img">
+          <img
+            src={coverSrc}
+            srcset={coverSrcset}
+            sizes="100vw"
+            alt={scheda0?.alt ?? t.heroAltFallback(scheda.nome)}
+            fetchpriority="high"
+            decoding="sync"
+          />
+        </div>
+      )
+    }
+    <div class="sg-hero-grad" aria-hidden="true"></div>
+
+    <div class="wrap sg-hero-body">
+      <Breadcrumb
+        items={[
+          { label: t.home, href: hrefHome },
+          { label: t.soluzioni, href: hrefSoluzioni },
+          { label: scheda.nome },
+        ]}
+      />
+      <p class="eyebrow sg-eyebrow">{scheda.eyebrow}</p>
+      <h1>{scheda.nome}</h1>
+      {scheda.alias && <p class="sg-alias">{scheda.alias}</p>}
+      <p class="sg-claim">{scheda.claim}</p>
+      <p class="lead sg-lead">{scheda.lead}</p>
+
+      <div class="sg-hero-cta">
+        <a href="#sezione" class="btn btn-red">
+          {t.esploraSezione}
+          <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
+        </a>
+        <a href={hrefContatti} class="btn btn-light">{t.chiediAdatto}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 2. DI COSA SI TRATTA ==================== -->
+  <section class="block sg-id">
+    <div class="sec-num" aria-hidden="true">01</div>
+    <div class="wrap">
+      <div class="sg-id-grid">
+        <div class="reveal">
+          <p class="eyebrow">{t.diCosaSiTratta}</p>
+          <h2>{scheda.identita.titolo}</h2>
+        </div>
+        <div class="sg-id-text reveal">
+          {scheda.identita.paragrafi.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+
+      <ul class="sg-car stagger">
+        {
+          scheda.caratteristiche.map((c) => (
+            <li>
+              <h3>{c.titolo}</h3>
+              <p>{c.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 3. SEZIONE INTERATTIVA — il blocco centrale ==== -->
+  <section class="sg-sez on-dark" id="sezione">
+    <div class="sec-num" aria-hidden="true">02</div>
+    <div class="wrap">
+      <div class="sg-sez-head reveal">
+        <p class="eyebrow">{t.laSezione}</p>
+        <h2>{scheda.sezione.titolo}</h2>
+      </div>
+
+      <HotspotExplainer
+        hotspots={scheda.hotspots}
+        intro={scheda.sezione.intro}
+        etichettaFoto={ui[lang].fotoDettaglio}
+        didascalia={ui[lang].disegnoSegnaposto}
+      >
+        <Disegno lang={lang} />
+      </HotspotExplainer>
+
+      {/* Il modello 3D sta qui perché racconta la stessa cosa del disegno in
+          sezione, montata. Scheda nuova: è una pagina a sé, pesante, e non
+          deve rubare la posizione a questa. */}
+      {
+        scheda.modello3d && (
+          <div class="sg-3d reveal">
+            <div class="sg-3d-txt">
+              <h3>{scheda.modello3d.titolo}</h3>
+              <p>{scheda.modello3d.testo}</p>
+            </div>
+            <a
+              href={scheda.modello3d.href}
+              class="btn btn-light"
+              target="_blank"
+              rel="noopener"
+            >
+              {t.apriModello3d}
+              <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+            </a>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <!-- ==================== 4. DATI TECNICI ==================== -->
+  <section class="block sg-dati-s">
+    <div class="sec-num" aria-hidden="true">03</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{t.datiTecnici}</p>
+        <h2>{scheda.dati.titolo}</h2>
+      </div>
+
+      <dl class:list={['sg-dati', 'stagger', `n-${scheda.dati.voci.length}`]}>
+        {
+          scheda.dati.voci.map((v) => (
+            <div>
+              <dt>{v.label}</dt>
+              <dd>
+                <span class="v">{v.valore}</span>
+                {v.unita && <span class="u">{v.unita}</span>}
+                {v.nota && <span class="nt">{v.nota}</span>}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="sg-dati-n">{scheda.dati.nota}</p>
+    </div>
+  </section>
+
+  <!-- ==================== 5. IL SISTEMA ==================== -->
+  <section class="block sg-sis on-dark">
+    <div class="sec-num" aria-hidden="true">04</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{t.ilSistema}</p>
+        <h2>{scheda.sistema.titolo}</h2>
+        <p>{scheda.sistema.intro}</p>
+      </div>
+
+      <ul class="sg-comp stagger">
+        {
+          scheda.sistema.componenti.map((c, i) => (
+            <li>
+              <span class="n">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                <h3>{c.nome}</h3>
+                <p>{c.testo}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 6. APPLICAZIONI ==================== -->
+  <section class="block sg-app">
+    <div class="sec-num" aria-hidden="true">05</div>
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <p class="eyebrow">{t.doveSiUsa}</p>
+        <h2>{t.destinazioni}</h2>
+      </div>
+
+      <ul class="adv-grid stagger">
+        {
+          scheda.applicazioni.map((v) => (
+            <li>
+              <span class="adv-n">{v.num}</span>
+              <h3>{v.titolo}</h3>
+              <p>{v.testo}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 7. GALLERY ==================== -->
+  {
+    galleria && galleria.galleria.length > 0 && (
+      <section class="block sg-gal on-dark">
+        <div class="sec-num" aria-hidden="true">06</div>
+        <div class="wrap">
+          <div class="sec-head reveal">
+            <p class="eyebrow">{t.realizzazioni}</p>
+            <h2>{t.comeSiVede}</h2>
+          </div>
+
+          <div class="gal-grid stagger">
+            {galleria.galleria.map((img, i) => (
+              <figure class:list={['gal-item', { wide: i === 0 }]}>
+                <Picture
+                  id={img.id}
+                  alt={t.galleriaAlt(scheda.nome, i + 1)}
+                  ratio={i === 0 ? '21/9' : '4/3'}
+                  sizes="(max-width: 700px) 100vw, 50vw"
+                />
+              </figure>
+            ))}
+          </div>
+
+          <p class="ph-note gal-note">
+            {t.notaGalleria}
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ==================== 8. ALTRE SOLUZIONI ==================== -->
+  <section class="block sg-other">
+    <div class="wrap">
+      <div class="other-head reveal">
+        <div>
+          <p class="eyebrow">{t.altreSoluzioni}</p>
+          <h2>{t.nonUnica}</h2>
+        </div>
+        <a href={hrefSoluzioni} class="btn btn-ghost">
+          {t.tutteLeSoluzioni} <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+
+      <ul class="other-grid stagger">
+        {
+          altre.map((s) => (
+            <li>
+              <a href={s.href ?? hrefSoluzioni}>
+                {s.img ? (
+                  <Picture id={s.img} alt={s.alt} ratio="4/3" sizes="(max-width: 700px) 100vw, 33vw" />
+                ) : (
+                  <div class="other-noimg">
+                    <span class="spec">{ui[lang].fotoDaServizio}</span>
+                  </div>
+                )}
+                <h3>{s.nome}</h3>
+                <p>{s.claim}</p>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ==================== 9. CTA ==================== -->
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">{t.passoSuccessivo}</p>
+          <h2>{t.verifichiamo(scheda.nome)}</h2>
+          <p class="cta-p">{t.ctaTesto}</p>
+        </div>
+        <a href={hrefContatti} class="btn btn-red">
+          {t.richiediValutazione} <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ==================== 1. APERTURA ==================== */
+  .sg-hero {
+    position: relative;
+    min-height: 88svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background: var(--navy);
+    color: #fff;
+  }
+  .sg-hero-img {
+    position: absolute;
+    inset: 0;
+  }
+  .sg-hero-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 55%;
+  }
+  .sg-hero-grad {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.76) 0%,
+      rgba(29, 42, 68, 0.42) 34%,
+      rgba(22, 32, 58, 0.9) 82%,
+      var(--navy) 100%
+    );
+  }
+  .sg-hero-body {
+    position: relative;
+    z-index: 2;
+    padding-top: 150px;
+    padding-bottom: 64px;
+    width: 100%;
+  }
+  .sg-eyebrow {
+    margin-top: 24px;
+    color: var(--red-soft);
+  }
+  .sg-hero h1 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(48px, 8vw, 104px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 16px 0 10px;
+    color: #fff;
+  }
+  /* Il nome descrittivo sta sotto il nome commerciale: è la parola con cui la
+     soluzione viene chiesta al telefono, non può sparire. */
+  .sg-alias {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.62);
+    margin-bottom: 14px;
+  }
+  .sg-claim {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: clamp(19px, 2.4vw, 28px);
+    color: #fff;
+    line-height: 1.25;
+    max-width: 24ch;
+  }
+  .sg-lead {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 58ch;
+  }
+  .sg-hero-cta {
+    display: flex;
+    gap: 14px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+  }
+
+  /* ==================== 2. DI COSA SI TRATTA ==================== */
+  .sg-id {
+    background: var(--white);
+    padding-top: 96px;
+    padding-bottom: 104px;
+  }
+  .sg-id-grid {
+    display: grid;
+    grid-template-columns: 0.72fr 1.28fr;
+    gap: 52px;
+    align-items: start;
+    margin-bottom: 52px;
+  }
+  .sg-id-grid h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 50px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .sg-id-text p {
+    font-size: 17px;
+    margin-bottom: 18px;
+    max-width: 62ch;
+  }
+  .sg-id-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .sg-car {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--bg2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .sg-car li {
+    background: #fff;
+    padding: 28px 24px 30px;
+  }
+  .sg-car h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .sg-car p {
+    font-size: 14px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 3. SEZIONE INTERATTIVA ==================== */
+  .sg-sez {
+    background: var(--navy-deep);
+    padding: 152px 0;
+    position: relative;
+  }
+  .sg-sez-head {
+    max-width: 680px;
+    margin-bottom: 64px;
+  }
+  .sg-sez-head h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(34px, 4.8vw, 62px);
+    margin-top: 18px;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  /* Rimando al modello 3D. Sta sotto il disegno, separato da un filo: è un
+     approfondimento, non un secondo contenuto della sezione. */
+  .sg-3d {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 56px;
+    padding-top: 36px;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .sg-3d-txt {
+    max-width: 52ch;
+  }
+  .sg-3d h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(21px, 2.2vw, 27px);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    color: #fff;
+  }
+  .sg-3d p {
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  /* ==================== 4. DATI TECNICI ==================== */
+  .sg-dati-s {
+    background: var(--bg1);
+  }
+  /* Il numero di dati cambia da scheda a scheda: la griglia si adatta invece
+     di lasciare buchi in fondo alla riga. */
+  .sg-dati {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--bg2);
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+  .sg-dati.n-4 {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .sg-dati.n-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .sg-dati.n-6 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  /* Ogni cella e' un subgrid di due righe: l'etichetta sta nella prima, il
+     valore nella seconda. Le righe sono quelle della griglia madre, quindi i
+     valori partono alla stessa altezza in tutti i riquadri anche quando una
+     nota o un valore a capo cambiano l'ingombro. Il gap di 1px della madre
+     disegna i separatori: dentro la cella va azzerato, altrimenti taglierebbe
+     una riga fra etichetta e valore. */
+  .sg-dati > div {
+    background: #fff;
+    padding: 26px 22px 28px;
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 2;
+    row-gap: 0;
+    justify-items: center;
+    text-align: center;
+    min-width: 0;
+  }
+  .sg-dati dt {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .sg-dati dd {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .sg-dati .v {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 24px;
+    color: var(--navy);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    /* Le serie di altezze sono lunghe: devono poter andare a capo ovunque. */
+    overflow-wrap: anywhere;
+  }
+  .sg-dati .u {
+    font-family: var(--brand);
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .sg-dati .nt {
+    flex-basis: 100%;
+    font-size: 12.5px;
+    color: var(--text-2);
+    margin-top: 6px;
+  }
+  .sg-dati-n {
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 5. IL SISTEMA ==================== */
+  .sg-sis {
+    background: var(--navy);
+  }
+  .sg-comp {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 52px;
+  }
+  .sg-comp li {
+    display: flex;
+    gap: 18px;
+    padding: 24px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+  .sg-comp .n {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--red-soft);
+    flex: none;
+    padding-top: 4px;
+  }
+  .sg-comp h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+  .sg-comp p {
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.66);
+  }
+
+  /* ==================== 6. APPLICAZIONI ==================== */
+  .sg-app {
+    background: var(--bg1);
+  }
+  .adv-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+  .adv-grid li {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 30px 26px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.4s var(--ease), border-color 0.4s, transform 0.4s var(--ease);
+  }
+  .adv-grid li::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 3px;
+    width: 0;
+    background: var(--red);
+    transition: width 0.45s var(--ease);
+  }
+  .adv-grid li:hover {
+    box-shadow: var(--sh-card);
+    border-color: #fff;
+    transform: translateY(-3px);
+  }
+  .adv-grid li:hover::after {
+    width: 100%;
+  }
+  .adv-n {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--red);
+  }
+  .adv-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 19px;
+    margin: 14px 0 10px;
+    line-height: 1.25;
+  }
+  .adv-grid p {
+    font-size: 14.5px;
+    color: var(--text-2);
+  }
+
+  /* ==================== 7. GALLERY ==================== */
+  .sg-gal {
+    background: var(--navy-ink);
+  }
+  .gal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+  .gal-item {
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--r-md);
+  }
+  .gal-item.wide {
+    grid-column: span 2;
+  }
+  .gal-item :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+  }
+  .gal-item:hover :global(.frame img) {
+    transform: scale(1.04);
+  }
+  .gal-note {
+    margin-top: 32px;
+  }
+
+  /* ==================== 8. ALTRE SOLUZIONI ==================== */
+  .sg-other {
+    background: var(--white);
+  }
+  .other-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  .other-head h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(28px, 3.4vw, 42px);
+    margin-top: 16px;
+    letter-spacing: -0.02em;
+  }
+  .other-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .other-grid a {
+    display: block;
+  }
+  .other-grid :global(.frame) {
+    transition: transform 0.4s var(--ease);
+  }
+  .other-grid a:hover :global(.frame) {
+    transform: translateY(-4px);
+  }
+  .other-grid h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 20px;
+    margin: 16px 0 6px;
+  }
+  .other-grid p {
+    font-size: 14px;
+  }
+  .other-noimg {
+    aspect-ratio: 4 / 3;
+    background: var(--ph-bg);
+    border: 1px dashed var(--ph-border);
+    border-radius: var(--r-md);
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    text-align: center;
+  }
+
+  /* ==================== 9. CTA ==================== */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* ==================== RESPONSIVE ==================== */
+  @media (max-width: 1100px) {
+    .sg-dati,
+    .sg-dati.n-4,
+    .sg-dati.n-5,
+    .sg-dati.n-6 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .adv-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 1000px) {
+    .sg-car {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 920px) {
+    .sg-id-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .sg-comp {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .other-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .sg-sez {
+      padding: 104px 0;
+    }
+    .sg-sez-head {
+      margin-bottom: 44px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .sg-3d {
+      align-items: stretch;
+      gap: 22px;
+      margin-top: 40px;
+    }
+    .sg-3d .btn {
+      justify-content: center;
+    }
+    .sg-hero {
+      min-height: auto;
+    }
+    .sg-hero-body {
+      padding-top: 122px;
+      padding-bottom: 48px;
+    }
+    .sg-hero-cta {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .sg-car,
+    .adv-grid,
+    .gal-grid,
+    .other-grid {
+      grid-template-columns: 1fr;
+    }
+    /* La tabella dati non si comprime: diventa un elenco etichetta → valore. */
+    .sg-dati,
+    .sg-dati.n-4,
+    .sg-dati.n-5,
+    .sg-dati.n-6 {
+      grid-template-columns: 1fr;
+    }
+    .sg-dati > div {
+      display: flex;
+      grid-row: auto;
+      text-align: left;
+      justify-items: stretch;
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 20px;
+    }
+    .sg-dati dt {
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .sg-dati dd {
+      margin-top: 0;
+      justify-content: flex-end;
+      text-align: right;
+      flex: none;
+      max-width: 52%;
+    }
+    .sg-dati .nt {
+      text-align: right;
+    }
+    .gal-item.wide {
+      grid-column: span 1;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+    .sg-sez {
+      padding: 80px 0;
+    }
+    .sg-id {
+      padding-top: 64px;
+      padding-bottom: 72px;
+    }
+    .sg-id-grid {
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .sg-id-text p {
+      font-size: 16px;
+      margin-bottom: 14px;
+    }
+  }
+</style>

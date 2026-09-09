@@ -1,0 +1,46 @@
+---
+/**
+ * /en/projects — le realizzazioni, versione inglese.
+ *
+ * Le schede di dettaglio non sono tradotte: qui le card mostrano la
+ * fotografia e il nome, senza collegamento. Vedi il commento nel componente.
+ */
+import IndiceProgetti from '../../../components/pagine/IndiceProgetti.astro';
+import { realizzazioni } from '../../../data/progetti';
+import { etichetta } from '../../../i18n/en/contenuti';
+
+const intestazione = {
+  eyebrow: 'Completed work',
+  titolo: 'More than 700,000 m² built.',
+  lead: 'More than a hundred companies have entrusted us with their plants. This is what has been built: industrial sheds, logistics hubs, head offices.',
+  nota: 'Review note: the photographs come from the Moioli archive and the projects are real. Six of them are already named in the archive; the names of the others are still to be assigned. Floor area, location and year were not supplied for any of them and remain placeholders.',
+};
+
+const ui = {
+  seoTitolo: 'Completed work — Prefabbricati Moioli',
+  seoDescrizione:
+    'Precast structures built by Moioli: industrial sheds, logistics hubs and head offices across northern Italy. More than 700,000 m² built.',
+  home: 'Home',
+  briciola: 'Completed work',
+  conNome: 'Named projects',
+  daNominare: 'Name to be assigned',
+  daNominareNota:
+    'Real projects, photographed. The archive does not record a name: when one arrives, it replaces the placeholder.',
+  fotografie: (n: number) => `${n} photographs`,
+  nomeDaAssegnare: 'NAME — to be assigned',
+  schedaAlt: (nome: string) => `${nome} — precast structure built by Moioli`,
+  schedaAltAnonima: 'Precast structure built by Prefabbricati Moioli',
+  ctaEyebrow: 'The next one',
+  ctaTitolo: 'Your plant could be the next one.',
+  ctaTesto: 'From structural design to handover, with a single point of contact.',
+  parliamoProgetto: 'Let’s talk about your project',
+};
+---
+
+<IndiceProgetti
+  lang="en"
+  realizzazioni={realizzazioni}
+  intestazione={intestazione}
+  etichetta={etichetta}
+  t={ui}
+/>

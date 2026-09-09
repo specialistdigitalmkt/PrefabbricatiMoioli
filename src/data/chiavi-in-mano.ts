@@ -147,4 +147,4 @@ export const pagina = {
     testo:
       'Superficie del lotto, destinazione d’uso e metri quadri coperti: con questi tre dati possiamo dirti se il chiavi in mano è la strada giusta.',
   },
-} as const;
+}; // niente `as const`: la versione inglese deve poter usare la stessa forma

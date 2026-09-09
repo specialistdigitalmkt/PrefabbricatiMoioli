@@ -1,0 +1,40 @@
+---
+/**
+ * /en/solutions — indice delle tipologie, versione inglese.
+ *
+ * Il campionario dei rivestimenti non e' tradotto: il blocco resta in pagina
+ * con i campioni, ma senza collegamento (hrefRivestimenti = null).
+ */
+import IndiceSoluzioni from '../../../components/pagine/IndiceSoluzioni.astro';
+import { soluzioni } from '../../../i18n/en/contenuti';
+
+const ui = {
+  seoTitolo: 'Roofing solutions — Prefabbricati Moioli',
+  seoDescrizione:
+    'The seven Moioli precast roofing types: Tecnoshed, Stegos, Tecnowing, Tegolo TT, Bacacier, double-pitch and Coverplan.',
+  home: 'Home',
+  briciola: 'Solutions',
+  eyebrow: 'Solutions',
+  titolo: 'Seven ways to roof a space.',
+  lead: 'The roof is not a finishing detail: it decides how the light comes in, how much the structure weighs and what you will be able to put on top of it tomorrow. These are the types we manufacture.',
+
+  finEyebrow: 'Finishes',
+  finTitolo: 'Then there is the face the building shows outside.',
+  finTag: 'Façade finishes',
+  finSottotitolo: 'The sample book of façade finishes.',
+  finTesto:
+    'The panel arrives finished from the plant: the surface you see is the one that comes out of the mould. Exposed aggregate, washed and fair-faced surfaces.',
+  vediCampionario: 'See the sample book',
+
+  notaRevisione:
+    'Review note: the descriptive copy for each type is editorial and has to be validated by the technical department. The pairing of photograph and building type is to be confirmed. No technical figures have been entered: every monospaced entry is a placeholder.',
+
+  ctaEyebrow: 'Not sure which one to choose?',
+  ctaTitolo: 'We start from how you will use the building.',
+  ctaTesto:
+    'Tell us the intended use, the floor area and the constraints of the site: we will point you to the right type and explain why.',
+  parliamoProgetto: 'Let’s talk about the project',
+};
+---
+
+<IndiceSoluzioni lang="en" soluzioni={soluzioni} hrefRivestimenti={null} t={ui} />

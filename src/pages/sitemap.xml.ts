@@ -5,6 +5,7 @@
 import type { APIRoute } from 'astro';
 import { realizzazioni } from '../data/progetti';
 import { soluzioni } from '../data/soluzioni';
+import { coppieRotte } from '../i18n';
 
 const ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'monthly' },
@@ -31,6 +32,16 @@ const ROUTES = [
     path: `/progetti/${r.slug}`,
     priority: r.numerata ? '0.4' : '0.6',
     changefreq: 'yearly',
+  })),
+
+  /* Le pagine inglesi si aggiungono dalla stessa tabella che governa lo
+     switcher e gli hreflang: se una traduzione nasce o sparisce, la sitemap
+     la segue senza che nessuno debba ricordarsene. Priorità leggermente
+     sotto l'italiana, che resta la versione principale del sito. */
+  ...Object.values(coppieRotte).map((path) => ({
+    path,
+    priority: path === '/en' ? '0.9' : '0.7',
+    changefreq: 'monthly',
   })),
 ];
 

@@ -11,6 +11,7 @@ import { azienda } from '../data/site';
 import images from '../data/images.json';
 import '../styles/global.css';
 import Icon from '../components/Icon.astro';
+import { linguaDi, percorsoAlternato, normalizza, ui, LINGUE, type Lang } from '../i18n';
 
 interface Props {
   title: string;
@@ -26,6 +27,9 @@ interface Props {
   noindex?: boolean;
   /** La pagina apre su fondo chiaro: la testata parte già in versione scura. */
   headerSuChiaro?: boolean;
+  /** Lingua della pagina. Se non passata si deduce dal percorso: /en/... e'
+   *  inglese, tutto il resto italiano. */
+  lang?: Lang;
 }
 
 const {
@@ -36,7 +40,10 @@ const {
   jsonLd = null,
   noindex = false,
   headerSuChiaro = false,
+  lang = linguaDi(Astro.url.pathname),
 } = Astro.props;
+
+const t = ui[lang];
 
 /* Il preload deve descrivere le stesse alternative dell'<img>, altrimenti il
    browser scarica due file diversi: quello precaricato e quello scelto dal
@@ -52,6 +59,16 @@ const lcpSrcset = lcp
 const lcpFallback = lcp ? `/img/${preloadImage}-${lcp.widths.at(-1)}.webp` : null;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+/* Le due versioni della stessa pagina si dichiarano a vicenda. Esistono solo
+   per le pagine davvero tradotte: dichiarare un alternato inesistente e'
+   peggio che non dichiararne nessuno. */
+const percorsoProprio = normalizza(Astro.url.pathname);
+const percorsoAltro = percorsoAlternato(Astro.url.pathname);
+const percorsoIt = lang === 'it' ? percorsoProprio : percorsoAltro;
+const percorsoEn = lang === 'en' ? percorsoProprio : percorsoAltro;
+const haAlternato = Boolean(percorsoIt && percorsoEn);
+const urlAssoluto = (percorso: string) => new URL(percorso, Astro.site).href;
 const { indirizzo } = azienda;
 
 /* Dati strutturati di sito: Organization + LocalBusiness. */
@@ -106,7 +123,7 @@ const orgLd = {
 ---
 
 <!doctype html>
-<html lang="it">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -114,11 +131,20 @@ const orgLd = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {
+      haAlternato && (
+        <>
+          <link rel="alternate" hreflang="it" href={urlAssoluto(percorsoIt!)} />
+          <link rel="alternate" hreflang="en" href={urlAssoluto(percorsoEn!)} />
+          <link rel="alternate" hreflang="x-default" href={urlAssoluto(percorsoIt!)} />
+        </>
+      )
+    }
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={azienda.nome} />
-    <meta property="og:locale" content="it_IT" />
+    <meta property="og:locale" content={LINGUE[lang].locale} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -165,7 +191,7 @@ const orgLd = {
   <body>
     <LogoSprite />
 
-    <a href="#main" class="skip">Vai al contenuto</a>
+    <a href="#main" class="skip">{t.skip}</a>
 
     {
       preloader && (
@@ -182,17 +208,17 @@ const orgLd = {
     <div class="progress" aria-hidden="true"><i id="pbar"></i></div>
     <div class="cursor" id="cur" aria-hidden="true"></div>
     <div class="cursor-ring" id="curing" aria-hidden="true"></div>
-    <div class="demo-flag" aria-hidden="true">Demo concept</div>
+    <div class="demo-flag" aria-hidden="true">{t.demoFlag}</div>
 
-    <Header suChiaro={headerSuChiaro} />
+    <Header suChiaro={headerSuChiaro} lang={lang} />
 
     <main id="main">
       <slot />
     </main>
 
-    <Footer />
+    <Footer lang={lang} />
 
-    <button class="totop" id="totop" aria-label="Torna all'inizio della pagina">
+    <button class="totop" id="totop" aria-label={t.tornaSu}>
       <Icon nome="freccia-su" dim={19} />
     </button>
 

@@ -1,0 +1,14 @@
+---
+/**
+ * /en/solutions/tecnowing — l'unica scheda tecnica tradotta.
+ *
+ * Route statica invece che dinamica: in inglese esiste una scheda sola, e
+ * una route dinamica su un elemento solo sarebbe solo un giro in piu'.
+ * Il giorno che se ne traduce una seconda, questa diventa /en/solutions/[slug].
+ */
+import SchedaSoluzione from '../../../components/pagine/SchedaSoluzione.astro';
+import { tecnowing, ui } from '../../../i18n/en/tecnowing';
+import { soluzioni } from '../../../i18n/en/contenuti';
+---
+
+<SchedaSoluzione scheda={tecnowing} lang="en" soluzioni={soluzioni} t={ui} />

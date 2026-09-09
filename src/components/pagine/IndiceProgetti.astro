@@ -1,0 +1,320 @@
+---
+/**
+ * Corpo dell'indice delle realizzazioni, condiviso fra italiano (/progetti)
+ * e inglese (/en/projects).
+ *
+ * Le realizzazioni ancora senza nome sono marcate: il titolo mancante e'
+ * dichiarato, non inventato.
+ *
+ * In italiano ogni scheda porta a una pagina di dettaglio con la propria
+ * galleria. Quelle pagine non sono tradotte: in inglese la scheda non e' un
+ * collegamento, perche' porterebbe su una pagina italiana.
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Picture from '../../components/Picture.astro';
+import Icon from '../../components/Icon.astro';
+import type { Realizzazione } from '../../data/progetti';
+import type { Lang } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+  realizzazioni: readonly Realizzazione[];
+  /** Testi dell'apertura: eyebrow, titolo, lead e nota di revisione. */
+  intestazione: { eyebrow: string; titolo: string; lead: string; nota: string };
+  etichetta: (r: Realizzazione) => string;
+  t: Record<string, any>;
+}
+
+const { lang, realizzazioni, intestazione: paginaProgetti, etichetta, t } = Astro.props;
+
+const hrefHome = lang === 'en' ? '/en' : '/';
+const hrefContatti = lang === 'en' ? '/en/contact' : '/contatti';
+
+/* In inglese la scheda di dettaglio non esiste: la card resta una card. */
+const hrefScheda = (slug: string) => (lang === 'en' ? undefined : `/progetti/${slug}`);
+
+const conNome = realizzazioni.filter((r) => !r.numerata);
+const daNominare = realizzazioni.filter((r) => r.numerata);
+---
+
+<BaseLayout
+  title={t.seoTitolo}
+  description={t.seoDescrizione}
+  lang={lang}
+>
+  <PageHero
+    eyebrow={paginaProgetti.eyebrow}
+    title={paginaProgetti.titolo}
+    lead={paginaProgetti.lead}
+    crumbs={[{ label: t.home, href: hrefHome }, { label: t.briciola }]}
+  />
+
+  <section class="block prj">
+    <div class="wrap">
+      <!-- ============ CON NOME ============ -->
+      <div class="grp-h reveal">
+        <h2>{t.conNome}</h2>
+        <span class="grp-n">{conNome.length}</span>
+      </div>
+
+      <ul class="prj-grid stagger">
+        {
+          conNome.map((r) => (
+            <li class="prj-card">
+              <a href={hrefScheda(r.slug)}>
+                <Picture
+                  id={r.cover}
+                  alt={t.schedaAlt(etichetta(r))}
+                  ratio="4/3.5"
+                  sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
+                />
+                <div class="tint" aria-hidden="true" />
+                {hrefScheda(r.slug) && (
+                  <span class="prj-arrow"><Icon nome="freccia-dx" dim={18} /></span>
+                )}
+                <div class="info">
+                  <h3>{etichetta(r)}</h3>
+                  <p class="mq">{t.fotografie(r.totaleFoto)}</p>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <!-- ============ DA NOMINARE ============ -->
+      <div class="grp-h grp-h2 reveal">
+        <h2>{t.daNominare}</h2>
+        <span class="grp-n">{daNominare.length}</span>
+        <p class="grp-t">{t.daNominareNota}</p>
+      </div>
+
+      <ul class="prj-grid stagger">
+        {
+          daNominare.map((r) => (
+            <li class="prj-card is-anon">
+              <a href={hrefScheda(r.slug)}>
+                <Picture
+                  id={r.cover}
+                  alt={t.schedaAltAnonima}
+                  ratio="4/3.5"
+                  sizes="(max-width: 600px) 100vw, (max-width: 920px) 50vw, 33vw"
+                />
+                <div class="tint" aria-hidden="true" />
+                {hrefScheda(r.slug) && (
+                  <span class="prj-arrow"><Icon nome="freccia-dx" dim={18} /></span>
+                )}
+                <div class="info">
+                  <h3>{etichetta(r)}</h3>
+                  <span class="spec spec-dark">{t.nomeDaAssegnare}</span>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="ph-note prj-note">{paginaProgetti.nota}</p>
+    </div>
+  </section>
+
+  <section class="cta-band on-dark">
+    <div class="wrap">
+      <div class="cta-inner reveal">
+        <div>
+          <p class="eyebrow">{t.ctaEyebrow}</p>
+          <h2>{t.ctaTitolo}</h2>
+          <p class="cta-p">{t.ctaTesto}</p>
+        </div>
+        <a href={hrefContatti} class="btn btn-red">
+          {t.parliamoProgetto} <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .prj {
+    background: var(--bg1);
+  }
+
+  /* --- Testate di gruppo ------------------------------------------------ */
+  .grp-h {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    flex-wrap: wrap;
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .grp-h2 {
+    margin-top: 72px;
+  }
+  .grp-h h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(22px, 2.6vw, 30px);
+    letter-spacing: -0.02em;
+  }
+  .grp-n {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+  }
+  .grp-t {
+    flex-basis: 100%;
+    font-size: 14.5px;
+    color: var(--text-2);
+    max-width: 62ch;
+    margin-top: 4px;
+  }
+
+  /* --- Griglia ----------------------------------------------------------- */
+  .prj-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  .prj-card {
+    position: relative;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: var(--navy);
+  }
+  .prj-card a {
+    display: block;
+  }
+  .prj-card :global(.frame) {
+    border-radius: var(--r-md);
+  }
+  .prj-card :global(.frame img) {
+    transition: transform 0.9s var(--ease);
+    filter: saturate(0.9);
+  }
+  .prj-card:hover :global(.frame img) {
+    transform: scale(1.06);
+  }
+
+  .prj-card .tint {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(22, 32, 58, 0.14) 0%,
+      rgba(22, 32, 58, 0.08) 38%,
+      rgba(15, 22, 42, 0.9) 100%
+    );
+    transition: background 0.5s;
+    pointer-events: none;
+  }
+
+  .prj-card .info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    padding: 22px;
+    transform: translateY(6px);
+    transition: transform 0.45s var(--ease);
+    pointer-events: none;
+  }
+  .prj-card:hover .info {
+    transform: translateY(0);
+  }
+
+  .prj-card h3 {
+    font-family: var(--brand);
+    font-weight: 600;
+    color: #fff;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    margin-bottom: 6px;
+  }
+  .prj-card .mq {
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Le schede senza nome restano riconoscibili anche a colpo d'occhio */
+  .is-anon h3 {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .prj-arrow {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 4;
+    width: 38px;
+    height: 38px;
+    border: 1.5px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    opacity: 0;
+    transform: rotate(-30deg);
+    transition: 0.45s var(--ease);
+    background: rgba(15, 22, 42, 0.3);
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+  }
+  .prj-card:hover .prj-arrow,
+  .prj-card a:focus-visible ~ .prj-arrow {
+    opacity: 1;
+    transform: rotate(0);
+  }
+
+  .prj-note {
+    margin-top: 48px;
+  }
+
+  /* --- CTA --------------------------------------------------------------- */
+  .cta-band {
+    background: var(--navy-deep);
+    padding: 90px 0;
+  }
+  .cta-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta-inner h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 48px);
+    margin: 16px 0;
+    letter-spacing: -0.02em;
+  }
+  .cta-p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  @media (max-width: 920px) {
+    .prj-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .grp-h2 {
+      margin-top: 52px;
+    }
+  }
+  @media (max-width: 600px) {
+    .prj-grid {
+      grid-template-columns: 1fr;
+    }
+    .cta-band {
+      padding: 64px 0;
+    }
+  }
+</style>

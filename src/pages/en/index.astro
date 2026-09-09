@@ -1,0 +1,83 @@
+---
+/**
+ * /en — home inglese.
+ *
+ * Stesso componente della home italiana: cambiano contenuti e collegamenti.
+ * Il payoff del marchio e' una decisione di marca da approvare: vedi la nota
+ * in cima a src/i18n/en/contenuti.ts.
+ */
+import Home from '../../components/pagine/Home.astro';
+import { payoff, numeri, timeline, metodo, soluzioni, etichetta } from '../../i18n/en/contenuti';
+import { realizzazioni } from '../../data/progetti';
+
+const primiProgetti = realizzazioni.filter((r) => !r.numerata).slice(0, 3);
+
+const ui = {
+  seoTitolo: 'Prefabbricati Moioli — Precast concrete structures since 1972',
+  seoDescrizione:
+    'We design and build turnkey industrial, commercial and civic structures. Precast reinforced concrete roofing. Bagnatica, Bergamo — Italy.',
+  heroAlt: 'Precast industrial structure built by Prefabbricati Moioli',
+  dal: 'Since',
+  heroLead:
+    'We design and build turnkey industrial, commercial and civic structures. Half a century of experience, technology and reliability behind your project.',
+  parliamoProgetto: 'Let’s talk about your project',
+  vediRealizzazioni: 'See completed work',
+  scorri: 'Scroll',
+  hannoScelto: 'They chose Prefabbricati Moioli',
+
+  azEyebrow: 'The company',
+  azTitolo: 'Know-how that has been building since 1972.',
+  azParagrafi: [
+    'Prefabbricati Moioli was founded at the end of <strong>1972</strong>, out of the determination and combined experience of the Moioli brothers and a group of designers. From the very beginning a technically ambitious company, able to deliver singular and innovative projects.',
+    'In a sector that demands <strong>quality, competitiveness and safety</strong>, we offer the most complete design consultancy, backed by comprehensive technology and continuous investment in the training of our technical staff.',
+    'From the first idea to the coordination of suppliers and trades, right through to handover: ours is <strong>full support</strong> at every stage of the work.',
+  ],
+  conosciAzienda: 'About the company',
+  nostroMetodo: 'Our method',
+  stabilimentoAlt: 'Production bay for precast elements at the Bagnatica plant',
+  anniDiStoria: 'YEARS OF HISTORY',
+
+  solEyebrow: 'Solutions',
+  solTitolo: 'Seven ways to roof a space.',
+  solIntro:
+    'Precast reinforced concrete roofing systems. The choice follows how the building will be used, not only how big it has to be.',
+  scopriSoluzione: 'Explore the solution',
+  vediTutteSoluzioni: 'See all solutions',
+  tutteLeSoluzioni: 'All solutions',
+
+  mtEyebrow: 'Turnkey projects',
+  mtTitolo: 'You imagine it. Moioli builds it.',
+  mtIntro:
+    'From design to handover, we work alongside you at every stage with selected professionals and trades. Our turnkey offer guarantees:',
+  mtBanner: 'One point of contact, <b>nothing to worry about</b>: from design to handover.',
+  richiediConsulenza: 'Request a consultation',
+
+  pgEyebrow: 'Completed work',
+  pgTitolo: 'More than 700,000 m² built.',
+  pgIntro:
+    'A selection of the projects delivered for the leading industrial and logistics groups of northern Italy.',
+  catRealizzazione: 'Project',
+  fotografie: (n: number) => `${n} photographs`,
+  progettoAlt: (nome: string) => `${nome} — precast structure built by Moioli`,
+  pgFoot: 'More than 100 companies have entrusted us with their plants.',
+  tuttiProgetti: 'All projects',
+
+  ctaEyebrow: 'Contact',
+  ctaTitolo: 'Let’s talk about your project.',
+  ctaTesto:
+    'Tell us what you need to build: we answer with a technical proposal, not a generic quotation.',
+  richiediPreventivo: 'Request a quote',
+};
+---
+
+<Home
+  lang="en"
+  payoff={payoff}
+  numeri={numeri}
+  timeline={timeline}
+  metodo={metodo}
+  soluzioni={soluzioni}
+  progetti={primiProgetti}
+  etichetta={etichetta}
+  t={ui}
+/>

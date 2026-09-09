@@ -7,6 +7,25 @@
  */
 import Logo from './Logo.astro';
 import { azienda, nav, download } from '../data/site';
+import { navEn, downloadEn, ui, type Lang } from '../i18n';
+
+interface Props {
+  /** Lingua del piè di pagina. */
+  lang?: Lang;
+}
+const { lang = 'it' } = Astro.props;
+
+const t = ui[lang];
+const voci = lang === 'en' ? navEn : nav;
+const doc = lang === 'en' ? downloadEn : download;
+
+/* La riga d'impresa e' l'unica frase del piè di pagina: in inglese e'
+   scritta qui invece di comporsi dai dati, perche' l'ordine delle parole
+   non regge la traduzione parola per parola. */
+const rigaImpresa =
+  lang === 'en'
+    ? `${azienda.ragioneSociale} — precast reinforced concrete structures since ${azienda.fondazione}.`
+    : `${azienda.ragioneSociale} — ${azienda.descrizione} dal ${azienda.fondazione}.`;
 
 const { indirizzo } = azienda;
 ---
@@ -20,7 +39,7 @@ const { indirizzo } = azienda;
         <Logo variant="light" payoff="sempre" height={40} />
         {/* Riga fattuale, non il payoff: quello vive solo nell'apertura
             della home, altrimenti sulla home comparirebbe due volte. */}
-        <p>{azienda.ragioneSociale} — {azienda.descrizione} dal {azienda.fondazione}.</p>
+        <p>{rigaImpresa}</p>
         <address>
           {indirizzo.via}, {indirizzo.cap} {indirizzo.citta} ({indirizzo.provincia})<br />
           <a href={`tel:${azienda.telefonoHref}`}>{azienda.telefono}</a><br />
@@ -29,26 +48,26 @@ const { indirizzo } = azienda;
       </div>
 
       <div class="foot-col">
-        <h2 class="foot-h">Naviga</h2>
-        <nav class="foot-nav" aria-label="Navigazione secondaria">
-          {nav.map((v) => <a href={v.href}>{v.label}</a>)}
+        <h2 class="foot-h">{t.footNaviga}</h2>
+        <nav class="foot-nav" aria-label={t.navSecondaria}>
+          {voci.map((v) => <a href={v.href}>{v.label}</a>)}
         </nav>
       </div>
 
       <div class="foot-col">
-        <h2 class="foot-h">{download.titolo}</h2>
+        <h2 class="foot-h">{doc.titolo}</h2>
         <ul class="dl-list">
           {
-            download.voci.map((v) => (
+            doc.voci.map((v) => (
               <li>
                 <span class="dl-fmt">{v.formato}</span>
                 <span class="dl-label">{v.label}</span>
-                <span class="spec spec-dark">FILE — da fornire</span>
+                <span class="spec spec-dark">{t.footFileDaFornire}</span>
               </li>
             ))
           }
         </ul>
-        <p class="dl-note">{download.nota}</p>
+        <p class="dl-note">{doc.nota}</p>
       </div>
     </div>
 
@@ -56,7 +75,7 @@ const { indirizzo } = azienda;
       <span>
         &copy; {new Date().getFullYear()} {azienda.ragioneSociale} — P.IVA {azienda.piva}
       </span>
-      <span class="foot-legal">Privacy Policy · Cookie Policy</span>
+      <span class="foot-legal">{t.footLegale}</span>
     </div>
   </div>
 </footer>

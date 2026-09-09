@@ -25,11 +25,14 @@ interface Props {
   intro?: string;
   /** Testo della didascalia sotto il disegno. */
   didascalia?: string;
+  /** Etichetta del segnaposto fotografico, nella lingua della pagina. */
+  etichettaFoto?: string;
 }
 const {
   hotspots,
   intro,
   didascalia = 'DISEGNO SEGNAPOSTO — vettoriale definitivo da produrre',
+  etichettaFoto = 'FOTO DETTAGLIO — da servizio fotografico',
 } = Astro.props;
 ---
 
@@ -105,7 +108,7 @@ const {
               hidden={i !== 0}
             >
               <div class="hs-photo">
-                <span class="spec spec-dark">FOTO DETTAGLIO — da servizio fotografico</span>
+                <span class="spec spec-dark">{etichettaFoto}</span>
               </div>
 
               <p class="hs-desc">{h.descrizione}</p>

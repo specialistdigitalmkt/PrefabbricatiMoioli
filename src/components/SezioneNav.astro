@@ -7,20 +7,27 @@
  * È un <nav> con aria-current sulla voce attiva, non una fila di bottoni.
  */
 import { nav } from '../data/site';
+import { navEn, ui, type Lang } from '../i18n';
 
 interface Props {
   /** href della voce di primo livello che contiene il sottomenu. */
   sezione: string;
+  /** Lingua della navigazione. */
+  lang?: Lang;
+  /** Etichetta accessibile della barra. */
+  etichetta?: string;
 }
-const { sezione } = Astro.props;
+const { sezione, lang = 'it', etichetta = 'Pagine della sezione Azienda' } = Astro.props;
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-const voci = nav.find((v) => v.href === sezione)?.voci ?? [];
+/* In inglese la sezione Azienda ha una pagina sola: la voce di menu non ha
+   sottovoci, l'elenco resta vuoto e la barra non compare. E' voluto. */
+const voci = (lang === 'en' ? navEn : nav).find((v) => v.href === sezione)?.voci ?? [];
 ---
 
 {
   voci.length > 0 && (
-    <nav class="sez-nav" aria-label="Pagine della sezione Azienda">
+    <nav class="sez-nav" aria-label={etichetta}>
       <div class="wrap">
         <ul>
           {voci.map((v) => (

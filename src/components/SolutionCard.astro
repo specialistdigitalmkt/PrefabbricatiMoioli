@@ -7,6 +7,7 @@
 import Picture from './Picture.astro';
 import type { Soluzione } from '../data/soluzioni';
 import Icon from './Icon.astro';
+import { ui, type Lang } from '../i18n';
 
 interface Props {
   soluzione: Soluzione;
@@ -14,9 +15,12 @@ interface Props {
   indice: number;
   /** Formato ampio per le tipologie di punta. */
   grande?: boolean;
+  /** Lingua delle etichette di servizio. */
+  lang?: Lang;
 }
 
-const { soluzione: s, indice, grande = false } = Astro.props;
+const { soluzione: s, indice, grande = false, lang = 'it' } = Astro.props;
+const t = ui[lang];
 const Tag = s.href ? 'a' : 'div';
 const sizes = grande
   ? '(max-width: 700px) 100vw, 46vw'
@@ -33,7 +37,7 @@ const sizes = grande
           /* Nessuna fotografia disponibile per questa tipologia:
              si dichiara invece di riempire con un'immagine di repertorio. */
           <div class="sol-noimg">
-            <span class="spec">FOTO — da servizio fotografico</span>
+            <span class="spec">{t.fotoDaServizio}</span>
           </div>
         )
       }
@@ -50,13 +54,13 @@ const sizes = grande
         {
           s.specs.map((sp) => (
             <li>
-              <span class="spec">{sp} — da catalogo</span>
+              <span class="spec">{sp} {t.daCatalogo}</span>
             </li>
           ))
         }
       </ul>
 
-      {s.href && <span class="more">Scopri la soluzione <i><Icon nome="freccia-dx" dim={15} /></i></span>}
+      {s.href && <span class="more">{t.scopriSoluzione} <i><Icon nome="freccia-dx" dim={15} /></i></span>}
     </div>
   </Tag>
 </li>
