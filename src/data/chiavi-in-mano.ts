@@ -20,8 +20,8 @@
 
 export const pagina = {
   eyebrow: 'Chiavi in mano',
-  titolo: 'Dal terreno alle chiavi.',
-  claim: 'Un solo interlocutore, dall’area libera all’edificio che apre.',
+  titolo: 'Dalle fondazioni all’ultimo dettaglio.',
+  claim: 'Un solo interlocutore, nessuna impresa da coordinare.',
   lead:
     'Il chiavi in mano Moioli nasce con CMB Costruzioni, società del gruppo. La struttura prefabbricata esce dallo stabilimento di Bagnatica; tutto il resto — opere civili, involucro, finiture — arriva dallo stesso contratto.',
 

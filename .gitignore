@@ -29,3 +29,13 @@ PROGETTO CHIAVI IN MANO/
 # Restano però versionate: senza, un deploy da CI non avrebbe le immagini,
 # perché gli originali non sono raggiungibili dal server di build.
 # public/img/
+
+# Materiale di lavoro appoggiato nella cartella del progetto: originali video
+# da centinaia di MB, design system e cataloghi. Non fa parte del sito e
+# GitHub rifiuterebbe i file oltre i 100 MB.
+/*.mp4
+/moioli frame.png
+Moioli sysetm/
+Cartelletta e design sistem/
+cartella ultimi cataloghi template/
+.scratch/
