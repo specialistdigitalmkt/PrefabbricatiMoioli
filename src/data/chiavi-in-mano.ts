@@ -29,7 +29,8 @@ export const pagina = {
     /* Timelapse del cantiere di Bonate, fornito dal cliente. Materiale utile
        fino a 41", accelerato 2,2× per stare in 22" tenendo l'arco intero:
        scavo, struttura, facciata, edificio consegnato. Senza audio: è
-       sfondo, non contenuto. */
+       sfondo, non contenuto. La coda con il marchio è stata tagliata: in
+       loop tornava sull'hero come una schermata di chiusura. Restano 19". */
     src: '/video/chiavi-in-mano.mp4',
     poster: 'cim-hero-poster',
     alt: 'Timelapse di un cantiere Moioli: dalle fondazioni all’edificio finito con impianto fotovoltaico in copertura',
