@@ -11,9 +11,9 @@
  *
  * COSA CAMBIA RISPETTO A [slug].astro
  * Solo la fascia 02. Al posto di `HotspotExplainer` con il disegno segnaposto
- * — e del rimando al modello che stava sotto — c'è il visualizzatore, in un
- * riquadro alto quanto quasi tutto lo schermo. Tutto il resto (apertura,
- * dati, sistema, applicazioni, gallery, CTA) è identico nel markup e nei
+ * — e del rimando al modello che stava sotto — c'è il visualizzatore, a tutta
+ * larghezza e alto quanto lo schermo. Tutto il resto (apertura, dati,
+ * sistema, applicazioni, gallery, CTA) è identico nel markup e nei
  * contenuti: arriva dagli stessi dati di `src/data/soluzioni-tecniche.ts`,
  * che questa pagina legge senza modificarli.
  *
@@ -24,11 +24,22 @@
  * se la variante viene approvata, vanno riunite.
  *
  * IL VISUALIZZATORE
- * `public/soluzioni/tecnowing/configuratore-3d/index.html` è un documento
- * completo e autosufficiente (three.js e React incorporati, ~950 KB) che
- * Astro copia senza toccare — vedi il LEGGIMI nella sua cartella. Sta in un
- * iframe con `loading="lazy"`: quei megabyte partono quando il lettore ci
- * arriva davvero, non all'apertura della pagina.
+ * `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` è un
+ * documento completo e autosufficiente (three.js e React incorporati,
+ * ~950 KB) che Astro copia senza toccare — vedi `modelli3d/LEGGIMI`. È una
+ * seconda esportazione, distinta da quella che serve /soluzioni/tecnowing:
+ * i pannelli non stanno più appoggiati sul modello ma sulle due fasce blu ai
+ * lati, e il modello gira da solo finché non lo si tocca. Le due versioni
+ * convivono apposta, così la scheda corrente non cambia.
+ *
+ * Sta in un iframe con `loading="lazy"`: quei megabyte partono quando il
+ * lettore ci arriva davvero, non all'apertura della pagina.
+ *
+ * PERCHÉ A TUTTA LARGHEZZA
+ * Il riquadro esce da `.wrap` ed è l'unico blocco della pagina che tocca i
+ * due bordi: le fasce laterali del visualizzatore sono dello stesso blu
+ * della sezione, quindi un riquadro rientrato avrebbe disegnato una cornice
+ * blu dentro un'altra cornice blu. A tutta larghezza le due continuano.
  *
  * FUORI DAI MOTORI
  * `noindex`: finché è una variante in valutazione non deve competere con
@@ -51,7 +62,7 @@ if (!scheda) throw new Error('Scheda «tecnowing» non trovata in soluzioni-tecn
 /* Il visualizzatore vive in `public/`, quindi il percorso è già quello
    finale — senza barra di chiusura, come il resto dei collegamenti del sito:
    su Vercel `trailingSlash: false` la versione con barra costerebbe un 308. */
-const MODELLO = '/soluzioni/tecnowing/configuratore-3d';
+const MODELLO = '/soluzioni/tecnowing/configuratore-3d-fasce';
 
 const galleria = (foto as Record<string, { cover: string; galleria: { id: string }[] }>)[scheda.slug];
 const cover = galleria?.cover;
@@ -164,22 +175,25 @@ const jsonLd = {
         <p class="eyebrow">Il modello</p>
         <h2>{scheda.sezione.titolo}</h2>
         <p class="sg-sez-intro">
-          La copertura montata, non disegnata. Trascina per girarci intorno,
-          seleziona un componente per isolarlo, cambia interposto e
-          configurazione: il modello si ricompone.
+          La copertura montata, non disegnata. Gira da sola finché non la
+          tocchi; poi trascina per girarci intorno, seleziona un componente
+          nella fascia di sinistra per isolarlo, cambia interposto e
+          configurazione in quella di destra: il modello si ricompone.
         </p>
       </div>
+    </div>
 
-      <div class="sg-viewer reveal">
-        <iframe
-          src={MODELLO}
-          title={`Modello tridimensionale della copertura ${scheda.nome}`}
-          loading="lazy"
-          allow="fullscreen"
-          allowfullscreen
-        ></iframe>
-      </div>
+    <div class="sg-viewer reveal">
+      <iframe
+        src={MODELLO}
+        title={`Modello tridimensionale della copertura ${scheda.nome}`}
+        loading="lazy"
+        allow="fullscreen"
+        allowfullscreen
+      ></iframe>
+    </div>
 
+    <div class="wrap">
       {/* Senza JavaScript l'iframe resta una cornice vuota: il rimando in
           chiaro è l'unica cosa che rimane utile. */}
       <noscript>
@@ -195,7 +209,7 @@ const jsonLd = {
           quelle della tabella qui sotto.
         </p>
         <a href={MODELLO} class="btn btn-light" target="_blank" rel="noopener">
-          Aprilo a tutto schermo
+          Aprilo in una scheda a parte
           <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
         </a>
       </div>
@@ -512,7 +526,7 @@ const jsonLd = {
   }
   .sg-sez-head {
     max-width: 680px;
-    margin-bottom: 64px;
+    margin-bottom: 56px;
   }
   .sg-sez-head h2 {
     font-family: var(--brand);
@@ -529,15 +543,21 @@ const jsonLd = {
     max-width: 56ch;
   }
 
-  /* Il riquadro del modello. Alto quasi quanto lo schermo perché la
-     copertura si legge solo se la si vede intera, ma non a schermo pieno:
-     la pagina deve restare una pagina, con lo scorrimento che continua. */
+  /* La banda del modello. Tocca i due bordi e prende l'altezza dello
+     schermo: dentro c'è un'interfaccia con testata, due fasce laterali e
+     piede, che rientrata e a 80vh finiva compressa. Non è però una presa
+     dello schermo: la pagina resta una pagina e lo scorrimento continua.
+
+     I 96px tolti sono la testata del sito, che è fissa: senza, il piede del
+     visualizzatore resterebbe sempre sotto il bordo dello schermo. È la
+     stessa misura di `scroll-padding-top`, così quando la banda si ferma
+     sotto la testata ci sta esatta. */
   .sg-viewer {
-    height: 80vh;
-    min-height: 520px;
-    max-height: 900px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: var(--r-md);
+    height: calc(100svh - 96px);
+    min-height: 560px;
+    max-height: 940px;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
     overflow: hidden;
     background: var(--navy);
   }
@@ -558,12 +578,12 @@ const jsonLd = {
   }
 
   .sg-viewer-foot {
+    margin-top: 32px;
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
     gap: 32px;
     flex-wrap: wrap;
-    margin-top: 28px;
   }
   .sg-viewer-foot p {
     max-width: 52ch;
@@ -893,11 +913,13 @@ const jsonLd = {
   }
 
   @media (max-width: 700px) {
-    /* Su telefono l'altezza si misura in svh: con vh la barra del browser che
-       si ritira farebbe saltare il riquadro mentre si ruota il modello. */
+    /* L'altezza si misura in svh: con vh la barra del browser che si ritira
+       farebbe saltare la banda mentre si ruota il modello. In verticale
+       l'interfaccia del visualizzatore va in pila, quindi le serve tutta
+       l'altezza che c'è. */
     .sg-viewer {
-      height: 78svh;
-      min-height: 440px;
+      height: calc(100svh - 76px);
+      min-height: 540px;
     }
     .sg-viewer-foot {
       align-items: stretch;
