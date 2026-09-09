@@ -253,10 +253,17 @@ sub('<span style="color:#1D2A44;font-weight:500">', '<span style="color:#FFFFFF;
 # la scheda prenderebbe tutto il pannello mentre c'e' spazio in abbondanza.
 sub("""    view: 'Assonometria',
     listOpen: true,""",
-    """    view: 'Assonometria',
-    /* Nelle fasce l'elenco sta aperto: c'e' tutta l'altezza della colonna.
-       In pila no, sarebbe una riga tolta al modello: parte chiuso e si apre
-       col suo pulsante. */
+    """    /* In pila la cella del modello e' bassa e larga: un edificio lungo
+       visto in assonometria ci sta dentro minuscolo, mentre la sezione la
+       riempie. Su telefono si parte da li'. Fra le due fasce, dove la cella
+       e' ampia, resta l'assonometria. */
+    view: window.matchMedia('(max-width:1000px)').matches ? 'Sezione' : 'Assonometria',
+    /* Da quando la vista la sceglie chi guarda, il passaggio di soglia non
+       gliela cambia piu' sotto le mani. */
+    viewScelta: false,
+    /* Stesso ragionamento per l'elenco componenti: nelle fasce ha tutta
+       l'altezza della colonna e sta aperto, in pila sarebbe una riga tolta al
+       modello e parte chiuso, col suo pulsante per aprirlo. */
     listOpen: !window.matchMedia('(max-width:1000px)').matches,""")
 
 sub("window.matchMedia('(max-width:1280px),(pointer:coarse)')",
@@ -270,8 +277,9 @@ sub("""    this.onMq = e => this.setState({ compact: e.matches, detail: e.matche
     """    this.onMq = e => this.setState({
       compact: e.matches,
       detail: e.matches && !!this.state.sel,
-      listOpen: !e.matches
-    });""")
+      listOpen: !e.matches,
+      view: this.state.viewScelta ? this.state.view : (e.matches ? 'Sezione' : 'Assonometria')
+    }, () => { this.setView(this.state.view); this.applyVisibility(); });""")
 
 sub("""    stage.setAttribute('name', 'tecnowing');
     stage.style.cssText = 'display:block;width:100%;height:100%';""",
@@ -312,7 +320,7 @@ sub("""      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], 
         this.setState({ view: label }""",
     """      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
         this.stopSpin();
-        this.setState({ view: label }""")
+        this.setState({ view: label, viewScelta: true }""")
 
 sub("""        onClick: () => this.setState({ [key]: !s[key] }, () => this.applyVisibility())""",
     """        onClick: () => { this.stopSpin(); this.setState({ [key]: !s[key] }, () => this.applyVisibility()); }""")
@@ -321,10 +329,16 @@ sub("""      onReset: () => this.setState({ sel: null, detail: false, view: 'Ass
         this.setView('Assonometria');
         this.applyVisibility();
       }),""",
-    """      onReset: () => { this.stopSpin(); this.setState({ sel: null, detail: false, view: 'Assonometria' }, () => {
-        this.setView('Assonometria');
-        this.applyVisibility();
-      }); },""")
+    """      onReset: () => {
+        this.stopSpin();
+        /* Reset vista vuol dire tornare al punto di partenza, che in pila e'
+           la sezione e nelle fasce l'assonometria. */
+        const base = s.compact ? 'Sezione' : 'Assonometria';
+        this.setState({ sel: null, detail: false, view: base, viewScelta: false }, () => {
+          this.setView(base);
+          this.applyVisibility();
+        });
+      },""")
 
 # Bottoni sulla fascia blu: il pieno navy sparirebbe nel fondo.
 sub("""    const INT_LABEL = {""",
@@ -383,6 +397,68 @@ sub("width:28px;height:28px;color:#9CA3AF;", "width:28px;height:28px;color:rgba(
 
 sub("`overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;border-top:1px solid #E1E3E5;`",
     "`overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;border-top:1px solid rgba(255,255,255,.12);`")
+
+# Il taglio della sezione esce da setView: cambiare interposto ricostruisce i
+# pezzi del tetto, e i nuovi nascono visibili
+sub("""    const sez = name === 'Sezione';
+    this.scene.layers.tegoli_alari.parent.children.forEach(g => {
+      g.children.forEach(m => {
+        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
+      });
+    });
+    if (this.state.fv === false) this.scene.layers.fotovoltaico.visible = false;
+    if (this.state.tamp === false) this.scene.layers.pannelli_tamponamento.visible = false;
+""",
+    """    this.applySection(name);
+""")
+
+sub("""  setView(name) {
+    if (!this.scene) return;""",
+    """  /* Interposto e configurazione cambiano l'ingombro — lo Shed alza il
+     tetto, la coppella lo ingrossa — e il modello scivola fuori centro. Si
+     rifa' l'inquadratura tenendo la direzione in cui si sta gia' guardando:
+     si aggiornano centro e distanza, l'angolo scelto da chi guarda resta. */
+  refit() {
+    if (!this.scene || this.state.view === 'Interno') return;
+    const cam = this.stage._camera, ctr = this.stage._controls;
+    this.frame(cam.position.clone().sub(ctr.target));
+  }
+
+  /* In sezione restano accese solo le campate attorno al taglio. Sta fuori
+     da setView perche' cambiare interposto o configurazione ricostruisce da
+     capo interposto, serramenti, fotovoltaico e bordo falda: i pezzi nuovi
+     nascono tutti visibili, e il tetto ricompariva intero mentre la vista era
+     ancora la sezione. Va quindi rifatto anche di la', ma senza rifare
+     l'inquadratura — cambiare pannello non deve spostare la telecamera. */
+  applySection(name) {
+    if (!this.scene) return;
+    const { dims } = this.scene;
+    const sez = (name || this.state.view) === 'Sezione';
+    this.scene.layers.tegoli_alari.parent.children.forEach((g) => {
+      g.children.forEach((m) => {
+        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
+      });
+    });
+    if (this.state.fv === false) this.scene.layers.fotovoltaico.visible = false;
+    if (this.state.tamp === false) this.scene.layers.pannelli_tamponamento.visible = false;
+  }
+
+  setView(name) {
+    if (!this.scene) return;""")
+
+sub("""          this.scene.setInterposto(map[label], this.state.config);
+          this.applyVisibility();""",
+    """          this.scene.setInterposto(map[label], this.state.config);
+          this.applySection();
+          this.applyVisibility();
+          this.refit();""")
+
+sub("""          this.scene.setInterposto(map[this.state.interposto], label);
+          this.applyVisibility();""",
+    """          this.scene.setInterposto(map[this.state.interposto], label);
+          this.applySection();
+          this.applyVisibility();
+          this.refit();""")
 
 # Inquadrature: il modello va messo in mezzo alla cella, non alla finestra
 sub("""    const [p, t] = P[name] || P.Assonometria;
@@ -502,7 +578,7 @@ sub("""    stage.setObject(this.scene.root);
     """    stage.setObject(this.scene.root);
     this.ghosts = new Map();
     this.applyVisibility();
-    this.setView('Assonometria');
+    this.setView(this.state.view);
     /* Il riquadro cambia proporzione con la finestra — e sotto i 1000px
        passa da colonna a riga: three-d-stage aggiorna l'aspetto della
        telecamera, rifare l'inquadratura tocca a noi. Solo finche' il

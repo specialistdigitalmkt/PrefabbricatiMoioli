@@ -43,7 +43,19 @@ Cosa cambia:
   si legge spostato di lato. La vista dall'interno resta a mano, e a 45°.
 - **Sotto i 1000px** le tre colonne diventano una pila — modello, viste,
   configuratore, componenti — e l'elenco componenti parte chiuso, per non
-  rubare al modello una riga intera.
+  rubare al modello una riga intera. Lì la cella del modello è alta poco più
+  di 270 px su un telefono vero: un edificio lungo visto in assonometria ci
+  sta dentro minuscolo, quindi **la vista di partenza è la sezione**, che la
+  riempie. Da quando la vista la sceglie chi guarda (`viewScelta`), il
+  passaggio di soglia non gliela cambia più sotto le mani.
+- **Il taglio della sezione sta fuori da `setView`** (`applySection`).
+  `setInterposto` ricostruisce da capo interposto, serramenti, fotovoltaico e
+  bordo falda, e i pezzi nuovi nascono tutti visibili: senza rifare il taglio,
+  cambiare interposto faceva ricomparire il tetto intero mentre la vista era
+  ancora la sezione. Il cambio pannello rifà anche l'inquadratura
+  (`refit`), ma tenendo la direzione in cui si sta guardando: lo Shed alza il
+  tetto e la coppella lo ingrossa, e senza aggiornare centro e distanza il
+  modello scivolava fuori campo. L'angolo scelto da chi guarda resta.
 
 ### Come si rigenera
 
