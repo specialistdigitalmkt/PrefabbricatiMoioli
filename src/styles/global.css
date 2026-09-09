@@ -473,11 +473,14 @@ a:hover .more i,
   transition-delay: 0.225s;
 }
 
-.img-reveal {
+/* Il clip sta sul figlio, non sul contenitore. Se lo si mette qui sopra,
+   l'IntersectionObserver che assegna .in misura un'area visibile nulla e non
+   scatta mai: l'immagine si nasconde da sola e resta un buco bianco. */
+.img-reveal > * {
   clip-path: inset(0 100% 0 0);
   transition: clip-path 1.2s var(--ease-io);
 }
-.img-reveal.in {
+.img-reveal.in > * {
   clip-path: inset(0 0 0 0);
 }
 .img-reveal img {
@@ -673,7 +676,7 @@ a:hover .more i,
     transform: none !important;
   }
 
-  .img-reveal {
+  .img-reveal > * {
     clip-path: none !important;
   }
   .img-reveal img {
