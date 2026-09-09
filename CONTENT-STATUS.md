@@ -349,3 +349,68 @@ Nessuno di questi elementi compare nel sito, né come pagina né come voce di me
 La sezione "Documentazione" della vecchia home, che elencava otto schede PDF
 scaricabili, è stata ridotta a un blocco nel piè di pagina come concordato: non
 è una route e non compare nel menu.
+
+---
+
+## 9. Versione inglese — `src/i18n/`
+
+Stato: **needs-client-approval su tutti i testi tradotti.**
+
+L'italiano resta la lingua del sito e vive alla radice: nessun URL è cambiato.
+L'inglese sta sotto `/en` con percorsi tradotti (`/en/turnkey`, non
+`/en/chiavi-in-mano`).
+
+### Cosa è tradotto
+
+| Pagina | Italiano | Inglese |
+| --- | --- | --- |
+| Home | `/` | `/en` |
+| Indice soluzioni | `/soluzioni` | `/en/solutions` |
+| Tecnowing | `/soluzioni/tecnowing` | `/en/solutions/tecnowing` |
+| Chiavi in mano | `/chiavi-in-mano` | `/en/turnkey` |
+| Indice realizzazioni | `/progetti` | `/en/projects` |
+| Azienda | `/azienda` | `/en/company` |
+| Contatti | `/contatti` | `/en/contact` |
+
+### Cosa NON è tradotto, e come si comporta il sito
+
+Referenze, riconoscimenti, schede delle singole realizzazioni, le altre sei
+schede di soluzione e il campionario rivestimenti esistono solo in italiano.
+
+Di conseguenza, e volutamente:
+
+- il menu inglese **non elenca** quelle pagine;
+- le card delle soluzioni non tradotte non sono cliccabili in inglese, come
+  già accade a Coverplan in italiano;
+- le card delle realizzazioni in inglese non sono link;
+- il blocco rivestimenti nell'indice inglese resta in pagina con i campioni,
+  ma senza collegamento;
+- lo switcher, dove la pagina gemella non esiste, porta alla home dell'altra
+  lingua invece di sparire.
+
+Il configuratore 3D di Tecnowing resta in italiano: il collegamento dalla
+scheda inglese lo dichiara.
+
+### Due decisioni che deve prendere il cliente
+
+1. **Il payoff.** «Dove la forma prende volume» è reso «Where form takes on
+   volume». È una decisione di marca, non una traduzione tecnica. L'alternativa
+   è lasciare il payoff in italiano anche nella versione inglese, come fanno
+   molti marchi industriali italiani.
+2. **La terminologia tecnica.** Le scelte su cui una traduzione può sbagliare
+   senza che si veda — tegolo alare → *wing unit*, interposto → *infill panel*,
+   luce netta → *clear span*, lucernari a shed → *north-light rooflights* —
+   sono annotate in cima a ciascun file di `src/i18n/en/` e vanno confermate
+   dall'ufficio tecnico. «Armatubo» è stato lasciato in italiano: va deciso se
+   ha un nome commerciale inglese.
+
+### Regole seguite nella traduzione
+
+- Nessun dato tecnico è stato toccato: i numeri di catalogo (modulo 250 cm,
+  R90′–R120′, travi 90÷235 cm) sono ricopiati identici. Cambia solo il formato
+  delle migliaia: 700.000 in italiano, 700,000 in inglese.
+- Dove l'italiano dichiara un segnaposto, l'inglese dichiara un segnaposto.
+- Nessuna competenza o realizzazione è stata attribuita in inglese che non
+  fosse già scritta in italiano.
+- I nomi di prodotto (Tecnowing, Stegos, Tecnoshed, Tegolo TT, Bacacier,
+  Coverplan) non si traducono: sono tradotti solo gli alias descrittivi.
