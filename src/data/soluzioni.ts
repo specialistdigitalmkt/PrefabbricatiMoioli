@@ -42,16 +42,17 @@ export type Soluzione = {
 
 export const soluzioni: Soluzione[] = [
   {
-    slug: 'tecnoshed',
-    nome: 'Tecnoshed',
-    claim: 'Luce naturale costante, senza abbagliamento.',
+    slug: 'tecnowing',
+    nome: 'Tecnowing',
+    alias: 'Copertura alare',
+    claim: 'La forma a “V” porta la luce e scarica l’acqua.',
     intro:
-      'Copertura a shed: la superficie vetrata orientata a nord porta luce diffusa e uniforme sul piano di lavoro per tutta la giornata. La soluzione di riferimento dove il capannone è anche un ambiente in cui si sta.',
-    img: 'sol-tecnoshed-cover',
-    alt: 'Vista dall’alto di una copertura Tecnoshed: file parallele di finestrature verticali',
-    specs: ['LUCE NETTA', 'ALTEZZA FINESTRA', 'LARGHEZZA MODULO'],
-    nota: 'Luce naturale da nord',
-    href: '/soluzioni/tecnoshed',
+      'Copertura alare per edifici industriali, commerciali e logistici. Fra un tegolo e il successivo si alternano elementi opachi o luminosi, lucernari continui o a shed, scelti in base alla destinazione d’uso.',
+    img: 'sol-tecnowing-cover',
+    alt: 'Vista aerea di un edificio con copertura alare Tecnowing',
+    specs: ['LARGHEZZA MODULO', 'ALTEZZA TRAVE', 'RESISTENZA AL FUOCO'],
+    nota: 'Copertura alare',
+    href: '/soluzioni/tecnowing',
     inEvidenza: true,
   },
   {
@@ -68,17 +69,16 @@ export const soluzioni: Soluzione[] = [
     inEvidenza: true,
   },
   {
-    slug: 'tecnowing',
-    nome: 'Tecnowing',
-    alias: 'Copertura alare',
-    claim: 'La forma a “V” porta la luce e scarica l’acqua.',
+    slug: 'tecnoshed',
+    nome: 'Tecnoshed',
+    claim: 'Luce naturale costante, senza abbagliamento.',
     intro:
-      'Copertura alare per edifici industriali, commerciali e logistici. Fra un tegolo e il successivo si alternano elementi opachi o luminosi, lucernari continui o a shed, scelti in base alla destinazione d’uso.',
-    img: 'sol-tecnowing-cover',
-    alt: 'Vista aerea di un edificio con copertura alare Tecnowing',
-    specs: ['LARGHEZZA MODULO', 'ALTEZZA TRAVE', 'RESISTENZA AL FUOCO'],
-    nota: 'Copertura alare',
-    href: '/soluzioni/tecnowing',
+      'Copertura a shed: la superficie vetrata orientata a nord porta luce diffusa e uniforme sul piano di lavoro per tutta la giornata. La soluzione di riferimento dove il capannone è anche un ambiente in cui si sta.',
+    img: 'sol-tecnoshed-cover',
+    alt: 'Vista dall’alto di una copertura Tecnoshed: file parallele di finestrature verticali',
+    specs: ['LUCE NETTA', 'ALTEZZA FINESTRA', 'LARGHEZZA MODULO'],
+    nota: 'Luce naturale da nord',
+    href: '/soluzioni/tecnoshed',
   },
   {
     slug: 'tegolo-tt',
