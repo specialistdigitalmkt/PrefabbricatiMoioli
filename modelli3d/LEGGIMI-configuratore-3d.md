@@ -20,7 +20,10 @@ Per la variante a fasce no: la fa lo script che la genera, qui sotto.
 
 `tecnowing-viewer-fasce.html` **non è una seconda esportazione**: è
 `tecnowing-viewer.html` riscritto da uno script, perché la versione originale
-resti intoccata sotto la scheda corrente.
+resti intoccata sotto la scheda corrente. Lo script tocca due cose: il markup
+dell'app, che sta nel template, e il modulo `tecnowing-scene.js`, che sta nel
+manifest delle risorse — gzippato e in base64. Quest'ultimo viene decompresso,
+riscritto come testo e ricompresso.
 
 Cosa cambia:
 
@@ -56,6 +59,20 @@ Cosa cambia:
   (`refit`), ma tenendo la direzione in cui si sta guardando: lo Shed alza il
   tetto e la coppella lo ingrossa, e senza aggiornare centro e distanza il
   modello scivolava fuori campo. L'angolo scelto da chi guarda resta.
+
+- **I tamponamenti sono rifatti.** L'involucro parte da mezzo pilastro oltre
+  il filo di griglia, non dal filo: i pilastri sono i pezzi più esterni della
+  struttura e con i pannelli sul filo restavano davanti, in vista. Le facciate
+  lunghe girano l'angolo e le testate ci si appoggiano dentro, così sparisce
+  la fessura di spigolo. Dietro i pannelli corre una lastra continua: senza,
+  le fughe sarebbero buchi aperti sul capannone. Modulo 250 nei due versi,
+  tre posature — `setTamponamenti('verticali' | 'orizzontali' | 'misto')`:
+  verticali sono pannelli alti tutta la facciata, orizzontali sono corsi da
+  250 interrotti sui pilastri (dove un pannello orizzontale trova appoggio),
+  misto è lati lunghi verticali e testate orizzontali. Con i pannelli accesi
+  i plinti spariscono: stanno sotto quota ma sono larghi 150 e sporgevano di
+  8 cm oltre l'involucro. In sezione il tamponamento della facciata vicina
+  non si disegna, o il taglio sarebbe un muro grigio e basta.
 
 ### Come si rigenera
 

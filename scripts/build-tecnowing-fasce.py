@@ -26,7 +26,7 @@ COSA CAMBIA rispetto all'originale, che resta intoccato sotto
   3. le inquadrature arretrano quando la cella centrale e' stretta;
   4. sotto i 1000px le colonne diventano righe.
 """
-import json, io, os, sys, shutil
+import json, io, os, sys, shutil, gzip, base64
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'modelli3d', 'tecnowing-viewer.html')
@@ -34,10 +34,27 @@ DST = os.path.join(ROOT, 'modelli3d', 'tecnowing-viewer-fasce.html')
 PUB = os.path.join(ROOT, 'public', 'soluzioni', 'tecnowing',
                    'configuratore-3d-fasce', 'index.html')
 TPL_LINE = 400  # 0-based
+MAN_LINE = 388  # 0-based — il manifest delle risorse
+SCENA = '7c6d1e2e-fc4e-4ecf-81d1-340c751ac52d'  # tecnowing-scene.js
 
 lines = io.open(SRC, encoding='utf-8').read().split('\n')
 tpl = json.loads(lines[TPL_LINE])
 orig = tpl
+
+# Il modulo della scena non sta nel template: sta nel manifest, gzippato e in
+# base64. Si tira fuori, si modifica come testo e si rimette. Il base64 non
+# contiene mai '<', quindi qui la riga non ha bisogno dell'escape del template.
+man = json.loads(lines[MAN_LINE])
+scena = gzip.decompress(base64.b64decode(man[SCENA]['data'])).decode('utf-8')
+scena_orig = scena
+
+def sub_scena(old, new, n=1):
+    global scena
+    c = scena.count(old)
+    if c != n:
+        sys.exit('SCENA: attese %d occorrenze, trovate %d per:\n%s' % (n, c, old[:160]))
+    scena = scena.replace(old, new)
+
 
 def sub(old, new, n=1):
     global tpl
@@ -115,8 +132,8 @@ body{height:100%;min-height:100vh;overflow:hidden;background:#16203A!important}
 @media (max-width:1000px){
   .vp-root{
     grid-template-columns:minmax(0,1fr);
-    grid-template-rows:52px minmax(0,1fr) auto auto auto 36px;
-    grid-template-areas:"head" "stage" "bar" "right" "left" "foot";
+    grid-template-rows:52px minmax(0,1fr) auto auto 36px;
+    grid-template-areas:"head" "stage" "right" "left" "foot";
   }
   .vp-header{padding:0 6px 0 12px!important}
   .vp-logo{height:20px!important}
@@ -136,12 +153,19 @@ body{height:100%;min-height:100vh;overflow:hidden;background:#16203A!important}
   .vp-panel-right > div{flex:0 0 auto;gap:5px!important}
   .vp-panel-right button{min-height:38px!important;padding:0 10px!important}
   .vp-viewbar button{min-height:38px!important}
-  /* La barra viste smette di galleggiare e diventa una riga sua: dove lo
-     schermo e' stretto, coprire il modello costa troppo. */
+  /* Qui la barra viste torna a galleggiare sul modello. In pila ogni riga
+     sotto e' altezza tolta al modello, e con il gruppo tamponamento sarebbero
+     quattro: meglio appoggiarla sull'aria che l'inquadratura lascia comunque
+     sotto la copertura. */
   .vp-viewbar{
+    /* Sta nella cella del modello, non appesa al fondo del visualizzatore:
+       in pila il modello e' solo la seconda riga, e con bottom:0 la barra
+       finiva sopra l'elenco componenti. Stessa cella significa sovrapposta,
+       e align-self la porta in basso. */
+    grid-area:stage;align-self:end;justify-self:stretch;
     position:relative!important;left:auto!important;right:auto!important;
     bottom:auto!important;transform:none!important;
-    margin:8px 12px 0!important;padding:5px!important;max-width:none;
+    margin:0 12px 10px!important;max-width:none;padding:5px!important;z-index:22;
   }
   .vp-viewbar > div{flex:0 0 auto}
   .vp-footer{gap:14px!important;font-size:10px!important;padding:0 12px!important;overflow-x:auto;white-space:nowrap}
@@ -436,7 +460,12 @@ sub("""  setView(name) {
     const sez = (name || this.state.view) === 'Sezione';
     this.scene.layers.tegoli_alari.parent.children.forEach((g) => {
       g.children.forEach((m) => {
-        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
+        const dentroTaglio = Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
+        /* Il tamponamento della facciata vicina sta fra chi guarda e il
+           taglio: con l'involucro chiuso la sezione diventava un muro grigio
+           e basta. Si toglie; quello di fondo resta, e fa da quinta. */
+        const muroDavanti = m.name.indexOf('tamponamento_nord') >= 0;
+        m.visible = !sez || (dentroTaglio && !muroDavanti);
       });
     });
     if (this.state.fv === false) this.scene.layers.fotovoltaico.visible = false;
@@ -596,6 +625,199 @@ sub("""  componentWillUnmount() {
     if (this.ro) this.ro.disconnect();
     if (!this.mq) return;""")
 
+
+# Il gruppo delle tre posature, fra Interposto e Configurazione. C'e' solo a
+# tamponamenti accesi: spenti, scegliere la posatura non vuol dire niente, e in
+# pila sarebbe una riga tolta al modello.
+sub('''    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.55)">Configurazione</div>''',
+    '''    <sc-if value="{{ showTamp }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.55)">Tamponamento</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ tampOpts }}" as="o" hint-placeholder-count="3">
+          <button sc-camel-on-click="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.55)">Configurazione</div>''')
+
+sub("""    strat: false,
+    tamp: false,""",
+    """    strat: false,
+    tamp: false,
+    /* Posatura dei pannelli: verticali, orizzontali o misto — lati lunghi
+       verticali e testate orizzontali. */
+    tampTipo: 'Verticali',""")
+
+sub("""      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
+        this.stopSpin();""",
+    """      showTamp: s.tamp,
+      tampOpts: seg(['Verticali', 'Orizzontali', 'Misto'], s.tampTipo, label => {
+        this.stopSpin();
+        this.setState({ tampTipo: label }, () => {
+          const map = { 'Verticali': 'verticali', 'Orizzontali': 'orizzontali', 'Misto': 'misto' };
+          this.scene.setTamponamenti(map[label]);
+          /* Come per l'interposto: i pannelli sono rifatti da capo e nascono
+             visibili, quindi il taglio della sezione va riapplicato. */
+          this.applySection();
+          this.applyVisibility();
+        });
+      }, 12, btnRail),
+      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
+        this.stopSpin();""")
+
+
+# A capannone tamponato i plinti spariscono sotto il rinterro
+sub("""    L.fotovoltaico.visible = this.state.fv;
+    L.pannelli_tamponamento.visible = this.state.tamp;""",
+    """    L.fotovoltaico.visible = this.state.fv;
+    L.pannelli_tamponamento.visible = this.state.tamp;
+    /* I plinti stanno sotto quota, ma sono larghi 150 e sporgono di 8 cm
+       oltre l'involucro: a capannone tamponato si vedevano come dentini alla
+       base del muro. Con i pannelli su, il terreno e' rinterrato. */
+    if (L.fondazioni) L.fondazioni.visible = !this.state.tamp;""")
+
+
+# Accendere tamponamenti o stratigrafia cambia l'ingombro: l'inquadratura segue
+sub("""        onClick: () => { this.stopSpin(); this.setState({ [key]: !s[key] }, () => this.applyVisibility()); }""",
+    """        onClick: () => {
+          this.stopSpin();
+          /* Tamponamenti e stratigrafia cambiano l'ingombro di parecchio —
+             l'involucro chiude il volume, la stratigrafia lo apre — quindi
+             l'inquadratura si rifa', tenendo l'angolo di chi guarda. */
+          this.setState({ [key]: !s[key] }, () => { this.applyVisibility(); this.refit(); });
+        }""")
+
+# ─────────────────────────────────────────────────────────────────────
+# 3bis. La scena: l'involucro di tamponamento
+# ─────────────────────────────────────────────────────────────────────
+sub_scena("""    pannello:   flat('cls_pannello_tamponamento', 0xD9DCE0)
+  };""",
+    """    pannello:   flat('cls_pannello_tamponamento', 0xD9DCE0),
+    /* Il fondo continuo dietro i pannelli: si vede solo dentro le fughe, ed
+       e' quello che rende leggibile la posatura. */
+    fuga:       flat('fondo_tamponamento', 0xA3A9B1, { roughness: 0.9 })
+  };""")
+
+sub_scena("""  /* tamponamenti */
+  const L_pan = layer('pannelli_tamponamento');
+  const Q_TOP = Q_ROOF + H_TEG + H_SHED;
+  const N_PL = Math.round(LX / 2.50), W_PL = LX / N_PL;
+  for (let k = 0; k < N_PL; k++) {
+    const x = W_PL * (k + 0.5);
+    [0, LY].forEach((y, s) => put(L_pan, new THREE.BoxGeometry(W_PL, Q_TOP, W_PAN), MAT.pannello,
+      `pannello_tamponamento_${s ? 'nord' : 'sud'}_${k + 1}`, x, y + (s ? W_PAN / 2 : -W_PAN / 2), Q_TOP / 2,
+      { ...CAT.pannelli_tamponamento, sig: `PAN ${s ? 'N' : 'S'}${k + 1}` }));
+  }
+  const N_PT = Math.round(LY / 2.50), W_PT = LY / N_PT;
+  for (let k = 0; k < N_PT; k++) {
+    const y = W_PT * (k + 0.5);
+    [0, LX].forEach((x, s) => put(L_pan, new THREE.BoxGeometry(W_PAN, Q_TOP, W_PT), MAT.pannello,
+      `pannello_tamponamento_${s ? 'est' : 'ovest'}_${k + 1}`, x + (s ? W_PAN / 2 : -W_PAN / 2), y, Q_TOP / 2,
+      { ...CAT.pannelli_tamponamento, sig: `PAN ${s ? 'E' : 'O'}${k + 1}` }));
+  }""",
+    """  /* ── tamponamenti ────────────────────────────────────────────────────
+     L'involucro sta fuori da tutta la struttura. I pezzi piu' esterni sono i
+     pilastri, che sporgono di mezza sezione oltre il filo di griglia: con i
+     pannelli appoggiati sul filo restavano davanti, in vista dall'esterno.
+     Qui il piano dei pannelli parte da quel mezzo pilastro e va in fuori.
+
+     Le facciate lunghe girano l'angolo, le testate ci si appoggiano dentro:
+     cosi' il volume chiude e sparisce la fessura d'angolo da cui si vedeva
+     il pilastro di spigolo.
+
+     Dietro i pannelli corre una lastra continua. Senza, le fughe sarebbero
+     buchi aperti sul capannone; con, sono fughe vere — e sono l'unica cosa
+     che distingue le tre posature, quindi devono leggersi. */
+  const L_pan = layer('pannelli_tamponamento');
+  const Q_TOP = Q_ROOF + H_TEG + H_SHED;
+  const OFF = PIL / 2;          /* mezzo pilastro: il filo interno dell'involucro */
+  const MOD = 2.50;             /* modulo del pannello, nei due versi */
+  const SP = W_PAN;             /* spessore totale dell'involucro */
+  const FUGA = 0.03;            /* larghezza della fuga fra pannello e pannello */
+  const T_PAN = 0.10;           /* spessore della lastra a vista */
+  const RIL = 0.03;             /* di quanto il pannello sporge dal fondo */
+
+  const FACCE = [
+    { n: 'sud',   lungo: true,  verso: -1, filo: -OFF,     a: -OFF - SP, b: LX + OFF + SP, sig: 'S' },
+    { n: 'nord',  lungo: true,  verso: 1,  filo: LY + OFF, a: -OFF - SP, b: LX + OFF + SP, sig: 'N' },
+    { n: 'ovest', lungo: false, verso: -1, filo: -OFF,     a: -OFF,      b: LY + OFF,      sig: 'O' },
+    { n: 'est',   lungo: false, verso: 1,  filo: LX + OFF, a: -OFF,      b: LY + OFF,      sig: 'E' }
+  ];
+
+  /* Un pannello a vista. `u` corre lungo la facciata, `z` in altezza; la fuga
+     si toglie dalle due misure, cosi' fra un pannello e l'altro resta il
+     fondo in ombra. */
+  function posaPannello(f, u0, u1, z0, z1, sig) {
+    const q = f.filo + f.verso * (SP - T_PAN / 2);
+    const lu = u1 - u0 - FUGA, lz = z1 - z0 - FUGA;
+    const um = (u0 + u1) / 2, zm = (z0 + z1) / 2;
+    const geo = f.lungo
+      ? new THREE.BoxGeometry(lu, lz, T_PAN)
+      : new THREE.BoxGeometry(T_PAN, lz, lu);
+    put(L_pan, geo, MAT.pannello, `pannello_tamponamento_${f.n}_${sig}`,
+      f.lungo ? um : q, f.lungo ? q : um, zm,
+      { ...CAT.pannelli_tamponamento, sig: `PAN ${f.sig}${sig}` });
+  }
+
+  function posaFondo(f) {
+    const t = SP - RIL;
+    const q = f.filo + f.verso * t / 2;
+    const lu = f.b - f.a, um = (f.a + f.b) / 2;
+    const geo = f.lungo
+      ? new THREE.BoxGeometry(lu, Q_TOP, t)
+      : new THREE.BoxGeometry(t, Q_TOP, lu);
+    put(L_pan, geo, MAT.fuga, `fondo_tamponamento_${f.n}`,
+      f.lungo ? um : q, f.lungo ? q : um, Q_TOP / 2,
+      { ...CAT.pannelli_tamponamento, sig: `FND ${f.sig}` });
+  }
+
+  /* Verticali: la facciata si divide in moduli da 250 e ogni pannello e' alto
+     quanto tutta la facciata. */
+  const tagliModulo = (f) => {
+    const n = Math.max(1, Math.round((f.b - f.a) / MOD));
+    return Array.from({ length: n + 1 }, (_, i) => f.a + (f.b - f.a) * i / n);
+  };
+  /* Orizzontali: i corsi si interrompono sui pilastri, perche' e' li' che un
+     pannello orizzontale trova appoggio. */
+  const tagliCampata = (f) => [f.a, ...(f.lungo ? gx : gy).slice(1, -1), f.b];
+  const corsi = () => {
+    const m = Math.max(1, Math.round(Q_TOP / MOD));
+    return Array.from({ length: m + 1 }, (_, i) => Q_TOP * i / m);
+  };
+
+  /* 'verticali' · 'orizzontali' · 'misto' — misto e' lati lunghi verticali e
+     testate orizzontali, la posa che si vede piu' spesso in cantiere. */
+  let tampCorrente = 'verticali';
+  function setTamponamenti(tipo) {
+    tampCorrente = tipo;
+    clear(L_pan);
+    FACCE.forEach((f) => {
+      posaFondo(f);
+      const orizzontale = tipo === 'orizzontali' || (tipo === 'misto' && !f.lungo);
+      if (orizzontale) {
+        const u = tagliCampata(f), z = corsi();
+        for (let i = 0; i < u.length - 1; i++) {
+          for (let k = 0; k < z.length - 1; k++) {
+            posaPannello(f, u[i], u[i + 1], z[k], z[k + 1], `${i + 1}.${k + 1}`);
+          }
+        }
+      } else {
+        const u = tagliModulo(f);
+        for (let i = 0; i < u.length - 1; i++) posaPannello(f, u[i], u[i + 1], 0, Q_TOP, `${i + 1}`);
+      }
+    });
+  }
+  setTamponamenti('verticali');""")
+
+sub_scena("""  return { root, layers, setInterposto, dims, MAT, get config() { return current; } };""",
+    """  return { root, layers, setInterposto, setTamponamenti, dims, MAT,
+    get config() { return current; },
+    get tamponamenti() { return tampCorrente; } };""")
+
 # ─────────────────────────────────────────────────────────────────────
 # 4. Riscrittura del bundle
 # ─────────────────────────────────────────────────────────────────────
@@ -603,9 +825,16 @@ enc = json.dumps(tpl, ensure_ascii=True).replace('</', '<\\u002F')
 assert '</' not in enc and '\n' not in enc
 assert json.loads(enc) == tpl
 lines[TPL_LINE] = enc
+
+man[SCENA] = dict(man[SCENA],
+                  data=base64.b64encode(gzip.compress(scena.encode('utf-8'), 9)).decode('ascii'))
+enc_man = json.dumps(man, ensure_ascii=True, separators=(',', ':'))
+assert '<' not in enc_man and '\n' not in enc_man
+lines[MAN_LINE] = enc_man
 io.open(DST, 'w', encoding='utf-8').write('\n'.join(lines))
 os.makedirs(os.path.dirname(PUB), exist_ok=True)
 shutil.copyfile(DST, PUB)
 print('scritto  %s' % os.path.relpath(DST, ROOT))
 print('copiato  %s' % os.path.relpath(PUB, ROOT))
 print('template: %d -> %d caratteri' % (len(orig), len(tpl)))
+print('scena:    %d -> %d caratteri' % (len(scena_orig), len(scena)))
