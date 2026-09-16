@@ -20,8 +20,8 @@
  * dal markup via data-attribute, perche' lo script non conosce la lingua.
  *
  * I CONTENUTI
- * Del chiavi in mano e' stato fornito un solo dato - che nasce con CMB
- * Costruzioni, societa' del gruppo. Tutto il resto e' redazionale e non
+ * Del chiavi in mano non sono stati forniti dati: il servizio e le sue
+ * realizzazioni si presentano solo col marchio Moioli. Tutto il resto e' redazionale e non
  * attribuisce competenze specifiche a nessuno. Dove serve un contenuto vero
  * c'e' un segnaposto dichiarato. Vedi src/data/chiavi-in-mano.ts.
  */
@@ -191,38 +191,9 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- ==================== 4. CMB COSTRUZIONI ==================== -->
-  <section class="block cim-cmb">
-    <div class="sec-num" aria-hidden="true">03</div>
-    <div class="wrap">
-      <div class="cim-cmb-grid">
-        <div class="reveal">
-          <p class="eyebrow">{pagina.cmb.eyebrow}</p>
-          <h2>{pagina.cmb.titolo}</h2>
-          <p class="cim-cmb-t">{pagina.cmb.testo}</p>
-        </div>
-
-        <div class="cim-cmb-lato reveal">
-          <div class="cim-logo">
-            <img
-              src={pagina.cmb.logo.scuro}
-              alt={pagina.cmb.logo.alt}
-              width={pagina.cmb.logo.larghezza}
-              height={pagina.cmb.logo.altezza}
-              loading="lazy"
-            />
-          </div>
-          <div class="cim-slot">
-            <span class="spec">{pagina.cmb.segnaposto}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== 5. COSA COMPRENDE ==================== -->
+  <!-- ==================== 4. COSA COMPRENDE ==================== -->
   <section class="block cim-compr">
-    <div class="sec-num" aria-hidden="true">04</div>
+    <div class="sec-num" aria-hidden="true">03</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.comprende.eyebrow}</p>
@@ -236,9 +207,9 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- ==================== 6. PORTFOLIO (segnaposto) ==================== -->
+  <!-- ==================== 5. PORTFOLIO (segnaposto) ==================== -->
   <section class="block cim-port on-dark">
-    <div class="sec-num" aria-hidden="true">05</div>
+    <div class="sec-num" aria-hidden="true">04</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.portfolio.eyebrow}</p>
@@ -264,7 +235,7 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- ==================== 7. CTA ==================== -->
+  <!-- ==================== 6. CTA ==================== -->
   <section class="cta-band on-dark">
     <div class="wrap">
       <div class="cta-inner reveal">
@@ -562,44 +533,6 @@ const jsonLd = {
     max-width: 40ch;
   }
 
-  /* ==================== 4. CMB ==================== */
-  .cim-cmb {
-    background: var(--bg1);
-  }
-  .cim-cmb-grid {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 56px;
-    align-items: start;
-  }
-  .cim-cmb-grid h2 {
-    font-family: var(--brand);
-    font-weight: 600;
-    font-size: clamp(30px, 4vw, 50px);
-    margin-top: 16px;
-    letter-spacing: -0.02em;
-  }
-  .cim-cmb-t {
-    margin-top: 20px;
-    font-size: 17px;
-    max-width: 56ch;
-  }
-  /* Il marchio di un'altra società sta nel suo riquadro, con aria attorno:
-     non si mescola alla grafica Moioli. */
-  .cim-logo {
-    background: #fff;
-    border: 1px solid var(--bg2);
-    border-radius: var(--r-md);
-    padding: 40px 44px;
-    display: grid;
-    place-items: center;
-  }
-  .cim-logo img {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
-  }
-
   /* ==================== SEGNAPOSTO ==================== */
   .cim-slot {
     margin-top: 22px;
@@ -700,8 +633,7 @@ const jsonLd = {
   }
 
   @media (max-width: 920px) {
-    .cim-id-grid,
-    .cim-cmb-grid {
+    .cim-id-grid {
       grid-template-columns: 1fr;
       gap: 40px;
     }

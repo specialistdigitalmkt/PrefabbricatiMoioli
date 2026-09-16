@@ -78,7 +78,7 @@ Solo queste sei. Il menu contiene solo ciò che è navigabile e finito.
 | `/soluzioni/stegos` | Scheda prodotto |
 | `/soluzioni/[slug]` | Schede di Tecnowing, Tegolo TT, Bacacier, Doppia falda |
 | `/soluzioni/rivestimenti` | Campionario delle finiture di facciata |
-| `/chiavi-in-mano` | Il chiavi in mano con CMB Costruzioni |
+| `/chiavi-in-mano` | Il chiavi in mano Moioli |
 | `/progetti` | Le 25 realizzazioni fotografate |
 | `/progetti/[slug]` | Scheda di ogni realizzazione, con galleria |
 | `/azienda` | Profilo aziendale |

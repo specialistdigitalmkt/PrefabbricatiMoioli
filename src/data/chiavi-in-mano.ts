@@ -2,12 +2,13 @@
  * Contenuti della pagina /chiavi-in-mano.
  *
  * ATTENZIONE — QUASI TUTTO QUI È REDAZIONALE.
- * Del chiavi in mano Moioli è stato fornito un solo dato: che nasce con
- * CMB Costruzioni, società del gruppo Moioli. Nient'altro.
+ * Del chiavi in mano Moioli non è stato fornito nessun dato. Il servizio e
+ * le sue realizzazioni si presentano solo col marchio Moioli: nessun
+ * partner nominato in pagina.
  *
  * Di conseguenza:
  * - Non compare nessun numero: né cantieri, né tempi, né superfici.
- * - Non è attribuita a Moioli o a CMB nessuna competenza specifica che non
+ * - Non è attribuita a Moioli nessuna competenza specifica che non
  *   sia deducibile dal termine «chiavi in mano».
  * - Le fasi descritte sono l'arco di qualunque costruzione, ed è l'arco che
  *   il timelapse in apertura mostra davvero: scavo, struttura, involucro,
@@ -23,7 +24,7 @@ export const pagina = {
   titolo: 'Dalle fondazioni all’ultimo dettaglio.',
   claim: 'Un solo interlocutore, nessuna impresa da coordinare.',
   lead:
-    'Il chiavi in mano Moioli nasce con CMB Costruzioni, società del gruppo. La struttura prefabbricata esce dallo stabilimento di Bagnatica; tutto il resto — opere civili, involucro, finiture — arriva dallo stesso contratto.',
+    'Con il chiavi in mano Moioli la struttura prefabbricata esce dallo stabilimento di Bagnatica, e tutto il resto — opere civili, involucro, finiture — arriva dallo stesso contratto.',
 
   video: {
     /* Timelapse del cantiere di Bonate, fornito dal cliente. Materiale utile
@@ -104,23 +105,6 @@ export const pagina = {
         testo: 'L’edificio passa al committente pronto all’uso.',
       },
     ],
-  },
-
-  cmb: {
-    eyebrow: 'Il partner',
-    titolo: 'CMB Costruzioni.',
-    testo:
-      'CMB Costruzioni è la società del gruppo Moioli che porta a termine la parte edile del chiavi in mano. La struttura prefabbricata e la costruzione dell’edificio restano così dentro lo stesso gruppo.',
-    /* Profilo, storia e competenze di CMB non sono stati forniti: al loro
-       posto un segnaposto dichiarato, non un testo inventato. */
-    segnaposto: 'PROFILO CMB COSTRUZIONI — testo da fornire',
-    logo: {
-      chiaro: '/cmb/cmb-orizzontale-bianco.svg',
-      scuro: '/cmb/cmb-orizzontale.svg',
-      alt: 'CMB Costruzioni',
-      larghezza: 543.79,
-      altezza: 82.2,
-    },
   },
 
   comprende: {
