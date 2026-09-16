@@ -13,6 +13,7 @@
     "soluzioni-foto": "node scripts/build-soluzioni-foto.mjs"
   },
   "dependencies": {
+    "@vercel/blob": "^2.8.0",
     "astro": "^5.14.1"
   },
   "devDependencies": {
