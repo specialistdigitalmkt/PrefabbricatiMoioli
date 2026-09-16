@@ -82,7 +82,7 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
       <p class="eyebrow">{azienda.nome}</p>
       {/* Il payoff arriva dai dati, non dal markup: è l'unico punto del sito
           in cui compare. */}
-      <h1>
+      <h1 lang={(payoff as { lingua?: string }).lingua}>
         <span class="ln"><span>{payoff.riga1}</span></span>
         <span class="ln"><span><em>{payoff.riga2}</em></span></span>
       </h1>

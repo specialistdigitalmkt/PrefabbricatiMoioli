@@ -7,12 +7,9 @@
  *
  * DUE PUNTI DA FAR CONFERMARE AL CLIENTE
  *
- * 1. IL PAYOFF. «Dove la forma prende volume» e' il payoff del marchio e
- *    compare una volta sola in tutto il sito, come titolo della home. Qui e'
- *    reso «Where form takes on volume»: e' una decisione di marca, non una
- *    traduzione tecnica, e va approvata. L'alternativa e' lasciarlo in
- *    italiano anche nella versione inglese, come fanno molti marchi
- *    industriali italiani.
+ * 1. IL PAYOFF. Deciso dal cliente: resta in italiano anche nella versione
+ *    inglese, «Dove la forma prende volume». Porta lang="it" perché un
+ *    lettore di schermo in inglese lo pronunci correttamente.
  *
  * 2. I NOMI DI PRODOTTO. Tecnowing, Stegos, Tecnoshed, Tegolo TT, Bacacier,
  *    Coverplan restano invariati: sono nomi commerciali. Sono tradotti solo
@@ -21,10 +18,11 @@
  * Stato: needs-client-approval su tutti i testi redazionali.
  */
 import { soluzioni as soluzioniIt } from '../../data/soluzioni';
+import { azienda } from '../../data/site';
 import type { Realizzazione } from '../../data/progetti';
 
-/** Payoff del marchio — DECISIONE DI MARCA, da approvare. Vedi nota 1. */
-export const payoff = { riga1: 'Where form', riga2: 'takes on volume.' };
+/** Payoff del marchio: in italiano per decisione del cliente. Vedi nota 1. */
+export const payoff = { ...azienda.payoff, lingua: 'it' };
 
 /** Riga fattuale che firma il piè di pagina e la scheda azienda. */
 export const descrizione = 'Precast reinforced concrete structures';

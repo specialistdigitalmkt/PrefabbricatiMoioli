@@ -394,10 +394,8 @@ scheda inglese lo dichiara.
 
 ### Due decisioni che deve prendere il cliente
 
-1. **Il payoff.** «Dove la forma prende volume» è reso «Where form takes on
-   volume». È una decisione di marca, non una traduzione tecnica. L'alternativa
-   è lasciare il payoff in italiano anche nella versione inglese, come fanno
-   molti marchi industriali italiani.
+1. ~~**Il payoff.**~~ **Deciso: resta in italiano** anche nella versione
+   inglese, «Dove la forma prende volume», con  per i lettori di schermo.
 2. **La terminologia tecnica.** Le scelte su cui una traduzione può sbagliare
    senza che si veda — tegolo alare → *wing unit*, interposto → *infill panel*,
    luce netta → *clear span*, lucernari a shed → *north-light rooflights* —
