@@ -89,6 +89,10 @@
   }
 
   * { box-sizing: border-box; }
+  /* Senza questa regola ogni display: grid o flex dichiarato qui sotto vince
+     sull'attributo hidden, e gli elementi nascosti dallo script restano a
+     schermo: la schermata di accesso non spariva mai. */
+  [hidden] { display: none !important; }
   body {
     background: var(--fondo);
     color: var(--testo);
