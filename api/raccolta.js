@@ -12,7 +12,10 @@
  * I file (disegni, foto) NON passano di qui: vanno nella cartella Drive.
  *
  * VARIABILI D'AMBIENTE (pannello Vercel)
- *   BLOB_READ_WRITE_TOKEN  creata da Vercel collegando lo store Blob
+ *   BLOB_STORE_ID          creata da Vercel collegando lo store Blob; con
+ *                          questa l'SDK si autentica da solo (OIDC). Gli store
+ *                          collegati prima usano invece BLOB_READ_WRITE_TOKEN:
+ *                          vanno bene entrambe.
  *   RACCOLTA_PASSWORD      scelta dal cliente, chiesta all'apertura della pagina
  *   RACCOLTA_BLOB_ACCESS   facoltativa: 'private' (predefinito) o 'public',
  *                          deve coincidere con il tipo di store creato
@@ -67,7 +70,7 @@ async function leggiTutto() {
 }
 
 export default async function handler(req, res) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+  if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) {
     return rispondi(res, 503, { errore: 'archivio_non_attivo', messaggio: 'L’archivio delle risposte non è ancora collegato al progetto.' });
   }
   if (!process.env.RACCOLTA_PASSWORD) {

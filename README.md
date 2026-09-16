@@ -161,7 +161,7 @@ quando la raccolta è chiusa:
   per voce in Vercel Blob (privato).
 
 Richiede nel progetto Vercel: uno store **Blob privato** collegato
-(`BLOB_READ_WRITE_TOKEN`, creata da Vercel) e la variabile
+(`BLOB_STORE_ID`, oppure `BLOB_READ_WRITE_TOKEN` negli store più vecchi, creata da Vercel) e la variabile
 `RACCOLTA_PASSWORD`. Senza una delle due la pagina lo dice all'accesso.
 Disegni e foto non passano dal sito: vanno nella cartella Google Drive indicata
 in pagina. Prima di eliminarla, esportare le risposte dallo store.
