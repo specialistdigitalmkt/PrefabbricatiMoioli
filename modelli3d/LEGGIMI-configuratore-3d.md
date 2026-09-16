@@ -20,59 +20,46 @@ Per la variante a fasce no: la fa lo script che la genera, qui sotto.
 
 `tecnowing-viewer-fasce.html` **non è una seconda esportazione**: è
 `tecnowing-viewer.html` riscritto da uno script, perché la versione originale
-resti intoccata sotto la scheda corrente. Lo script tocca due cose: il markup
-dell'app, che sta nel template, e il modulo `tecnowing-scene.js`, che sta nel
-manifest delle risorse — gzippato e in base64. Quest'ultimo viene decompresso,
-riscritto come testo e ricompresso.
+resti intoccata sotto la scheda corrente. Lo script tocca solo il markup
+dell'app, che sta nel template. Il modulo della scena (`tecnowing-scene.js`)
+non lo tocca più: le posature dei tamponamenti, che prima aggiungeva lui,
+dall'esportazione di settembre 2026 ci sono già.
 
 Cosa cambia:
 
-- **I pannelli non stanno più sul modello.** L'app passa da pannelli bianchi
-  in `position:absolute` sopra il canvas a una griglia di tre colonne:
-  fascia sinistra (componenti e scheda elemento) · modello · fascia destra
-  (interposto e configurazione), con testata e piede a tutta larghezza. Le
-  fasce sono blu come il resto della pagina, quindi la banda del sito e
-  l'interfaccia del visualizzatore sono una cosa sola.
-- **Il modello gira da solo** all'apertura (`autorotate` su `three-d-stage`)
-  e si ferma al primo gesto: il trascinamento lo spegne dai controlli, ogni
-  comando dei pannelli chiama `stopSpin()`. Non riparte più.
-- **Le inquadrature si ricalcolano** invece di essere punti fissi. Delle
-  viste da fuori si tiene solo la direzione: il bersaglio diventa il centro
-  di ciò che è acceso in quel momento (`visibleBox` — in sezione tre quarti
-  dei tegoli sono nascosti) e la distanza si trova a tentativi, proiettando
-  gli spigoli dell'ingombro e correggendo finché non stanno dentro
-  (`frame`). Il campo visivo passa da 45° a 30°: a 45 l'estremità vicina
-  dell'edificio pesa tanto più della lontana che il modello, pur centrato,
-  si legge spostato di lato. La vista dall'interno resta a mano, e a 45°.
-- **Sotto i 1000px** le tre colonne diventano una pila — modello, viste,
-  configuratore, componenti — e l'elenco componenti parte chiuso, per non
-  rubare al modello una riga intera. Lì la cella del modello è alta poco più
-  di 270 px su un telefono vero: un edificio lungo visto in assonometria ci
-  sta dentro minuscolo, quindi **la vista di partenza è la sezione**, che la
-  riempie. Da quando la vista la sceglie chi guarda (`viewScelta`), il
-  passaggio di soglia non gliela cambia più sotto le mani.
-- **Il taglio della sezione sta fuori da `setView`** (`applySection`).
-  `setInterposto` ricostruisce da capo interposto, serramenti, fotovoltaico e
-  bordo falda, e i pezzi nuovi nascono tutti visibili: senza rifare il taglio,
-  cambiare interposto faceva ricomparire il tetto intero mentre la vista era
-  ancora la sezione. Il cambio pannello rifà anche l'inquadratura
-  (`refit`), ma tenendo la direzione in cui si sta guardando: lo Shed alza il
-  tetto e la coppella lo ingrossa, e senza aggiornare centro e distanza il
-  modello scivolava fuori campo. L'angolo scelto da chi guarda resta.
-
-- **I tamponamenti sono rifatti.** L'involucro parte da mezzo pilastro oltre
-  il filo di griglia, non dal filo: i pilastri sono i pezzi più esterni della
-  struttura e con i pannelli sul filo restavano davanti, in vista. Le facciate
-  lunghe girano l'angolo e le testate ci si appoggiano dentro, così sparisce
-  la fessura di spigolo. Dietro i pannelli corre una lastra continua: senza,
-  le fughe sarebbero buchi aperti sul capannone. Modulo 250 nei due versi,
-  tre posature — `setTamponamenti('verticali' | 'orizzontali' | 'misto')`:
-  verticali sono pannelli alti tutta la facciata, orizzontali sono corsi da
-  250 interrotti sui pilastri (dove un pannello orizzontale trova appoggio),
-  misto è lati lunghi verticali e testate orizzontali. Con i pannelli accesi
-  i plinti spariscono: stanno sotto quota ma sono larghi 150 e sporgevano di
-  8 cm oltre l'involucro. In sezione il tamponamento della facciata vicina
-  non si disegna, o il taglio sarebbe un muro grigio e basta.
+- **Da 821 px in su i pannelli non stanno più sul modello.** L'app passa a
+  una griglia di tre colonne: fascia sinistra (componenti e scheda elemento)
+  · modello · fascia destra (interposto, tamponamento, configurazione), con
+  testata e piede a tutta larghezza. Le fasce sono blu come il resto della
+  pagina, quindi la banda del sito e l'interfaccia del visualizzatore sono
+  una cosa sola. I pannelli nascono in `position:absolute` e lo script non
+  toglie quelle misure: le scavalca con `!important` dentro la media query.
+  I colori passano per variabili `--f-*`, definite solo sulle fasce, con il
+  colore originale come ripiego.
+- **Sotto gli 821 px, e sul telefono sdraiato, niente fasce**: resta
+  l'impaginazione dell'esportazione, con i fogli bianchi richiamati dalla
+  barra schede in fondo. La condizione è l'opposto esatto di `MOBILE` nel
+  componente; se l'esportazione la cambia, va cambiata anche nello script.
+- **Il modello gira da solo** all'apertura (lo fa già l'esportazione) e si
+  ferma al primo gesto: il trascinamento lo spegne dai controlli, e qui anche
+  ogni comando dei pannelli, con `stopSpin()`. Non riparte più.
+- **Le inquadrature si stringono sul volume visibile, ovunque.**
+  L'esportazione lo fa solo su telefono e su schermo largo tiene i punti di
+  vista composti per l'iPad; fra le due fasce la cella è quasi quadrata e il
+  modello finiva piccolo e di lato. Qui `frameFor` mira sempre al centro di
+  ciò che è acceso e arretra quanto basta. Il campo visivo delle viste da
+  fuori è 30° invece di 45°: a 45 l'estremità vicina dell'edificio pesa tanto
+  più della lontana che il modello, pur centrato, si legge spostato di lato.
+  Dall'interno restano i 45° e il punto di vista a mano. Cambiare interposto,
+  configurazione, posa o un livello rifà l'inquadratura tenendo l'angolo di
+  chi guarda; lo stesso quando la cella cambia misura (`ResizeObserver`).
+- **Il taglio della sezione si rifà** dopo `setInterposto` e
+  `setTamponamenti`: ricostruiscono i pezzi da capo e i pezzi nuovi nascono
+  visibili, quindi il tetto ricompariva intero mentre la vista era ancora la
+  sezione. In sezione il tamponamento della facciata vicina (nord) non si
+  disegna, o il taglio sarebbe un muro grigio e basta.
+- **La scheda elemento a tutto pannello** resta solo nei fogli: nella fascia
+  la colonna è alta quanto lo schermo e lista e scheda ci stanno insieme.
 
 ### Come si rigenera
 
@@ -83,7 +70,7 @@ python3 scripts/build-tecnowing-fasce.py
 Scrive `modelli3d/tecnowing-viewer-fasce.html` e ne mette la copia in
 `public/`. **La modifica non si fa a mano**: il markup dell'app vive dentro
 `<script type="__bundler/template">` come una stringa JSON su una riga sola,
-con ogni `</` scritto `<\u002F` — una riga da 36 000 caratteri che un editor
+con ogni `</` scritto `<\u002F` — una riga da 54 000 caratteri che un editor
 rompe al primo a capo. Lo script la decodifica, la modifica e la ricodifica.
 
 Quando arriva una nuova esportazione del configuratore, si sostituisce
@@ -142,10 +129,9 @@ prova.
   non spedisce framework. È il motivo per cui sta fuori dalle pagine.
 - **È responsivo**: il contenitore è fluido e `three-d-stage` ha un
   `ResizeObserver`, quindi il canvas si ridimensiona invece di essere scalato.
-  Nella versione originale, sotto gli 820 px i pannelli si spostano sopra e
-  sotto il modello; in quella a fasce la soglia è 1000 px e le colonne
-  diventano righe. Entrambe hanno regole per il telefono, anche in
-  orizzontale.
+  Sotto gli 820 px, e sul telefono sdraiato, entrambe le versioni passano ai
+  fogli richiamati da una barra schede; sopra, l'originale tiene i pannelli
+  sul modello e quella a fasce li mette ai lati.
 - **Fuori dalla sitemap**, e va bene così: è uno strumento, non un contenuto
   da indicizzare. Non ha canonical né Open Graph.
 - I dati che mostra (modulo 250 cm, R90′–R120′, altezze travi) vanno

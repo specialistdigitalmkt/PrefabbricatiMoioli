@@ -10,7 +10,7 @@ Legge `modelli3d/tecnowing-viewer.html`, scrive
 PERCHE' UNO SCRIPT E NON UNA MODIFICA A MANO
 Il documento esportato dal configuratore e' un bundle: il markup dell'app vive
 dentro <script type="__bundler/template"> come UNA stringa JSON su una riga
-sola di 36 000 caratteri, con ogni "</" scritto "<\\u002F" (altrimenti il
+sola di 54 000 caratteri, con ogni "</" scritto "<\\u002F" (altrimenti il
 parser chiuderebbe lo script alla prima chiusura di tag). Si decodifica, si
 modifica, si ricodifica con la stessa convenzione.
 
@@ -20,40 +20,36 @@ non c'e' piu' invece di produrre un file rotto in silenzio.
 
 COSA CAMBIA rispetto all'originale, che resta intoccato sotto
 /soluzioni/tecnowing:
-  1. i pannelli lasciano il modello e diventano due fasce laterali blu
-     (griglia a tre colonne, colori da fondo scuro);
-  2. il modello gira da solo all'apertura e si ferma al primo gesto;
-  3. le inquadrature arretrano quando la cella centrale e' stretta;
-  4. sotto i 1000px le colonne diventano righe.
+  1. da 821px in su i pannelli lasciano il modello e diventano due fasce
+     laterali blu (griglia a tre colonne, colori da fondo scuro);
+  2. sotto, e sul telefono sdraiato, resta l'impaginazione a fogli
+     dell'esportazione, intatta;
+  3. le viste da fuori si inquadrano sul volume visibile, a 30 gradi, e si
+     rifanno quando cambia la geometria;
+  4. il primo comando ferma la rotazione automatica, non solo il primo
+     trascinamento;
+  5. in sezione il tamponamento della facciata vicina non si disegna, e il
+     taglio resta anche dopo aver cambiato interposto o posa.
+
+Le versioni dell'esportazione precedenti a settembre 2026 non avevano
+rotazione automatica, posature dei tamponamenti, inquadratura adattiva ne'
+fogli su telefono: lo script le aggiungeva, anche nel modulo della scena.
+Ora ci sono gia', e qui si tocca solo il template.
 """
-import json, io, os, sys, shutil, gzip, base64
+import json, io, os, sys, shutil
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'modelli3d', 'tecnowing-viewer.html')
 DST = os.path.join(ROOT, 'modelli3d', 'tecnowing-viewer-fasce.html')
 PUB = os.path.join(ROOT, 'public', 'soluzioni', 'tecnowing',
                    'configuratore-3d-fasce', 'index.html')
-TPL_LINE = 400  # 0-based
-MAN_LINE = 388  # 0-based — il manifest delle risorse
-SCENA = '7c6d1e2e-fc4e-4ecf-81d1-340c751ac52d'  # tecnowing-scene.js
 
 lines = io.open(SRC, encoding='utf-8').read().split('\n')
+# Il template e' la riga subito dopo il suo tag di apertura: si cerca il tag
+# invece di fidarsi di un numero di riga, che cambia a ogni esportazione.
+TPL_LINE = lines.index('  <script type="__bundler/template">') + 1
 tpl = json.loads(lines[TPL_LINE])
 orig = tpl
-
-# Il modulo della scena non sta nel template: sta nel manifest, gzippato e in
-# base64. Si tira fuori, si modifica come testo e si rimette. Il base64 non
-# contiene mai '<', quindi qui la riga non ha bisogno dell'escape del template.
-man = json.loads(lines[MAN_LINE])
-scena = gzip.decompress(base64.b64decode(man[SCENA]['data'])).decode('utf-8')
-scena_orig = scena
-
-def sub_scena(old, new, n=1):
-    global scena
-    c = scena.count(old)
-    if c != n:
-        sys.exit('SCENA: attese %d occorrenze, trovate %d per:\n%s' % (n, c, old[:160]))
-    scena = scena.replace(old, new)
 
 
 def sub(old, new, n=1):
@@ -66,258 +62,179 @@ def sub(old, new, n=1):
 # ─────────────────────────────────────────────────────────────────────
 # 1. Foglio di stile: da pannelli sovrapposti a griglia con fasce laterali
 # ─────────────────────────────────────────────────────────────────────
-NEW_CSS = """/* ── Impaginazione a fasce ───────────────────────────────
+NEW_CSS = """
+/* ── Impaginazione a fasce ───────────────────────────────
    Il modello sta al centro, chiaro; l'interfaccia sta sulle due fasce blu ai
    lati e non gli va piu' sopra. La griglia tiene le tre colonne (fascia
    sinistra · modello · fascia destra) e le due bande orizzontali (testata ·
-   piede): i pannelli sono celle, non riquadri appoggiati sul modello, quindi
-   non ne nascondono piu' un pezzo.
+   piede): i pannelli sono celle, non riquadri appoggiati sul modello.
 
-   Le misure stanno qui e non nel markup perche' il layout deve cambiare con
-   la larghezza: sotto i 1000px le fasce non ci stanno piu' e le tre colonne
-   diventano una pila, con il modello in cima. */
-html{height:100%}
-body{height:100%;min-height:100vh;overflow:hidden;background:#16203A!important}
-/* La runtime monta l'app in #dc-root > .sc-host: senza altezza esplicita su
-   questi wrapper, un height:100% sul root si risolve a zero e resta vuoto. */
-#dc-root,.sc-host,x-dc{display:block;width:100%;height:100%}
+   Vale solo fuori dall'impaginazione a fogli dell'esportazione, cioe' il
+   contrario esatto della sua condizione `mobile` — (max-width:820px) oppure
+   (max-height:520px) sdraiato. Li' sotto i pannelli restano fogli bianchi
+   richiamati dalla barra schede, com'erano: due colonne da 250px su un
+   telefono lascerebbero al modello una fessura.
 
-.vp-root{
-  width:100%!important;height:100%!important;
-  display:grid;
-  grid-template-columns:var(--rail-l,300px) minmax(0,1fr) var(--rail-r,272px);
-  grid-template-rows:56px minmax(0,1fr) 40px;
-  grid-template-areas:"head head head" "left stage right" "foot foot foot";
-}
-/* In presentazione i pannelli escono dal DOM: le fasce si chiudono da sole e
-   il modello prende tutta la larghezza. */
-.vp-root:not(:has(.vp-panel-left)){--rail-l:0px;--rail-r:0px}
-
-.vp-header{grid-area:head}
-.vp-panel-left{grid-area:left}
-.vp-stage{grid-area:stage}
-.vp-panel-right{grid-area:right}
-.vp-footer{grid-area:foot}
-.vp-header,.vp-panel-left,.vp-panel-right,.vp-stage,.vp-footer{
-  position:relative;min-width:0;min-height:0;
-}
-.vp-panel-right{overflow-y:auto;overflow-x:hidden}
-.vp-panel-left,.vp-panel-right,.vp-viewbar,.vp-footer{-webkit-overflow-scrolling:touch}
-.vp-viewbar::-webkit-scrollbar,.vp-footer::-webkit-scrollbar,
-.vp-panel-left ::-webkit-scrollbar,.vp-panel-right::-webkit-scrollbar{height:0;width:0}
-
-/* La barra viste resta sospesa sul modello, ma centrata sul modello e non
-   sulla pagina: le due fasce non hanno la stessa larghezza. E dentro il
-   modello ci deve stare: piu' larga della cella andrebbe a coprire i
-   pannelli, che e' esattamente cio' da cui siamo partiti. Quando non ci sta
-   diventa una striscia che scorre. */
-.vp-viewbar{
-  left:calc(var(--rail-l,300px) + (100% - var(--rail-l,300px) - var(--rail-r,272px)) / 2)!important;
-  max-width:calc(100% - var(--rail-l,300px) - var(--rail-r,272px) - 20px);
-  overflow-x:auto;justify-content:flex-start;
-}
-.vp-viewbar > div{flex:0 0 auto}
-/* Appena la cella si stringe i sette pulsanti si stringono con lei, invece di
-   diventare subito una striscia da far scorrere. */
-@media (max-width:1520px){
-  .vp-viewbar{gap:8px!important;padding:5px!important}
-  .vp-viewbar button{padding:0 11px!important}
-}
-
-@media (max-width:1280px){.vp-root{--rail-l:276px;--rail-r:252px}}
-@media (max-width:1100px){.vp-root{--rail-l:252px;--rail-r:232px}}
-
-/* Sotto i 1000px le fasce diventano righe: modello, viste, configuratore,
-   componenti. Il modello resta in cima e si tiene tutto lo spazio libero. */
-@media (max-width:1000px){
-  .vp-root{
-    grid-template-columns:minmax(0,1fr);
-    grid-template-rows:52px minmax(0,1fr) auto auto 36px;
-    grid-template-areas:"head" "stage" "right" "left" "foot";
-  }
-  .vp-header{padding:0 6px 0 12px!important}
-  .vp-logo{height:20px!important}
-  .vp-title{font-size:15px!important}
-  /* In pila ogni riga tolta al modello si vede: i comandi si stringono e
-     l'elenco dei componenti parte chiuso (vedi listOpen), cosi' la riga vale
-     il suo pulsante finche' non lo si apre. */
-  .vp-panel-left{
-    border-right:0!important;border-top:1px solid rgba(255,255,255,.10)!important;
-    max-height:30vh;
-  }
-  .vp-panel-right{
-    border-left:0!important;border-top:1px solid rgba(255,255,255,.10)!important;
-    flex-direction:row!important;flex-wrap:wrap!important;
-    gap:8px 18px!important;padding:10px 12px 12px!important;
-  }
-  .vp-panel-right > div{flex:0 0 auto;gap:5px!important}
-  .vp-panel-right button{min-height:38px!important;padding:0 10px!important}
-  .vp-viewbar button{min-height:38px!important}
-  /* Qui la barra viste torna a galleggiare sul modello. In pila ogni riga
-     sotto e' altezza tolta al modello, e con il gruppo tamponamento sarebbero
-     quattro: meglio appoggiarla sull'aria che l'inquadratura lascia comunque
-     sotto la copertura. */
-  .vp-viewbar{
-    /* Sta nella cella del modello, non appesa al fondo del visualizzatore:
-       in pila il modello e' solo la seconda riga, e con bottom:0 la barra
-       finiva sopra l'elenco componenti. Stessa cella significa sovrapposta,
-       e align-self la porta in basso. */
-    grid-area:stage;align-self:end;justify-self:stretch;
-    position:relative!important;left:auto!important;right:auto!important;
-    bottom:auto!important;transform:none!important;
-    margin:0 12px 10px!important;max-width:none;padding:5px!important;z-index:22;
-  }
-  .vp-viewbar > div{flex:0 0 auto}
-  .vp-footer{gap:14px!important;font-size:10px!important;padding:0 12px!important;overflow-x:auto;white-space:nowrap}
-  .vp-footer > div{flex:0 0 auto}
-  .vp-exit{right:12px!important;top:64px!important}
-}
-
-/* Telefono */
-@media (max-width:560px){
-  .vp-header{gap:8px}
-  .vp-eyebrow,.vp-divider{display:none}
-  .vp-brand{gap:10px!important;min-width:0}
-  .vp-logo{height:18px!important}
-  .vp-panel-left{max-height:26vh}
-  .vp-panel-right button,.vp-viewbar button{font-size:10px!important;padding:0 9px!important}
-}
-
-/* Telefono in orizzontale: larghezza ce n'e', altezza no. In pila il modello
-   resterebbe una striscia, quindi le fasce tornano ai lati. */
-@media (max-height:560px) and (orientation:landscape) and (max-width:1000px){
-  .vp-root{
-    --rail-l:206px;--rail-r:190px;
-    grid-template-columns:var(--rail-l) minmax(0,1fr) var(--rail-r);
-    grid-template-rows:52px minmax(0,1fr) 32px;
+   I pannelli nascono in position:absolute con le misure nello style del
+   markup, e i fogli ne hanno bisogno: qui si scavalcano con !important invece
+   di toglierle. I colori passano per variabili (--f-*) che il markup legge
+   con il valore originale come ripiego: definite solo dentro le fasce, fuori
+   — fogli, barra viste — non esistono e resta il bianco. */
+@media (min-width:821px) and (min-height:521px), (min-width:821px) and (orientation:portrait){
+  .vp-root.vp-root{
+    display:grid;
+    grid-template-columns:var(--rail-l,300px) minmax(0,1fr) var(--rail-r,272px);
+    grid-template-rows:56px minmax(0,1fr) 40px;
     grid-template-areas:"head head head" "left stage right" "foot foot foot";
+    background:#16203A!important;
   }
-  .vp-panel-left{border-right:1px solid rgba(255,255,255,.10)!important;border-top:0!important;max-height:none}
-  .vp-panel-right{
-    border-left:1px solid rgba(255,255,255,.10)!important;border-top:0!important;
-    flex-direction:column!important;gap:14px!important;padding:12px 12px 14px!important;
+  /* In presentazione i pannelli escono dal DOM: le fasce si chiudono da sole
+     e il modello prende tutta la larghezza. */
+  .vp-root:not(:has(.vp-panel-left)){--rail-l:0px;--rail-r:0px}
+
+  .vp-root .vp-header,.vp-root .vp-stage,.vp-root .vp-panel-left,
+  .vp-root .vp-panel-right,.vp-root .vp-footer{
+    position:relative!important;left:auto!important;right:auto!important;
+    top:auto!important;bottom:auto!important;width:auto!important;
+    height:auto!important;max-height:none!important;min-width:0;min-height:0;
   }
-  .vp-viewbar{
-    position:absolute!important;left:50%!important;bottom:8px!important;
-    transform:translateX(-50%)!important;margin:0!important;
-    max-width:calc(100% - 24px);
+  .vp-root .vp-header{grid-area:head}
+  .vp-root .vp-stage{grid-area:stage}
+  .vp-root .vp-footer{grid-area:foot;background:#16203A!important;border-top-color:rgba(255,255,255,.12)!important}
+  .vp-root .vp-panel-left,.vp-root .vp-panel-right{
+    background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;
   }
-  .vp-footer{font-size:9.5px!important}
+  .vp-root .vp-panel-left{grid-area:left;border-right:1px solid rgba(255,255,255,.10)!important}
+  .vp-root .vp-panel-right{
+    grid-area:right;border-left:1px solid rgba(255,255,255,.10)!important;
+    gap:22px!important;padding:22px 20px 20px!important;overflow-y:auto;overflow-x:hidden;
+  }
+  .vp-root .vp-panel-right > div > div{flex-wrap:wrap}
+  /* Barre di scorrimento scure, o sulla fascia blu resta una striscia chiara. */
+  .vp-root .vp-panel-left,.vp-root .vp-panel-right{color-scheme:dark}
+
+  .vp-panel-left,.vp-panel-right,.vp-footer{
+    --f-testo:rgba(255,255,255,.82);--f-muto:rgba(255,255,255,.55);
+    --f-tenue:rgba(255,255,255,.45);--f-forte:#FFFFFF;--f-rosso:#D98581;
+    --f-sel-testo:#FFFFFF;--f-filo:rgba(255,255,255,.12);--f-fondo:transparent;
+    --f-grigio:rgba(255,255,255,.05);--f-riga:rgba(255,255,255,.07);
+    --f-sel:rgba(177,55,51,.26);--f-pallino:rgba(255,255,255,.30);
+    --f-icona-filo:rgba(255,255,255,.18);
+    /* Segmenti: acceso = bianco pieno, spento = solo contorno. Il navy pieno
+       dei pulsanti originali sparirebbe nel fondo. */
+    --f-on-fondo:#FFFFFF;--f-on-testo:#16203A;
+    --f-off-testo:rgba(255,255,255,.62);--f-off-filo:rgba(255,255,255,.24);
+  }
+
+  /* La barra viste resta sospesa sul modello, ma centrata sul modello e non
+     sulla pagina: le due fasce non hanno la stessa larghezza. E dentro il
+     modello ci deve stare: piu' larga della cella coprirebbe i pannelli.
+     Quando non ci sta diventa una striscia che scorre. */
+  .vp-root .vp-viewbar{
+    left:calc(var(--rail-l,300px) + (100% - var(--rail-l,300px) - var(--rail-r,272px)) / 2)!important;
+    right:auto!important;transform:translateX(-50%)!important;
+    max-width:calc(100% - var(--rail-l,300px) - var(--rail-r,272px) - 20px);
+    overflow-x:auto;justify-content:flex-start;
+  }
+  .vp-root .vp-viewbar > div{flex:0 0 auto}
 }
+/* Appena la cella si stringe i pulsanti si stringono con lei, invece di
+   diventare subito una striscia da far scorrere. */
+@media (min-width:821px) and (min-height:521px) and (max-width:1520px){
+  .vp-root .vp-viewbar{gap:8px!important;padding:5px!important}
+  .vp-root .vp-viewbar button{padding:0 11px!important}
+}
+@media (min-width:821px) and (min-height:521px) and (max-width:1280px){.vp-root{--rail-l:276px;--rail-r:252px}}
+@media (min-width:821px) and (min-height:521px) and (max-width:1100px){.vp-root{--rail-l:240px;--rail-r:224px}}
+@media (min-width:821px) and (min-height:521px) and (max-width:940px){.vp-root{--rail-l:220px;--rail-r:206px}}
 """
 
 a = tpl.index('/* ── Layout adattivo')
 b = tpl.index('</style>', a)
-tpl = tpl[:a] + NEW_CSS + tpl[b:]
+tpl = tpl[:b] + NEW_CSS + tpl[b:]
 
 # ─────────────────────────────────────────────────────────────────────
-# 2. Markup: le celle della griglia perdono le misure assolute e passano
-#    ai colori da fondo scuro
+# 2. Markup: i colori dei pannelli passano per le variabili delle fasce
 # ─────────────────────────────────────────────────────────────────────
-sub('<div class="vp-root" style="position:relative;width:100%;height:100%;overflow:hidden;background:#F5F6F7;font-family:\'IBM Plex Sans\',sans-serif;color:#3B3F45;-webkit-font-smoothing:antialiased">',
-    '<div class="vp-root" style="position:relative;width:100%;height:100%;overflow:hidden;background:#16203A;font-family:\'IBM Plex Sans\',sans-serif;color:rgba(255,255,255,.82);-webkit-font-smoothing:antialiased">')
-
-# Il modello: cella della griglia, con il canvas che la riempie in assoluto.
-sub('style="position:absolute;left:0;right:0;top:56px;bottom:40px;background:#F5F6F7"',
-    'style="position:relative;background:#F5F6F7"')
-
-sub('style="position:absolute;left:0;right:0;top:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:#16203A;z-index:30"',
-    'style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 0 20px;background:#16203A;z-index:30"')
-
-# Fascia sinistra
-sub('style="position:absolute;left:20px;top:76px;width:280px;max-height:500px;display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #E1E3E5;border-radius:6px;box-shadow:0 6px 24px rgba(17,25,46,.10);z-index:20;overflow:hidden"',
-    'style="display:flex;flex-direction:column;background:transparent;border-right:1px solid rgba(255,255,255,.10);z-index:20;overflow:hidden"')
-
-sub('style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:48px;padding:0 16px;background:#FFFFFF;border:0;cursor:pointer;text-align:left"',
-    'style="display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:56px;padding:0 20px;background:transparent;border:0;cursor:pointer;text-align:left"')
-
-sub('style="display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:0 14px 0 9px;background:#FFFFFF;border:0;border-bottom:1px solid #E1E3E5;cursor:pointer;text-align:left"',
-    'style="display:flex;align-items:center;gap:10px;width:100%;min-height:56px;padding:0 16px 0 13px;background:transparent;border:0;border-bottom:1px solid rgba(255,255,255,.12);cursor:pointer;text-align:left"')
-
-sub('style="flex:none;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:5px;background:#F5F6F7;border:1px solid #E1E3E5;color:#1D2A44"',
-    'style="flex:none;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:5px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:#FFFFFF"')
-
 sub('font-weight:600;color:#686F79">Componenti del sistema</span>',
-    'font-weight:600;color:rgba(255,255,255,.55)">Componenti del sistema</span>', 2)
-
-sub("<div style=\"font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#9CA3AF;letter-spacing:.01em\">{{ c.size }}</div>",
-    "<div style=\"font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(255,255,255,.42);letter-spacing:.01em\">{{ c.size }}</div>")
-
-# Scheda elemento
+    'font-weight:600;color:var(--f-muto,#686F79)">Componenti del sistema</span>', 2)
+sub('min-height:48px;padding:0 16px;background:#FFFFFF;border:0;cursor:pointer',
+    'min-height:48px;padding:0 16px;background:var(--f-fondo,#FFFFFF);border:0;cursor:pointer')
+sub('padding:0 14px 0 9px;background:#FFFFFF;border:0;border-bottom:1px solid #E1E3E5;',
+    'padding:0 14px 0 9px;background:var(--f-fondo,#FFFFFF);border:0;border-bottom:1px solid var(--f-filo,#E1E3E5);')
+sub('border-radius:5px;background:#F5F6F7;border:1px solid #E1E3E5;color:#1D2A44"',
+    'border-radius:5px;background:var(--f-grigio,#F5F6F7);border:1px solid var(--f-icona-filo,#E1E3E5);color:var(--f-forte,#1D2A44)"')
+sub('color:#9CA3AF;letter-spacing:.01em">{{ c.size }}',
+    'color:var(--f-tenue,#9CA3AF);letter-spacing:.01em">{{ c.size }}')
 sub('font-weight:600;color:#686F79">Scheda elemento</div>',
-    'font-weight:600;color:rgba(255,255,255,.55)">Scheda elemento</div>')
-sub("style=\"font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#1D2A44;line-height:1.2\">{{ selFam }}",
-    "style=\"font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:#FFFFFF;line-height:1.2\">{{ selFam }}")
-sub('color:#B13733;margin-top:3px">{{ selCount }}', 'color:#D98581;margin-top:3px">{{ selCount }}')
-sub('<div style="display:grid;grid-template-columns:84px 1fr;gap:10px;padding:6px 0;border-top:1px solid #E1E3E5">',
-    '<div style="display:grid;grid-template-columns:84px 1fr;gap:10px;padding:6px 0;border-top:1px solid rgba(255,255,255,.12)">')
-sub('color:#9CA3AF;line-height:1.5">{{ s.k }}', 'color:rgba(255,255,255,.45);line-height:1.5">{{ s.k }}')
-sub('font-size:11px;color:#3B3F45;line-height:1.45">{{ s.v }}', 'font-size:11px;color:rgba(255,255,255,.82);line-height:1.45">{{ s.v }}')
-sub('<div style="margin-top:8px;font-size:12px;line-height:1.5;color:#686F79">Seleziona un elemento per isolarlo nel modello.</div>',
-    '<div style="margin-top:8px;font-size:12px;line-height:1.5;color:rgba(255,255,255,.55)">Seleziona un elemento per isolarlo nel modello.</div>')
-
-# Fascia destra
-sub('style="position:absolute;right:20px;top:76px;display:flex;flex-direction:column;gap:12px;background:#FFFFFF;border:1px solid #E1E3E5;border-radius:6px;box-shadow:0 6px 24px rgba(17,25,46,.10);padding:14px 16px 16px;z-index:20"',
-    'style="display:flex;flex-direction:column;gap:22px;background:transparent;border-left:1px solid rgba(255,255,255,.10);padding:22px 20px 20px;z-index:20"')
-
-for etichetta in ('Interposto', 'Configurazione'):
-    sub('font-weight:600;color:#686F79">%s</div>\n      <div style="display:flex;gap:6px">' % etichetta,
-        'font-weight:600;color:rgba(255,255,255,.55)">%s</div>\n      <div style="display:flex;gap:6px;flex-wrap:wrap">' % etichetta)
+    'font-weight:600;color:var(--f-muto,#686F79)">Scheda elemento</div>')
+sub('color:#1D2A44;line-height:1.2">{{ selFam }}', 'color:var(--f-forte,#1D2A44);line-height:1.2">{{ selFam }}')
+sub('color:#B13733;margin-top:3px">{{ selCount }}', 'color:var(--f-rosso,#B13733);margin-top:3px">{{ selCount }}')
+sub('gap:10px;padding:6px 0;border-top:1px solid #E1E3E5">',
+    'gap:10px;padding:6px 0;border-top:1px solid var(--f-filo,#E1E3E5)">')
+sub('color:#9CA3AF;line-height:1.5">{{ s.k }}', 'color:var(--f-tenue,#9CA3AF);line-height:1.5">{{ s.k }}')
+sub('color:#3B3F45;line-height:1.45">{{ s.v }}', 'color:var(--f-testo,#3B3F45);line-height:1.45">{{ s.v }}')
+sub('color:#686F79">Seleziona un elemento', 'color:var(--f-muto,#686F79)">Seleziona un elemento')
+for etichetta in ('Interposto', 'Tamponamento', 'Configurazione'):
+    sub('font-weight:600;color:#686F79">%s</div>' % etichetta,
+        'font-weight:600;color:var(--f-muto,#686F79)">%s</div>' % etichetta)
 
 # Piede
-sub('style="position:absolute;left:0;right:0;bottom:0;height:40px;display:flex;align-items:center;gap:22px;padding:0 20px;background:#FFFFFF;border-top:1px solid #E1E3E5;font-family:\'IBM Plex Mono\',monospace;font-size:11px;letter-spacing:.02em;color:#686F79;z-index:25"',
-    'style="display:flex;align-items:center;gap:22px;padding:0 20px;background:#16203A;border-top:1px solid rgba(255,255,255,.12);font-family:\'IBM Plex Mono\',monospace;font-size:11px;letter-spacing:.02em;color:rgba(255,255,255,.55);z-index:25"')
-sub('<span style="color:#1D2A44;font-weight:500">', '<span style="color:#FFFFFF;font-weight:500">', 6)
+sub('letter-spacing:.02em;color:#686F79;z-index:25"', 'letter-spacing:.02em;color:var(--f-muto,#686F79);z-index:25"')
+sub('<span style="color:#1D2A44;font-weight:500">', '<span style="color:var(--f-forte,#1D2A44);font-weight:500">', 6)
 
 # ─────────────────────────────────────────────────────────────────────
-# 3. Logica: autorotazione e stili dei comandi sulla fascia
+# 3. Logica
 # ─────────────────────────────────────────────────────────────────────
-# La soglia "compatto" seguiva il puntatore a dito: ora deve seguire il
-# punto in cui le fasce diventano righe, altrimenti su iPad in orizzontale
-# la scheda prenderebbe tutto il pannello mentre c'e' spazio in abbondanza.
-sub("""    view: 'Assonometria',
-    listOpen: true,""",
-    """    /* In pila la cella del modello e' bassa e larga: un edificio lungo
-       visto in assonometria ci sta dentro minuscolo, mentre la sezione la
-       riempie. Su telefono si parte da li'. Fra le due fasce, dove la cella
-       e' ampia, resta l'assonometria. */
-    view: window.matchMedia('(max-width:1000px)').matches ? 'Sezione' : 'Assonometria',
-    /* Da quando la vista la sceglie chi guarda, il passaggio di soglia non
-       gliela cambia piu' sotto le mani. */
-    viewScelta: false,
-    /* Stesso ragionamento per l'elenco componenti: nelle fasce ha tutta
-       l'altezza della colonna e sta aperto, in pila sarebbe una riga tolta al
-       modello e parte chiuso, col suo pulsante per aprirlo. */
-    listOpen: !window.matchMedia('(max-width:1000px)').matches,""")
+# Stili costruiti in JS: stesse variabili, stesso ripiego.
+sub("""        ? `background:#1D2A44;color:#FFFFFF;border:1px solid #1D2A44;`
+        : `background:#FFFFFF;color:#686F79;border:1px solid #E1E3E5;`);""",
+    """        ? `background:var(--f-on-fondo,#1D2A44);color:var(--f-on-testo,#FFFFFF);border:1px solid var(--f-on-fondo,#1D2A44);`
+        : `background:var(--f-fondo,#FFFFFF);color:var(--f-off-testo,#686F79);border:1px solid var(--f-off-filo,#E1E3E5);`);""")
 
+sub("""        + `border-bottom:1px solid #F5F6F7;`
+        + (s.sel === c.key ? `background:#F1E3E2;box-shadow:inset 3px 0 0 #B13733;` : `background:#FFFFFF;`),
+      dotStyle: `flex:none;width:12px;height:12px;border-radius:3px;background:${c.color};border:1px solid rgba(17,25,46,.18);`,
+      nameStyle: `font-size:13px;line-height:1.2;color:${s.sel === c.key ? '#B13733' : '#3B3F45'};`""",
+    """        + `border-bottom:1px solid var(--f-riga,#F5F6F7);`
+        + (s.sel === c.key ? `background:var(--f-sel,#F1E3E2);box-shadow:inset 3px 0 0 #B13733;` : `background:var(--f-fondo,#FFFFFF);`),
+      dotStyle: `flex:none;width:12px;height:12px;border-radius:3px;background:${c.color};border:1px solid var(--f-pallino,rgba(17,25,46,.18));`,
+      nameStyle: `font-size:13px;line-height:1.2;color:${s.sel === c.key ? 'var(--f-sel-testo,#B13733)' : 'var(--f-testo,#3B3F45)'};`""")
+
+sub("""        ? `flex:1 1 auto;min-height:0;overflow-y:auto;background:#F5F6F7;padding:14px 16px 18px;`
+        : `border-top:1px solid #E1E3E5;background:#F5F6F7;padding:14px 16px 16px;`,""",
+    """        ? `flex:1 1 auto;min-height:0;overflow-y:auto;background:var(--f-grigio,#F5F6F7);padding:14px 16px 18px;`
+        : `border-top:1px solid var(--f-filo,#E1E3E5);background:var(--f-grigio,#F5F6F7);padding:14px 16px 16px;`,""")
+sub("width:28px;height:28px;color:#9CA3AF;", "width:28px;height:28px;color:var(--f-tenue,#9CA3AF);")
+sub("min-height:0;border-top:1px solid #E1E3E5;`", "min-height:0;border-top:1px solid var(--f-filo,#E1E3E5);`")
+
+# La scheda a tutto pannello serviva perche' su tablet il riquadro era basso.
+# Nella fascia la colonna e' alta quanto lo schermo e lista e scheda ci stanno
+# insieme: il modo compatto resta solo per i fogli.
 sub("window.matchMedia('(max-width:1280px),(pointer:coarse)')",
-    "window.matchMedia('(max-width:1000px)')", 2)
+    "window.matchMedia(Component.MOBILE)", 2)
 
-# Passando la soglia l'elenco segue il layout: aperto nella fascia, chiuso in
-# pila. Il valore di partenza da solo non basta — il riquadro puo' nascere
-# largo e stringersi subito dopo (dentro un iframe succede), e resterebbe
-# aperto a rubare al modello mezza altezza.
-sub("""    this.onMq = e => this.setState({ compact: e.matches, detail: e.matches && !!this.state.sel });""",
-    """    this.onMq = e => this.setState({
-      compact: e.matches,
-      detail: e.matches && !!this.state.sel,
-      listOpen: !e.matches,
-      view: this.state.viewScelta ? this.state.view : (e.matches ? 'Sezione' : 'Assonometria')
-    }, () => { this.setView(this.state.view); this.applyVisibility(); });""")
-
-sub("""    stage.setAttribute('name', 'tecnowing');
-    stage.style.cssText = 'display:block;width:100%;height:100%';""",
-    """    stage.setAttribute('name', 'tecnowing');
-    /* Gira da solo appena la scena e' pronta. three-d-stage spegne
-       l'autorotazione al primo 'start' dei controlli, cioe' al primo tocco
-       sul modello; stopSpin() fa lo stesso per i comandi dei pannelli, che
-       i controlli non vedono passare. */
-    stage.setAttribute('autorotate', '');
-    /* Riempie la cella della griglia: il :host di three-d-stage nasce
-       height:100vh, che dentro una riga alta quanto il suo contenuto
-       sarebbe di troppo. */
+sub("""    stage.style.cssText = 'display:block;width:100%;height:100%';""",
+    """    /* Riempie la cella della griglia: il :host di three-d-stage nasce
+       height:100vh, che dentro una riga della griglia sarebbe di troppo. */
     stage.style.cssText = 'position:absolute;inset:0;display:block;width:auto;height:auto';""")
 
+# L'inquadratura segue la cella anche quando cambia senza che cambi la
+# finestra — il carattere che arriva, le fasce che si allargano.
+sub("""    this.setView('Assonometria');
+    this.setState({ ready: true });""",
+    """    this.setView('Assonometria');
+    this.ro = new ResizeObserver(() => this.onResize());
+    this.ro.observe(this.hostEl);
+    this.setState({ ready: true });""")
+sub("""    if (this.tween) cancelAnimationFrame(this.tween);
+    clearTimeout(this.tweenEnd);""",
+    """    if (this.ro) this.ro.disconnect();
+    if (this.tween) cancelAnimationFrame(this.tween);
+    clearTimeout(this.tweenEnd);""")
+
+# Rotazione automatica: l'esportazione la ferma al primo trascinamento. Qui
+# anche al primo comando dei pannelli, che i controlli non vedono passare.
 sub("""  layer(k) { return this.scene && this.scene.layers[k]; }""",
     """  layer(k) { return this.scene && this.scene.layers[k]; }
 
@@ -327,496 +244,121 @@ sub("""  layer(k) { return this.scene && this.scene.layers[k]; }""",
     const c = this.stage && this.stage._controls;
     if (c) c.autoRotate = false;
   }""")
-
 sub("""  select(key) {
     const s = this.state;""",
     """  select(key) {
     this.stopSpin();
     const s = this.state;""")
-
 sub("""      onCanvasTap: e => {
         this.tapStart""",
     """      onCanvasTap: e => {
         this.stopSpin();
         this.tapStart""")
-
-sub("""      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
+sub("""s.view, label => {
         this.setState({ view: label }""",
-    """      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
+    """s.view, label => {
         this.stopSpin();
-        this.setState({ view: label, viewScelta: true }""")
-
-sub("""        onClick: () => this.setState({ [key]: !s[key] }, () => this.applyVisibility())""",
-    """        onClick: () => { this.stopSpin(); this.setState({ [key]: !s[key] }, () => this.applyVisibility()); }""")
-
+        this.setState({ view: label }""")
+sub("""s.interposto, label => {
+        this.setState({ interposto: label }""",
+    """s.interposto, label => {
+        this.stopSpin();
+        this.setState({ interposto: label }""")
+sub("""        const spegni = s.tamp && s.tamponamento === label;""",
+    """        this.stopSpin();
+        const spegni = s.tamp && s.tamponamento === label;""")
+sub("""s.config, label => {
+        const keep""",
+    """s.config, label => {
+        this.stopSpin();
+        const keep""")
+sub("""        onClick: () => this.setState({ [key]: !s[key] }, () => {
+          this.applyVisibility();
+          if (this.state.mobile) this.reframe(true);
+        })""",
+    """        onClick: () => {
+          this.stopSpin();
+          this.setState({ [key]: !s[key] }, () => {
+            this.applyVisibility();
+            this.reframe(true);
+          });
+        }""")
 sub("""      onReset: () => this.setState({ sel: null, detail: false, view: 'Assonometria' }, () => {
         this.setView('Assonometria');
         this.applyVisibility();
       }),""",
     """      onReset: () => {
         this.stopSpin();
-        /* Reset vista vuol dire tornare al punto di partenza, che in pila e'
-           la sezione e nelle fasce l'assonometria. */
-        const base = s.compact ? 'Sezione' : 'Assonometria';
-        this.setState({ sel: null, detail: false, view: base, viewScelta: false }, () => {
-          this.setView(base);
+        this.setState({ sel: null, detail: false, view: 'Assonometria' }, () => {
+          this.setView('Assonometria');
           this.applyVisibility();
         });
       },""")
 
-# Bottoni sulla fascia blu: il pieno navy sparirebbe nel fondo.
-sub("""    const INT_LABEL = {""",
-    """    /* Gli stessi segmenti, ma sulla fascia blu: acceso = bianco pieno,
-       spento = solo contorno. Il navy pieno del btn() qui sparirebbe. */
-    const btnRail = (on, w) => `display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 ${w || 16}px;`
-      + `font:600 11px/1 'IBM Plex Sans',sans-serif;letter-spacing:.09em;text-transform:uppercase;`
-      + `border-radius:5px;cursor:pointer;white-space:nowrap;`
-      + (on
-        ? `background:#FFFFFF;color:#16203A;border:1px solid #FFFFFF;`
-        : `background:transparent;color:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.24);`);
+# Sezione: la facciata vicina sta fra chi guarda e il taglio.
+sub("""        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;""",
+    """        const dentroTaglio = Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
+        /* Il tamponamento nord e' quello verso la camera: con l'involucro
+           chiuso la sezione diventava un muro grigio e basta. Si toglie;
+           quello di fondo resta, e fa da quinta. */
+        const muroDavanti = g === this.scene.layers.pannelli_tamponamento && m.name.indexOf('_nord_') >= 0;
+        m.visible = !sez || (dentroTaglio && !muroDavanti);""")
 
-    const INT_LABEL = {""")
-
-sub("""    const seg = (list, cur, fn, w) => list.map(label => ({
-      label, style: btn(cur === label, w), onClick: () => fn(label)
-    }));""",
-    """    const seg = (list, cur, fn, w, sty) => list.map(label => ({
-      label, style: (sty || btn)(cur === label, w), onClick: () => fn(label)
-    }));""")
-
-sub("""      interpostoOpts: seg(['Sandwich', 'Coppella piana', 'Coppella curva'], s.interposto, label => {
-        this.setState({ interposto: label }""",
-    """      interpostoOpts: seg(['Sandwich', 'Coppella piana', 'Coppella curva'], s.interposto, label => {
-        this.stopSpin();
-        this.setState({ interposto: label }""")
-sub("      }, 14),", "      }, 12, btnRail),")
-
-sub("""      configOpts: seg(['Standard', 'Shed'], s.config, label => {
-        const keep""",
-    """      configOpts: seg(['Standard', 'Shed'], s.config, label => {
-        this.stopSpin();
-        const keep""")
-sub("      }, 22),", "      }, 20, btnRail),")
-
-# Righe dell'elenco componenti, su fondo scuro
-sub("""      rowStyle: `display:flex;align-items:center;gap:12px;height:56px;padding:0 16px;cursor:pointer;`
-        + `border-bottom:1px solid #F5F6F7;`
-        + (s.sel === c.key ? `background:#F1E3E2;box-shadow:inset 3px 0 0 #B13733;` : `background:#FFFFFF;`),
-      dotStyle: `flex:none;width:12px;height:12px;border-radius:3px;background:${c.color};border:1px solid rgba(17,25,46,.18);`,
-      nameStyle: `font-size:13px;line-height:1.2;color:${s.sel === c.key ? '#B13733' : '#3B3F45'};`""",
-    """      rowStyle: `display:flex;align-items:center;gap:12px;min-height:56px;padding:0 20px;cursor:pointer;`
-        + `border-bottom:1px solid rgba(255,255,255,.07);`
-        + (s.sel === c.key ? `background:rgba(177,55,51,.26);box-shadow:inset 3px 0 0 #B13733;` : `background:transparent;`),
-      dotStyle: `flex:none;width:12px;height:12px;border-radius:3px;background:${c.color};border:1px solid rgba(255,255,255,.30);`,
-      nameStyle: `font-size:13px;line-height:1.2;color:${s.sel === c.key ? '#FFFFFF' : 'rgba(255,255,255,.80)'};`""")
-
-sub("""      cardStyle: full
-        ? `flex:1 1 auto;min-height:0;overflow-y:auto;background:#F5F6F7;padding:14px 16px 18px;`
-        : `border-top:1px solid #E1E3E5;background:#F5F6F7;padding:14px 16px 16px;`,""",
-    """      cardStyle: full
-        ? `flex:1 1 auto;min-height:0;overflow-y:auto;background:rgba(255,255,255,.05);padding:16px 20px 20px;`
-        : `border-top:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);padding:16px 20px 20px;`,""")
-
-sub("width:28px;height:28px;color:#9CA3AF;", "width:28px;height:28px;color:rgba(255,255,255,.50);")
-
-sub("`overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;border-top:1px solid #E1E3E5;`",
-    "`overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;border-top:1px solid rgba(255,255,255,.12);`")
-
-# Il taglio della sezione esce da setView: cambiare interposto ricostruisce i
-# pezzi del tetto, e i nuovi nascono visibili
-sub("""    const sez = name === 'Sezione';
-    this.scene.layers.tegoli_alari.parent.children.forEach(g => {
-      g.children.forEach(m => {
-        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
-      });
-    });
-    if (this.state.fv === false) this.scene.layers.fotovoltaico.visible = false;
-    if (this.state.tamp === false) this.scene.layers.pannelli_tamponamento.visible = false;
-""",
-    """    this.applySection(name);
-""")
-
-sub("""  setView(name) {
-    if (!this.scene) return;""",
-    """  /* Interposto e configurazione cambiano l'ingombro — lo Shed alza il
-     tetto, la coppella lo ingrossa — e il modello scivola fuori centro. Si
-     rifa' l'inquadratura tenendo la direzione in cui si sta gia' guardando:
-     si aggiornano centro e distanza, l'angolo scelto da chi guarda resta. */
-  refit() {
-    if (!this.scene || this.state.view === 'Interno') return;
-    const cam = this.stage._camera, ctr = this.stage._controls;
-    this.frame(cam.position.clone().sub(ctr.target));
-  }
-
-  /* In sezione restano accese solo le campate attorno al taglio. Sta fuori
-     da setView perche' cambiare interposto o configurazione ricostruisce da
-     capo interposto, serramenti, fotovoltaico e bordo falda: i pezzi nuovi
-     nascono tutti visibili, e il tetto ricompariva intero mentre la vista era
-     ancora la sezione. Va quindi rifatto anche di la', ma senza rifare
-     l'inquadratura — cambiare pannello non deve spostare la telecamera. */
-  applySection(name) {
-    if (!this.scene) return;
-    const { dims } = this.scene;
-    const sez = (name || this.state.view) === 'Sezione';
-    this.scene.layers.tegoli_alari.parent.children.forEach((g) => {
-      g.children.forEach((m) => {
-        const dentroTaglio = Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;
-        /* Il tamponamento della facciata vicina sta fra chi guarda e il
-           taglio: con l'involucro chiuso la sezione diventava un muro grigio
-           e basta. Si toglie; quello di fondo resta, e fa da quinta. */
-        const muroDavanti = m.name.indexOf('tamponamento_nord') >= 0;
-        m.visible = !sez || (dentroTaglio && !muroDavanti);
-      });
-    });
-    if (this.state.fv === false) this.scene.layers.fotovoltaico.visible = false;
-    if (this.state.tamp === false) this.scene.layers.pannelli_tamponamento.visible = false;
-  }
-
-  setView(name) {
-    if (!this.scene) return;""")
-
+# Cambiare interposto, configurazione o posa ricostruisce i pezzi da capo, e
+# i pezzi nuovi nascono visibili: senza rifare il taglio il tetto ricompariva
+# intero mentre la vista era ancora la sezione.
 sub("""          this.scene.setInterposto(map[label], this.state.config);
           this.applyVisibility();""",
     """          this.scene.setInterposto(map[label], this.state.config);
-          this.applySection();
-          this.applyVisibility();
-          this.refit();""")
-
+          this.setVisible(this.state.view);
+          this.applyVisibility();""")
 sub("""          this.scene.setInterposto(map[this.state.interposto], label);
           this.applyVisibility();""",
     """          this.scene.setInterposto(map[this.state.interposto], label);
-          this.applySection();
-          this.applyVisibility();
-          this.refit();""")
+          this.setVisible(this.state.view);
+          this.applyVisibility();""")
+sub("""          this.scene.setTamponamenti(label);
+          this.applyVisibility();""",
+    """          this.scene.setTamponamenti(label);
+          this.setVisible(this.state.view);
+          this.applyVisibility();""")
 
-# Inquadrature: il modello va messo in mezzo alla cella, non alla finestra
-sub("""    const [p, t] = P[name] || P.Assonometria;
-    cam.position.set(p[0], p[1], p[2]);
-    ctr.target.set(t[0], t[1], t[2]);
-    ctr.update();
-    void T;
-  }""",
-    """    const [p, t] = P[name] || P.Assonometria;
-    if (name === 'Interno') {
-      /* Il punto di vista dall'interno e' scelto a mano: sta dentro
-         l'edificio, e inquadrarlo dal suo ingombro vorrebbe dire uscirne. */
-      cam.position.set(p[0], p[1], p[2]);
-      ctr.target.set(t[0], t[1], t[2]);
-      cam.fov = 45;
-      cam.near = 0.2;
-      cam.far = 1200;
-      cam.updateProjectionMatrix();
+# Inquadrature. L'esportazione tiene i punti di vista composti a mano per
+# l'iPad e si stringe sul volume visibile solo su telefono. Fra le due fasce la
+# cella e' quasi quadrata: con i punti fissi il modello finiva piccolo e di
+# lato. Qui vale ovunque la regola del telefono — mira al centro di cio' che
+# si vede, distanza quanto basta — e ogni cambio di geometria reinquadra.
+sub("""    const fov = (360 / Math.PI) * Math.atan(half(this.fov0) * wide);""",
+    """    /* Da fuori, angolo stretto da fotografia di architettura. A 45 gradi
+       l'estremita' vicina dell'edificio pesa molto piu' di quella lontana:
+       l'ingombro resta centrato, ma l'occhio lo legge spostato di lato. */
+    const fov = inside ? (360 / Math.PI) * Math.atan(half(this.fov0) * wide) : 30;""")
+sub("""    let aim;
+    if (dir && !this.state.mobile) {
+      aim = this.stage._controls.target.clone();
     } else {
-      /* Da fuori si tiene la direzione della vista, non il suo punto: il
-         bersaglio diventa il centro di cio' che si vede e la telecamera
-         arretra quanto basta perche' ci stia dentro. Con i punti fissi —
-         tarati su un riquadro largo — nella cella tra le due fasce il
-         modello finiva di lato e piccolo. */
-      this.frame(new T.Vector3(p[0] - t[0], p[1] - t[1], p[2] - t[2]));
-    }
-    ctr.update();
-  }
-
-  /* Ingombro di cio' che e' acceso adesso, non dell'edificio intero: in
-     sezione tre quarti dei tegoli sono nascosti, e inquadrare tutto
-     lascerebbe mezza cella vuota. */
-  visibleBox() {
-    const T = this.THREE;
-    const box = new T.Box3();
-    this.scene.root.updateMatrixWorld(true);
-    Object.values(this.scene.layers).forEach((g) => {
-      if (!g.visible) return;
-      g.children.forEach((m) => { if (m.visible) box.expandByObject(m); });
-    });
-    if (box.isEmpty()) box.setFromObject(this.scene.root);
-    return box;
-  }
-
-  /* Punta al centro dell'ingombro e cerca la distanza a tentativi: proietta
-     gli otto spigoli, guarda di quanto sbordano dai bordi in coordinate
-     normalizzate e corregge. Poche passate bastano, e la cosa vale per
-     qualunque proporzione della cella senza doverne fissare una. */
-  frame(dir) {
-    const T = this.THREE;
-    const cam = this.stage._camera, ctr = this.stage._controls;
-    const box = this.visibleBox();
-    const c = box.getCenter(new T.Vector3());
-    const raggio = box.getBoundingSphere(new T.Sphere()).radius;
-    const n = dir.clone().normalize();
-    const spigoli = [];
-    for (let i = 0; i < 8; i++) {
-      spigoli.push(new T.Vector3(
-        i & 1 ? box.max.x : box.min.x,
-        i & 2 ? box.max.y : box.min.y,
-        i & 4 ? box.max.z : box.min.z
-      ));
-    }
-    /* Quanto dei bordi occupare. 1 sarebbe a filo dell'ingombro, che e' il
-       parallelepipedo dell'edificio: visto di sbieco i suoi spigoli stanno
-       piu' larghi della copertura, quindi un po' d'aria resta comunque. */
-    const PIENO = 0.94;
-    /* Angolo stretto, da fotografia di architettura. A 45 gradi — il campo
-       con cui nasce three-d-stage — l'estremita' vicina dell'edificio pesa
-       molto piu' di quella lontana: l'ingombro resta centrato sul suo centro,
-       ma l'occhio lo legge spostato di lato. A 30 la differenza fra i due
-       lati si assottiglia e la copertura sta in mezzo davvero. Dentro
-       l'edificio serve il contrario, e infatti li' restano 45. */
-    cam.fov = 30;
-    cam.updateProjectionMatrix();
-    /* Due correzioni per volta: la distanza, perche' l'ingombro ci stia, e
-       uno scorrimento verticale, perche' ci stia in mezzo. Lo scorrimento e'
-       lungo l'asse verticale del mondo e muove insieme telecamera e
-       bersaglio: sullo schermo e' un su-e-giu' e basta, e l'asse di rotazione
-       resta quello del modello, quindi la rotazione automatica non se ne
-       accorge. */
-    let d = raggio * 3;
-    let alza = 0;
-    const mira = new T.Vector3();
-    for (let i = 0; i < 12; i++) {
-      mira.copy(c).setY(c.y + alza);
-      cam.position.copy(mira).addScaledVector(n, d);
-      cam.lookAt(mira);
-      cam.updateMatrixWorld(true);
-      let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
-      for (const v of spigoli) {
-        const q = v.clone().project(cam);
-        if (q.x < x0) x0 = q.x;
-        if (q.x > x1) x1 = q.x;
-        if (q.y < y0) y0 = q.y;
-        if (q.y > y1) y1 = q.y;
+      aim = tv.clone();
+      if (this.state.mobile && !inside && !box.isEmpty()) {
+        const c0 = box.getCenter(new T.Vector3()).sub(tv);
+        aim.addScaledVector(rt, c0.dot(rt)).addScaledVector(upv, c0.dot(upv));
       }
-      const fuori = Math.max(Math.abs(x0), Math.abs(x1), Math.abs(y0), Math.abs(y1));
-      const scarto = (y0 + y1) / 2;
-      const aPosto = Math.abs(fuori - PIENO) < 0.01 && Math.abs(scarto) < 0.006;
-      if (aPosto) break;
-      alza += scarto * Math.tan((cam.fov * Math.PI / 180) / 2) * d;
-      d *= fuori / PIENO;
-    }
-    mira.copy(c).setY(c.y + alza);
-    cam.position.copy(mira).addScaledVector(n, d);
-    ctr.target.copy(mira);
-    cam.near = 0.2;
-    cam.far = (d + raggio) * 3;
-    cam.updateProjectionMatrix();
-  }""")
-
-sub("""    stage.setObject(this.scene.root);
-    this.ghosts = new Map();
-    this.applyVisibility();
-    this.setView('Assonometria');""",
-    """    stage.setObject(this.scene.root);
-    this.ghosts = new Map();
-    this.applyVisibility();
-    this.setView(this.state.view);
-    /* Il riquadro cambia proporzione con la finestra — e sotto i 1000px
-       passa da colonna a riga: three-d-stage aggiorna l'aspetto della
-       telecamera, rifare l'inquadratura tocca a noi. Solo finche' il
-       modello gira da solo: dopo il primo tocco la vista e' di chi guarda,
-       e un ridimensionamento non gliela deve portare via. */
-    this.ro = new ResizeObserver(() => {
-      const c = this.stage && this.stage._controls;
-      if (this.scene && c && c.autoRotate) this.setView(this.state.view);
-    });
-    this.ro.observe(this.hostEl);""")
-
-sub("""  componentWillUnmount() {
-    if (!this.mq) return;""",
-    """  componentWillUnmount() {
-    if (this.ro) this.ro.disconnect();
-    if (!this.mq) return;""")
-
-
-# Il gruppo delle tre posature, fra Interposto e Configurazione. C'e' solo a
-# tamponamenti accesi: spenti, scegliere la posatura non vuol dire niente, e in
-# pila sarebbe una riga tolta al modello.
-sub('''    <div style="display:flex;flex-direction:column;gap:7px">
-      <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.55)">Configurazione</div>''',
-    '''    <sc-if value="{{ showTamp }}" hint-placeholder-val="{{ true }}">
-    <div style="display:flex;flex-direction:column;gap:7px">
-      <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.55)">Tamponamento</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
-        <sc-for list="{{ tampOpts }}" as="o" hint-placeholder-count="3">
-          <button sc-camel-on-click="{{ o.onClick }}" style="{{ o.style }}">{{ o.label }}</button>
-        </sc-for>
-      </div>
-    </div>
-    </sc-if>
-    <div style="display:flex;flex-direction:column;gap:7px">
-      <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;color:rgba(255,255,255,.55)">Configurazione</div>''')
-
-sub("""    strat: false,
-    tamp: false,""",
-    """    strat: false,
-    tamp: false,
-    /* Posatura dei pannelli: verticali, orizzontali o misto — lati lunghi
-       verticali e testate orizzontali. */
-    tampTipo: 'Verticali',""")
-
-sub("""      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
-        this.stopSpin();""",
-    """      showTamp: s.tamp,
-      tampOpts: seg(['Verticali', 'Orizzontali', 'Misto'], s.tampTipo, label => {
-        this.stopSpin();
-        this.setState({ tampTipo: label }, () => {
-          const map = { 'Verticali': 'verticali', 'Orizzontali': 'orizzontali', 'Misto': 'misto' };
-          this.scene.setTamponamenti(map[label]);
-          /* Come per l'interposto: i pannelli sono rifatti da capo e nascono
-             visibili, quindi il taglio della sezione va riapplicato. */
-          this.applySection();
-          this.applyVisibility();
-        });
-      }, 12, btnRail),
-      viewOpts: seg(['Assonometria', 'Interno', 'Sezione', 'Prospetto'], s.view, label => {
-        this.stopSpin();""")
-
-
-# A capannone tamponato i plinti spariscono sotto il rinterro
-sub("""    L.fotovoltaico.visible = this.state.fv;
-    L.pannelli_tamponamento.visible = this.state.tamp;""",
-    """    L.fotovoltaico.visible = this.state.fv;
-    L.pannelli_tamponamento.visible = this.state.tamp;
-    /* I plinti stanno sotto quota, ma sono larghi 150 e sporgono di 8 cm
-       oltre l'involucro: a capannone tamponato si vedevano come dentini alla
-       base del muro. Con i pannelli su, il terreno e' rinterrato. */
-    if (L.fondazioni) L.fondazioni.visible = !this.state.tamp;""")
-
-
-# Accendere tamponamenti o stratigrafia cambia l'ingombro: l'inquadratura segue
-sub("""        onClick: () => { this.stopSpin(); this.setState({ [key]: !s[key] }, () => this.applyVisibility()); }""",
-    """        onClick: () => {
-          this.stopSpin();
-          /* Tamponamenti e stratigrafia cambiano l'ingombro di parecchio —
-             l'involucro chiude il volume, la stratigrafia lo apre — quindi
-             l'inquadratura si rifa', tenendo l'angolo di chi guarda. */
-          this.setState({ [key]: !s[key] }, () => { this.applyVisibility(); this.refit(); });
-        }""")
-
-# ─────────────────────────────────────────────────────────────────────
-# 3bis. La scena: l'involucro di tamponamento
-# ─────────────────────────────────────────────────────────────────────
-sub_scena("""    pannello:   flat('cls_pannello_tamponamento', 0xD9DCE0)
-  };""",
-    """    pannello:   flat('cls_pannello_tamponamento', 0xD9DCE0),
-    /* Il fondo continuo dietro i pannelli: si vede solo dentro le fughe, ed
-       e' quello che rende leggibile la posatura. */
-    fuga:       flat('fondo_tamponamento', 0xA3A9B1, { roughness: 0.9 })
-  };""")
-
-sub_scena("""  /* tamponamenti */
-  const L_pan = layer('pannelli_tamponamento');
-  const Q_TOP = Q_ROOF + H_TEG + H_SHED;
-  const N_PL = Math.round(LX / 2.50), W_PL = LX / N_PL;
-  for (let k = 0; k < N_PL; k++) {
-    const x = W_PL * (k + 0.5);
-    [0, LY].forEach((y, s) => put(L_pan, new THREE.BoxGeometry(W_PL, Q_TOP, W_PAN), MAT.pannello,
-      `pannello_tamponamento_${s ? 'nord' : 'sud'}_${k + 1}`, x, y + (s ? W_PAN / 2 : -W_PAN / 2), Q_TOP / 2,
-      { ...CAT.pannelli_tamponamento, sig: `PAN ${s ? 'N' : 'S'}${k + 1}` }));
-  }
-  const N_PT = Math.round(LY / 2.50), W_PT = LY / N_PT;
-  for (let k = 0; k < N_PT; k++) {
-    const y = W_PT * (k + 0.5);
-    [0, LX].forEach((x, s) => put(L_pan, new THREE.BoxGeometry(W_PAN, Q_TOP, W_PT), MAT.pannello,
-      `pannello_tamponamento_${s ? 'est' : 'ovest'}_${k + 1}`, x + (s ? W_PAN / 2 : -W_PAN / 2), y, Q_TOP / 2,
-      { ...CAT.pannelli_tamponamento, sig: `PAN ${s ? 'E' : 'O'}${k + 1}` }));
-  }""",
-    """  /* ── tamponamenti ────────────────────────────────────────────────────
-     L'involucro sta fuori da tutta la struttura. I pezzi piu' esterni sono i
-     pilastri, che sporgono di mezza sezione oltre il filo di griglia: con i
-     pannelli appoggiati sul filo restavano davanti, in vista dall'esterno.
-     Qui il piano dei pannelli parte da quel mezzo pilastro e va in fuori.
-
-     Le facciate lunghe girano l'angolo, le testate ci si appoggiano dentro:
-     cosi' il volume chiude e sparisce la fessura d'angolo da cui si vedeva
-     il pilastro di spigolo.
-
-     Dietro i pannelli corre una lastra continua. Senza, le fughe sarebbero
-     buchi aperti sul capannone; con, sono fughe vere — e sono l'unica cosa
-     che distingue le tre posature, quindi devono leggersi. */
-  const L_pan = layer('pannelli_tamponamento');
-  const Q_TOP = Q_ROOF + H_TEG + H_SHED;
-  const OFF = PIL / 2;          /* mezzo pilastro: il filo interno dell'involucro */
-  const MOD = 2.50;             /* modulo del pannello, nei due versi */
-  const SP = W_PAN;             /* spessore totale dell'involucro */
-  const FUGA = 0.03;            /* larghezza della fuga fra pannello e pannello */
-  const T_PAN = 0.10;           /* spessore della lastra a vista */
-  const RIL = 0.03;             /* di quanto il pannello sporge dal fondo */
-
-  const FACCE = [
-    { n: 'sud',   lungo: true,  verso: -1, filo: -OFF,     a: -OFF - SP, b: LX + OFF + SP, sig: 'S' },
-    { n: 'nord',  lungo: true,  verso: 1,  filo: LY + OFF, a: -OFF - SP, b: LX + OFF + SP, sig: 'N' },
-    { n: 'ovest', lungo: false, verso: -1, filo: -OFF,     a: -OFF,      b: LY + OFF,      sig: 'O' },
-    { n: 'est',   lungo: false, verso: 1,  filo: LX + OFF, a: -OFF,      b: LY + OFF,      sig: 'E' }
-  ];
-
-  /* Un pannello a vista. `u` corre lungo la facciata, `z` in altezza; la fuga
-     si toglie dalle due misure, cosi' fra un pannello e l'altro resta il
-     fondo in ombra. */
-  function posaPannello(f, u0, u1, z0, z1, sig) {
-    const q = f.filo + f.verso * (SP - T_PAN / 2);
-    const lu = u1 - u0 - FUGA, lz = z1 - z0 - FUGA;
-    const um = (u0 + u1) / 2, zm = (z0 + z1) / 2;
-    const geo = f.lungo
-      ? new THREE.BoxGeometry(lu, lz, T_PAN)
-      : new THREE.BoxGeometry(T_PAN, lz, lu);
-    put(L_pan, geo, MAT.pannello, `pannello_tamponamento_${f.n}_${sig}`,
-      f.lungo ? um : q, f.lungo ? q : um, zm,
-      { ...CAT.pannelli_tamponamento, sig: `PAN ${f.sig}${sig}` });
-  }
-
-  function posaFondo(f) {
-    const t = SP - RIL;
-    const q = f.filo + f.verso * t / 2;
-    const lu = f.b - f.a, um = (f.a + f.b) / 2;
-    const geo = f.lungo
-      ? new THREE.BoxGeometry(lu, Q_TOP, t)
-      : new THREE.BoxGeometry(t, Q_TOP, lu);
-    put(L_pan, geo, MAT.fuga, `fondo_tamponamento_${f.n}`,
-      f.lungo ? um : q, f.lungo ? q : um, Q_TOP / 2,
-      { ...CAT.pannelli_tamponamento, sig: `FND ${f.sig}` });
-  }
-
-  /* Verticali: la facciata si divide in moduli da 250 e ogni pannello e' alto
-     quanto tutta la facciata. */
-  const tagliModulo = (f) => {
-    const n = Math.max(1, Math.round((f.b - f.a) / MOD));
-    return Array.from({ length: n + 1 }, (_, i) => f.a + (f.b - f.a) * i / n);
-  };
-  /* Orizzontali: i corsi si interrompono sui pilastri, perche' e' li' che un
-     pannello orizzontale trova appoggio. */
-  const tagliCampata = (f) => [f.a, ...(f.lungo ? gx : gy).slice(1, -1), f.b];
-  const corsi = () => {
-    const m = Math.max(1, Math.round(Q_TOP / MOD));
-    return Array.from({ length: m + 1 }, (_, i) => Q_TOP * i / m);
-  };
-
-  /* 'verticali' · 'orizzontali' · 'misto' — misto e' lati lunghi verticali e
-     testate orizzontali, la posa che si vede piu' spesso in cantiere. */
-  let tampCorrente = 'verticali';
-  function setTamponamenti(tipo) {
-    tampCorrente = tipo;
-    clear(L_pan);
-    FACCE.forEach((f) => {
-      posaFondo(f);
-      const orizzontale = tipo === 'orizzontali' || (tipo === 'misto' && !f.lungo);
-      if (orizzontale) {
-        const u = tagliCampata(f), z = corsi();
-        for (let i = 0; i < u.length - 1; i++) {
-          for (let k = 0; k < z.length - 1; k++) {
-            posaPannello(f, u[i], u[i + 1], z[k], z[k + 1], `${i + 1}.${k + 1}`);
-          }
-        }
+    }""",
+    """    const aim = tv.clone();
+    if (!inside && !box.isEmpty()) {
+      const c0 = box.getCenter(new T.Vector3()).sub(tv);
+      aim.addScaledVector(rt, c0.dot(rt)).addScaledVector(upv, c0.dot(upv));
+    }""")
+sub("""    if (!inside) {
+      if (this.state.mobile) {
+        radius = Math.min(Lp * 4, Math.max(Lp * 0.4, fit * 1.06));
       } else {
-        const u = tagliModulo(f);
-        for (let i = 0; i < u.length - 1; i++) posaPannello(f, u[i], u[i + 1], 0, Q_TOP, `${i + 1}`);
+        const ref = reach(half(this.fov0) * 1.6, half(this.fov0));
+        radius = Lp * (ref > 0 ? Math.max(1, fit / ref) : 1);
       }
-    });
-  }
-  setTamponamenti('verticali');""")
-
-sub_scena("""  return { root, layers, setInterposto, dims, MAT, get config() { return current; } };""",
-    """  return { root, layers, setInterposto, setTamponamenti, dims, MAT,
-    get config() { return current; },
-    get tamponamenti() { return tampCorrente; } };""")
+    }""",
+    """    if (!inside) radius = Math.min(Lp * 4, Math.max(Lp * 0.4, fit * 1.06));""")
+sub("""          if (this.state.mobile) this.reframe(true);""",
+    """          this.reframe(true);""", 3)
 
 # ─────────────────────────────────────────────────────────────────────
 # 4. Riscrittura del bundle
@@ -825,16 +367,9 @@ enc = json.dumps(tpl, ensure_ascii=True).replace('</', '<\\u002F')
 assert '</' not in enc and '\n' not in enc
 assert json.loads(enc) == tpl
 lines[TPL_LINE] = enc
-
-man[SCENA] = dict(man[SCENA],
-                  data=base64.b64encode(gzip.compress(scena.encode('utf-8'), 9)).decode('ascii'))
-enc_man = json.dumps(man, ensure_ascii=True, separators=(',', ':'))
-assert '<' not in enc_man and '\n' not in enc_man
-lines[MAN_LINE] = enc_man
 io.open(DST, 'w', encoding='utf-8').write('\n'.join(lines))
 os.makedirs(os.path.dirname(PUB), exist_ok=True)
 shutil.copyfile(DST, PUB)
 print('scritto  %s' % os.path.relpath(DST, ROOT))
 print('copiato  %s' % os.path.relpath(PUB, ROOT))
 print('template: %d -> %d caratteri' % (len(orig), len(tpl)))
-print('scena:    %d -> %d caratteri' % (len(scena_orig), len(scena)))
