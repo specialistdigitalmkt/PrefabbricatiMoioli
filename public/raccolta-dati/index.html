@@ -362,13 +362,47 @@
   .realizzazioni { display: flex; flex-direction: column; gap: 10px; max-height: 720px; overflow-y: auto; padding-right: 4px; }
   .real {
     display: grid;
-    grid-template-columns: 180px minmax(0, 1fr);
-    gap: 14px;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 16px;
     padding: 10px;
     border: 1px solid var(--bordo);
     border-radius: var(--r);
   }
-  .real img { width: 180px; height: 120px; object-fit: cover; border-radius: 2px; background: var(--incasso); }
+  .carosello { display: flex; flex-direction: column; gap: 6px; }
+  .car-foto { all: unset; cursor: zoom-in; display: block; border-radius: 2px; overflow: hidden; background: var(--incasso); }
+  .car-foto:focus-visible { outline: 2px solid var(--fuoco); outline-offset: 2px; }
+  .car-foto img { display: block; width: 240px; height: 160px; object-fit: cover; }
+  .car-comandi { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .car-conto { font-family: var(--mono); font-size: 12px; color: var(--testo-2); font-variant-numeric: tabular-nums; }
+  .car-freccia {
+    font: 500 20px/1 var(--ui);
+    width: 34px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--bordo-forte);
+    border-radius: var(--r);
+    background: var(--superficie);
+    color: var(--titolo);
+    cursor: pointer;
+  }
+  .car-freccia:hover { border-color: var(--titolo); }
+  .car-freccia.grande { width: 44px; height: 44px; font-size: 26px; flex: none; }
+
+  .vista {
+    border: 0;
+    padding: 0;
+    background: var(--superficie);
+    color: var(--testo);
+    border-radius: var(--r);
+    width: min(1200px, calc(100vw - 32px));
+    max-height: calc(100vh - 32px);
+  }
+  .vista::backdrop { background: rgba(8, 12, 24, 0.82); }
+  .vista-testa { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--bordo); }
+  .vista-titolo { margin: 0; font-weight: 600; color: var(--titolo); }
+  .vista-corpo { display: flex; align-items: center; gap: 10px; padding: 12px; }
+  .vista-corpo img { flex: 1; min-width: 0; width: 100%; max-height: calc(100vh - 130px); object-fit: contain; }
   .real-campi { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
   .real-etichetta { margin: 0; display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: var(--testo-2); }
   .real-riga { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
@@ -405,7 +439,9 @@
   @media (max-width: 560px) {
     .reparti { grid-template-columns: 1fr; }
     .real { grid-template-columns: 1fr; }
-    .real img { width: 100%; height: auto; aspect-ratio: 3 / 2; max-width: 100%; }
+    .car-foto img { width: 100%; height: auto; aspect-ratio: 3 / 2; max-width: 100%; }
+    .vista-corpo { gap: 4px; padding: 8px; }
+    .car-freccia.grande { width: 36px; height: 36px; }
     .conferma { grid-template-columns: 1fr; }
     .domanda { padding: 16px; }
   }
@@ -502,6 +538,7 @@
     <div class="intro">
       <p><strong>Questa pagina raccoglie tutto quello che manca al sito, diviso per reparto.</strong> Ogni voce dice dove finirà il dato, così è chiaro a cosa serve.</p>
       <p>Disegni, foto e documenti non si caricano qui: vanno nella <a href="https://drive.google.com/drive/folders/1l7m9fmNjsR6x4r4UPu3M1L0VH7x-C2uX?usp=sharing" target="_blank" rel="noopener">cartella Drive condivisa</a>, e ogni voce indica il nome della sottocartella.</p>
+      <p>Nelle realizzazioni ogni progetto ha tutte le sue foto: scorrile con le frecce, o clicca la foto per vederla grande.</p>
       <p>Una voce conta come chiusa solo quando qualcuno spunta «dati verificati»: sul sito entrano soltanto quelli.</p>
       <ul class="regole">
         <li>Da fare — nessuna risposta</li>

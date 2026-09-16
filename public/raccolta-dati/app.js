@@ -283,6 +283,66 @@
         el('span', { text: 'File caricati nella cartella' })));
   }
 
+  /** Carosello delle foto di un progetto: una sola foto spesso non basta a
+      riconoscere l'edificio. Clic sulla foto = ingrandita. */
+  function carosello(r) {
+    let i = 0;
+    const n = r.foto.length;
+    const img = el('img', { src: r.foto[0].p, alt: r.etichetta + ', foto 1 di ' + n, width: 240, height: 160, loading: 'lazy' });
+    const conto = el('span', { class: 'car-conto', 'aria-live': 'polite', text: '1 / ' + n });
+    const vai = (k) => {
+      i = (k + n) % n;
+      img.src = r.foto[i].p;
+      img.alt = r.etichetta + ', foto ' + (i + 1) + ' di ' + n;
+      conto.textContent = (i + 1) + ' / ' + n;
+    };
+    const apri = el('button', { type: 'button', class: 'car-foto', 'aria-label': 'Ingrandisci ' + r.etichetta + ', foto corrente', onclick: () => ingrandisci(r, i, vai) }, img);
+    return el('div', { class: 'carosello' },
+      apri,
+      n > 1 ? el('div', { class: 'car-comandi' },
+        el('button', { type: 'button', class: 'car-freccia', 'aria-label': 'Foto precedente di ' + r.etichetta, onclick: () => vai(i - 1) }, '‹'),
+        conto,
+        el('button', { type: 'button', class: 'car-freccia', 'aria-label': 'Foto successiva di ' + r.etichetta, onclick: () => vai(i + 1) }, '›')) : null);
+  }
+
+  /* Vista ingrandita: una sola finestra per tutta la pagina. */
+  let vista = null;
+  function ingrandisci(r, start, sincronizza) {
+    if (!vista) {
+      vista = {
+        dlg: el('dialog', { class: 'vista', 'aria-label': 'Foto ingrandita' }),
+        img: el('img', { alt: '' }),
+        titolo: el('p', { class: 'vista-titolo' }),
+      };
+      vista.prec = el('button', { type: 'button', class: 'car-freccia grande', 'aria-label': 'Foto precedente', onclick: () => vista.vai(vista.i - 1) }, '‹');
+      vista.succ = el('button', { type: 'button', class: 'car-freccia grande', 'aria-label': 'Foto successiva', onclick: () => vista.vai(vista.i + 1) }, '›');
+      vista.dlg.append(
+        el('div', { class: 'vista-testa' }, vista.titolo, el('button', { type: 'button', class: 'mini', onclick: () => vista.dlg.close() }, 'Chiudi')),
+        el('div', { class: 'vista-corpo' }, vista.prec, vista.img, vista.succ));
+      vista.dlg.addEventListener('click', (e) => { if (e.target === vista.dlg) vista.dlg.close(); });
+      vista.dlg.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') vista.vai(vista.i - 1);
+        if (e.key === 'ArrowRight') vista.vai(vista.i + 1);
+      });
+      document.body.append(vista.dlg);
+    }
+    vista.vai = (k) => {
+      const n = vista.r.foto.length;
+      vista.i = (k + n) % n;
+      vista.img.src = vista.r.foto[vista.i].g;
+      vista.img.alt = vista.r.etichetta + ', foto ' + (vista.i + 1) + ' di ' + n;
+      vista.titolo.textContent = vista.r.etichetta + ' — foto ' + (vista.i + 1) + ' di ' + n;
+      vista.sincronizza(vista.i);
+    };
+    vista.r = r;
+    vista.sincronizza = sincronizza;
+    const piu = r.foto.length > 1;
+    vista.prec.hidden = !piu;
+    vista.succ.hidden = !piu;
+    vista.vai(start);
+    vista.dlg.showModal();
+  }
+
   function bloccoRealizzazioni(d) {
     const coperture = ['—', ...SOLUZIONI, 'Altra / mista'];
     const wrap = el('div', { class: 'griglia-wrap' }, el('p', { class: 'griglia-conto' }));
@@ -293,7 +353,7 @@
         el('label', { for: b + '-' + k, text: label }),
         el('input', { type: 'text', id: b + '-' + k, 'data-real': r.slug, 'data-k': k, oninput: (e) => salva('realizzazioni', r.slug, { [k]: e.target.value }), ...extra }));
       lista.append(el('article', { class: 'real' },
-        el('img', { src: r.thumb, alt: 'Fotografia della ' + r.etichetta.toLowerCase(), width: 240, height: 160, loading: 'lazy' }),
+        carosello(r),
         el('div', { class: 'real-campi' },
           el('p', { class: 'real-etichetta' }, el('code', { text: r.slug }), r.titolo ? el('span', { text: 'nome d’archivio: ' + r.titolo }) : null),
           el('div', { class: 'real-riga' },
