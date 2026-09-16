@@ -150,19 +150,19 @@ vantaggio — qui rende poco. Le uniche leve reali sono risoluzione, durata e
 qualità. Il file pesa 8,1 MB: è tanto, ed è il motivo per cui si carica solo
 dove serve davvero.
 
-**Temporanea: .** Pagina riservata al cliente per raccogliere
+**Temporanea: `/raccolta-dati`.** Pagina riservata al cliente per raccogliere
 i contenuti mancanti. Non è una pagina del sito: fuori da menu e sitemap,
-, protetta da password. È fatta di due pezzi, da eliminare insieme
+`noindex`, protetta da password. È fatta di due pezzi, da eliminare insieme
 quando la raccolta è chiusa:
 
--  — la pagina, HTML statico copiato in ;
--  — una Vercel Function a sé, fuori da Astro: il sito resta
-  statico e le intestazioni di  non cambiano. Salva una risposta
+- `public/raccolta-dati/` — la pagina, HTML statico copiato in `dist/`;
+- `api/raccolta.js` — una Vercel Function a sé, fuori da Astro: il sito resta
+  statico e le intestazioni di `vercel.json` non cambiano. Salva una risposta
   per voce in Vercel Blob (privato).
 
 Richiede nel progetto Vercel: uno store **Blob privato** collegato
-(, creata da Vercel) e la variabile
-. Senza una delle due la pagina lo dice all'accesso.
+(`BLOB_READ_WRITE_TOKEN`, creata da Vercel) e la variabile
+`RACCOLTA_PASSWORD`. Senza una delle due la pagina lo dice all'accesso.
 Disegni e foto non passano dal sito: vanno nella cartella Google Drive indicata
 in pagina. Prima di eliminarla, esportare le risposte dallo store.
 
