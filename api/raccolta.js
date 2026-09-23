@@ -5,6 +5,13 @@
  * statico e le intestazioni di vercel.json (noindex, cache) non cambiano.
  * Si elimina insieme a public/raccolta-dati quando la raccolta è chiusa.
  *
+ * QUANTE OPERAZIONI COSTA
+ * Il piano gratuito di Vercel Blob conta ogni chiamata. Perciò:
+ * - la lettura elenca i documenti (1 operazione) e scarica SOLO quelli
+ *   cambiati dopo la data che il client dichiara di conoscere già;
+ * - la pagina non interroga più il server a intervalli fissi.
+ * Una pagina aperta e ferma costa zero.
+ *
  * DOVE FINISCONO I DATI
  * Un documento JSON per voce in Vercel Blob, sotto `raccolta/<collezione>/`.
  * Uno per voce e non uno solo per tutto: due persone che compilano voci
@@ -43,7 +50,8 @@ function chiaveGiusta(inviata) {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-async function leggiTutto() {
+async function leggiTutto(dopo) {
+  const soglia = dopo ? Date.parse(dopo) : NaN;
   const blobs = [];
   let cursor;
   do {
@@ -53,10 +61,15 @@ async function leggiTutto() {
   } while (cursor);
 
   const stato = { risposte: {}, realizzazioni: {}, rivestimenti: {} };
+  let ultimo = '';
   await Promise.all(
     blobs.map(async (b) => {
       const [, coll, file] = b.pathname.split('/');
       if (!COLLEZIONI.has(coll) || !file || !file.endsWith('.json')) return;
+      const caricato = new Date(b.uploadedAt).toISOString();
+      if (caricato > ultimo) ultimo = caricato;
+      /* Già noto al client: non si scarica, e non costa un'operazione. */
+      if (!Number.isNaN(soglia) && Date.parse(caricato) <= soglia) return;
       const r = await get(b.pathname, { access: ACCESSO, useCache: false });
       if (!r) return;
       try {
@@ -66,7 +79,7 @@ async function leggiTutto() {
       }
     }),
   );
-  return stato;
+  return { stato, ultimo };
 }
 
 export default async function handler(req, res) {
@@ -82,7 +95,9 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      return rispondi(res, 200, { stato: await leggiTutto() });
+      const dopo = typeof req.query?.dopo === 'string' ? req.query.dopo : '';
+      const { stato, ultimo } = await leggiTutto(dopo);
+      return rispondi(res, 200, { stato, ultimo, parziale: !!dopo });
     }
 
     if (req.method === 'PUT') {

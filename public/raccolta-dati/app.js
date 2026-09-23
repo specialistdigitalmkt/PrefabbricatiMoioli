@@ -91,6 +91,9 @@
   const API = '/api/raccolta';
   let chiave = '';
   let collegato = false;
+  /* Data dell'ultima modifica già nota: il server rimanda solo il resto. */
+  let visto = '';
+  let ultimoAggiornamento = 0;
   let filtro = 'tutti';
   let soloDaFare = false;
 
@@ -496,9 +499,9 @@
   monta();
   mostraSalvataggio('Collegamento…', 'lavoro');
 
-  async function chiama(metodo, corpo) {
+  async function chiama(metodo, corpo, query) {
     try {
-      const r = await fetch(API, {
+      const r = await fetch(API + (query || ''), {
         method: metodo,
         headers: { 'x-raccolta-chiave': chiave, ...(corpo ? { 'content-type': 'application/json' } : {}) },
         body: corpo ? JSON.stringify(corpo) : undefined,
@@ -511,7 +514,8 @@
     }
   }
 
-  function ricevi(remoto) {
+  function ricevi(remoto, ultimo) {
+    if (ultimo) visto = ultimo;
     for (const coll of ['risposte', 'realizzazioni', 'rivestimenti']) {
       for (const [id, doc] of Object.entries(remoto[coll] || {})) {
         if (coda.has(coll + '/' + id)) continue; /* modifica locale non ancora inviata: vince la locale */
@@ -521,10 +525,18 @@
     applica();
   }
 
-  async function aggiorna() {
+  /* Si aggiorna quando serve davvero: al rientro sulla scheda, o a richiesta.
+     Mai a intervalli fissi — una pagina dimenticata aperta non deve consumare
+     niente. Al massimo una volta ogni due minuti. */
+  async function aggiorna(forzato) {
     if (!collegato || document.hidden || coda.size || inVolo) return;
-    const r = await chiama('GET');
-    if (r.ok) ricevi(r.stato);
+    if (!forzato && Date.now() - ultimoAggiornamento < 120000) return;
+    ultimoAggiornamento = Date.now();
+    const btn = $('#aggiorna');
+    btn.disabled = true;
+    const r = await chiama('GET', null, visto ? '?dopo=' + encodeURIComponent(visto) : '');
+    btn.disabled = false;
+    if (r.ok) ricevi(r.stato, r.ultimo);
     else if (r.status === 401) esci('La password è cambiata: inseriscila di nuovo.');
   }
 
@@ -551,9 +563,11 @@
     }
     try { sessionStorage.setItem('moioli-raccolta-chiave', pw); } catch {}
     collegato = true;
+    ultimoAggiornamento = Date.now();
     $('#accesso').hidden = true;
+    $('#aggiorna').hidden = false;
     mostraSalvataggio('Tutto salvato', 'ok');
-    ricevi(r.stato);
+    ricevi(r.stato, r.ultimo);
   }
 
   $('#accesso-form').addEventListener('submit', (e) => {
@@ -561,8 +575,8 @@
     const pw = $('#accesso-password').value;
     if (pw) entra(pw);
   });
-  setInterval(aggiorna, 45000);
-  document.addEventListener('visibilitychange', aggiorna);
+  $('#aggiorna').addEventListener('click', () => aggiorna(true));
+  document.addEventListener('visibilitychange', () => aggiorna(false));
 
   let salvata = '';
   try { salvata = sessionStorage.getItem('moioli-raccolta-chiave') || ''; } catch {}

@@ -171,6 +171,8 @@
     font: inherit;
   }
   .rail-campo input::placeholder { color: var(--rail-testo-2); }
+  #aggiorna { align-self: flex-start; }
+  #aggiorna:disabled { opacity: 0.6; cursor: wait; }
   .rail-campo p { font-size: 12px; color: var(--rail-testo-2); margin: 6px 0 0; }
   .filtro { display: flex; gap: 9px; align-items: center; font-size: 13px; color: var(--rail-testo); cursor: pointer; }
   .filtro input { accent-color: #d98581; width: 16px; height: 16px; }
@@ -529,9 +531,11 @@
       <p>Resta accanto a ogni risposta, per sapere a chi chiedere.</p>
     </div>
 
+    <button type="button" class="bottone secondario" id="aggiorna" hidden>Aggiorna le risposte</button>
+
     <p class="salvataggio" id="salvataggio" role="status" aria-live="polite" data-stato="lavoro">Collegamento…</p>
 
-    <p class="rail-piede">Ogni campo si salva da solo mentre scrivi. Si può lasciare a metà e riprendere quando si vuole: chi apre la pagina vede le stesse risposte, aggiornate ogni minuto circa.</p>
+    <p class="rail-piede">Ogni campo si salva da solo mentre scrivi. Si può lasciare a metà e riprendere quando si vuole. Le risposte scritte dagli altri arrivano quando torni sulla scheda, o premendo «Aggiorna le risposte».</p>
   </aside>
 
   <main class="contenuto">
