@@ -183,7 +183,14 @@ const jsonLd = {
       </div>
     </div>
 
-    <div class="sg-viewer reveal">
+    <div class="sg-viewer reveal" id="sgViewer">
+      {/* Solo al tocco: il modello occupa quasi tutto lo schermo e prende per
+          sé ogni trascinamento, quindi la pagina smetterebbe di scorrere. Il
+          velo lascia passare lo scorrimento finché non lo si tocca. */}
+      <button type="button" class="sg-velo" id="sgVelo">
+        <span class="sg-velo-t">Tocca per esplorare il modello</span>
+        <span class="sg-velo-s">Poi trascina per ruotarlo</span>
+      </button>
       <iframe
         src={MODELLO}
         title={`Modello tridimensionale della copertura ${scheda.nome}`}
@@ -568,6 +575,53 @@ const jsonLd = {
     border: 0;
   }
 
+  /* Velo per il tocco: con il mouse la rotellina scorre comunque la pagina,
+     quindi esiste solo sui dispositivi senza puntatore fine. */
+  .sg-viewer {
+    position: relative;
+  }
+  .sg-velo {
+    display: none;
+  }
+  @media (pointer: coarse) {
+    .sg-velo {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 0 var(--pad) 36px;
+      border: 0;
+      background: linear-gradient(to top, rgba(17, 25, 46, 0.82), rgba(17, 25, 46, 0) 45%);
+      color: #fff;
+      font-family: var(--ui-font);
+      cursor: pointer;
+      /* Lo scorrimento verticale passa alla pagina: il velo intercetta solo
+         il tocco secco. */
+      touch-action: pan-y;
+    }
+    .sg-velo.via {
+      display: none;
+    }
+  }
+  .sg-velo-t {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    padding: 12px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: var(--r-sm);
+    background: rgba(17, 25, 46, 0.6);
+  }
+  .sg-velo-s {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 6px;
+  }
+
   .sg-viewer-ns {
     margin-top: 18px;
     color: rgba(255, 255, 255, 0.72);
@@ -634,7 +688,7 @@ const jsonLd = {
   }
   .sg-dati dt {
     font-family: var(--mono);
-    font-size: 11.5px;
+    font-size: 12px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--red);
@@ -1003,3 +1057,22 @@ const jsonLd = {
     }
   }
 </style>
+
+<script>
+  /* Velo del modello 3D sui dispositivi al tocco: un tocco lo toglie e passa
+     il controllo al modello; quando il modello esce dallo schermo il velo
+     torna, così risalendo la pagina non ci si ritrova di nuovo bloccati. */
+  const viewer = document.getElementById('sgViewer');
+  const velo = document.getElementById('sgVelo');
+
+  if (viewer && velo) {
+    velo.addEventListener('click', () => {
+      velo.classList.add('via');
+      viewer.querySelector('iframe')?.focus();
+    });
+
+    new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) velo.classList.remove('via');
+    }).observe(viewer);
+  }
+</script>

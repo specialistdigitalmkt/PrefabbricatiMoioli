@@ -390,6 +390,21 @@ a:hover .more i,
   align-items: center;
   min-height: 26px;
 }
+/* Al tocco il briciolo diventa un bersaglio pieno: è il modo più rapido di
+   risalire di un livello, e a 26 px si prendeva il separatore. */
+@media (pointer: coarse) {
+  .breadcrumb {
+    column-gap: 4px;
+  }
+  .breadcrumb a,
+  .breadcrumb [aria-current] {
+    min-height: 44px;
+  }
+  .breadcrumb a {
+    padding-inline: 4px;
+    margin-inline: -4px;
+  }
+}
 .breadcrumb a:hover {
   color: var(--red);
 }

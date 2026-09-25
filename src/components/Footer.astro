@@ -124,7 +124,7 @@ const { indirizzo } = azienda;
 
   .foot-h {
     font-family: var(--brand);
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
@@ -169,7 +169,7 @@ const { indirizzo } = azienda;
 
   .dl-fmt {
     font-family: var(--brand);
-    font-size: 10.5px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--red-soft);
@@ -209,6 +209,21 @@ const { indirizzo } = azienda;
     }
     .foot-brand {
       grid-column: 1 / -1;
+    }
+  }
+
+  /* Al tocco le voci del piè di pagina salgono a 44 px: sono elenchi fitti
+     di link uno sotto l'altro, il caso in cui col pollice si sbaglia riga. */
+  @media (pointer: coarse) {
+    .foot-nav {
+      gap: 0;
+    }
+    .foot-nav a,
+    address a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding-block: 0;
     }
   }
 

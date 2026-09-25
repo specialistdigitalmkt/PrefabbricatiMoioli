@@ -8,6 +8,7 @@ import Logo from './Logo.astro';
 import { nav } from '../data/site';
 import { navEn, percorsoAlternato, ui, type Lang } from '../i18n';
 import Icon from './Icon.astro';
+import { azienda } from '../data/site';
 
 interface Props {
   /** La pagina apre su fondo chiaro: la testata parte già in versione scura. */
@@ -102,6 +103,12 @@ const isActive = (href: string) => {
     </div>
 
     <a href={hrefContatti} class="btn btn-light hdr-cta">{t.ctaPreventivo}</a>
+
+    {/* Solo su telefono: chiamare è l'azione che serve di più in cantiere o
+        in auto, e senza questo il numero stava in fondo alla pagina. */}
+    <a href={`tel:${azienda.telefonoHref}`} class="hdr-tel" aria-label={`${t.chiama} ${azienda.telefono}`}>
+      <Icon nome="telefono" dim={22} />
+    </a>
 
     <button class="menu-tog" id="mtog" aria-label={t.menuApri} aria-expanded="false" aria-controls="mnav">
       <Icon nome="menu" dim={24} />
@@ -208,7 +215,8 @@ const isActive = (href: string) => {
     background: var(--navy);
     color: #fff;
   }
-  header.su-chiaro:not(.scrolled) .menu-tog {
+  header.su-chiaro:not(.scrolled) .menu-tog,
+  header.su-chiaro:not(.scrolled) .hdr-tel {
     color: var(--navy);
   }
 
@@ -230,6 +238,12 @@ const isActive = (href: string) => {
 
   .logo-link {
     flex: none;
+    /* Il marchio è alto 34 px: il riempimento porta il bersaglio a 44 senza
+       spostarlo, il margine negativo lo compensa. */
+    display: flex;
+    align-items: center;
+    padding-block: 5px;
+    margin-block: -5px;
   }
 
   /* Sopra la fascia scura il marchio va in bianco pieno. */
@@ -495,8 +509,20 @@ const isActive = (href: string) => {
     justify-content: center;
     margin-right: -10px;
   }
-  header.scrolled .menu-tog {
+  header.scrolled .menu-tog,
+  header.scrolled .hdr-tel {
     color: var(--navy);
+  }
+
+  .hdr-tel {
+    display: none;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    transition: color 0.25s;
   }
 
   /* --- Menu mobile ------------------------------------------------------ */
@@ -609,8 +635,8 @@ const isActive = (href: string) => {
     margin: 4px 0 10px;
   }
   /* Con sette voci sotto Soluzioni il secondo livello è la parte che pesa di
-     più in altezza: sta stretto quanto basta a restare sopra i 24 px di
-     bersaglio richiesti, non un pixel meno. */
+     più in altezza, ma resta a 44 px: sono voci da toccare col pollice, una
+     sotto l'altra, e a 34 si sbagliava riga. Il menu scorre comunque. */
   .mnav-sub a {
     font-family: var(--ui-font) !important;
     font-size: 15.5px !important;
@@ -618,7 +644,7 @@ const isActive = (href: string) => {
     color: rgba(255, 255, 255, 0.72) !important;
     border-bottom: none !important;
     padding: 6px 0 !important;
-    min-height: 34px;
+    min-height: 44px;
   }
   .mnav-sub a[aria-current] {
     color: var(--red-soft) !important;
@@ -658,6 +684,9 @@ const isActive = (href: string) => {
     color: inherit;
     text-decoration: none;
     padding: 8px 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
   }
   .mnav-lang .lang-act {
     color: #fff;
@@ -690,7 +719,8 @@ const isActive = (href: string) => {
     .hdr-cta {
       display: none;
     }
-    .menu-tog {
+    .menu-tog,
+    .hdr-tel {
       display: flex;
     }
   }

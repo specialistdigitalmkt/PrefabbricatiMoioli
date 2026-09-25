@@ -11,7 +11,7 @@
  * più fa sembrare improvvisato un insieme di icone.
  */
 interface Props {
-  nome: 'freccia-dx' | 'freccia-sx' | 'freccia-giu' | 'freccia-su' | 'chevron-giu' | 'chiudi' | 'menu';
+  nome: 'freccia-dx' | 'freccia-sx' | 'freccia-giu' | 'freccia-su' | 'chevron-giu' | 'chiudi' | 'menu' | 'telefono';
   /** Dimensione in px. */
   dim?: number;
   class?: string;
@@ -27,6 +27,8 @@ const tracciati: Record<Props['nome'], string> = {
   'chevron-giu': 'M6 9l6 6 6-6',
   chiudi: 'M6 6l12 12M18 6L6 18',
   menu: 'M3 6h18M3 12h18M3 18h18',
+  telefono:
+    'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
 };
 ---
 
