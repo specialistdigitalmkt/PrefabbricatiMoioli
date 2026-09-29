@@ -10,7 +10,8 @@
  * IMPOSTAZIONE
  * Il baricentro e' la sezione interattiva, in posizione 02: subito dopo
  * l'introduzione, a fascia intera. Dati, sistema e applicazioni vengono dopo
- * e la commentano.
+ * e la commentano. Dove la scheda ha `modello3dInPagina` (Tecnowing), al posto
+ * del disegno c'è il modello 3D navigabile, a tutta larghezza.
  *
  * FONTI
  * Dati tecnici dai cataloghi ufficiali (src/data/soluzioni-tecniche.ts): dai
@@ -54,6 +55,10 @@ const DISEGNI = {
   'tegolo-tt': TegoloTTSection,
 } as const;
 const Disegno = DISEGNI[scheda.slug as keyof typeof DISEGNI];
+
+/* Dove la scheda ha il modello 3D in pagina (oggi solo Tecnowing), il
+   visualizzatore prende il posto del disegno in sezione. */
+const m3d = scheda.modello3dInPagina;
 
 const galleria = (foto as Record<string, { cover: string; galleria: { id: string }[] }>)[
   scheda.slug
@@ -121,7 +126,7 @@ const jsonLd = {
 
       <div class="sg-hero-cta">
         <a href="#sezione" class="btn btn-red">
-          {t.esploraSezione}
+          {m3d ? t.esploraModello : t.esploraSezione}
           <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
         </a>
         <a href={hrefContatti} class="btn btn-light">{t.chiediAdatto}</a>
@@ -157,47 +162,104 @@ const jsonLd = {
   </section>
 
   <!-- ==================== 3. SEZIONE INTERATTIVA — il blocco centrale ==== -->
-  <section class="sg-sez on-dark" id="sezione">
-    <div class="sec-num" aria-hidden="true">02</div>
-    <div class="wrap">
-      <div class="sg-sez-head reveal">
-        <p class="eyebrow">{t.laSezione}</p>
-        <h2>{scheda.sezione.titolo}</h2>
-      </div>
+  {
+    m3d ? (
+      /* Il modello prende il posto del disegno in sezione con i suoi punti:
+         il visualizzatore ha già il suo elenco di componenti selezionabili,
+         tenere anche l'altro significherebbe due interfacce che dicono la
+         stessa cosa. */
+      <section class="sg-sez sg-sez-3d on-dark" id="sezione">
+        <div class="sec-num" aria-hidden="true">02</div>
+        <div class="wrap">
+          <div class="sg-sez-head reveal">
+            <p class="eyebrow">{t.ilModello}</p>
+            <h2>{scheda.sezione.titolo}</h2>
+            <p class="sg-sez-intro">{m3d.intro}</p>
+          </div>
+        </div>
 
-      <HotspotExplainer
-        hotspots={scheda.hotspots}
-        intro={scheda.sezione.intro}
-        etichettaFoto={ui[lang].fotoDettaglio}
-        didascalia={ui[lang].disegnoSegnaposto}
-      >
-        <Disegno lang={lang} />
-      </HotspotExplainer>
+        <div class="sg-viewer reveal" id="sgViewer">
+          {/* Solo al tocco: il modello occupa quasi tutto lo schermo e prende
+              per sé ogni trascinamento, quindi la pagina smetterebbe di
+              scorrere. Il velo lascia passare lo scorrimento finché non lo si
+              tocca. */}
+          <button type="button" class="sg-velo" id="sgVelo">
+            <span class="sg-velo-t">{t.toccaModello}</span>
+            <span class="sg-velo-s">{t.trascinaModello}</span>
+          </button>
+          {/* `loading="lazy"`: il visualizzatore pesa quasi un mega e parte
+              quando il lettore ci arriva, non all'apertura della pagina. */}
+          <iframe
+            src={m3d.src}
+            title={t.titoloModello(scheda.nome)}
+            loading="lazy"
+            allow="fullscreen"
+            allowfullscreen
+          />
+        </div>
 
-      {/* Il modello 3D sta qui perché racconta la stessa cosa del disegno in
-          sezione, montata. Scheda nuova: è una pagina a sé, pesante, e non
-          deve rubare la posizione a questa. */}
-      {
-        scheda.modello3d && (
-          <div class="sg-3d reveal">
-            <div class="sg-3d-txt">
-              <h3>{scheda.modello3d.titolo}</h3>
-              <p>{scheda.modello3d.testo}</p>
-            </div>
-            <a
-              href={scheda.modello3d.href}
-              class="btn btn-light"
-              target="_blank"
-              rel="noopener"
-            >
-              {t.apriModello3d}
+        <div class="wrap">
+          {/* Senza JavaScript l'iframe resta una cornice vuota: il rimando in
+              chiaro è l'unica cosa che rimane utile. */}
+          <noscript>
+            <p class="sg-viewer-ns">
+              {t.modelloNoJs} <a href={m3d.src}>{t.apriSchedaParte}</a>.
+            </p>
+          </noscript>
+
+          <div class="sg-viewer-foot">
+            <p>{t.notaModello}</p>
+            <a href={m3d.src} class="btn btn-light" target="_blank" rel="noopener">
+              {t.apriSchedaParte}
               <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
             </a>
           </div>
-        )
-      }
-    </div>
-  </section>
+        </div>
+      </section>
+    ) : (
+      <section class="sg-sez on-dark" id="sezione">
+        <div class="sec-num" aria-hidden="true">02</div>
+        <div class="wrap">
+          <div class="sg-sez-head reveal">
+            <p class="eyebrow">{t.laSezione}</p>
+            <h2>{scheda.sezione.titolo}</h2>
+          </div>
+
+          <HotspotExplainer
+            hotspots={scheda.hotspots}
+            intro={scheda.sezione.intro}
+            etichettaFoto={ui[lang].fotoDettaglio}
+            didascalia={ui[lang].disegnoSegnaposto}
+          >
+            <Disegno lang={lang} />
+          </HotspotExplainer>
+
+          {/* Il modello 3D sta qui perché racconta la stessa cosa del disegno in
+              sezione, montata. Scheda nuova: è una pagina a sé, pesante, e non
+              deve rubare la posizione a questa. */}
+          {
+            scheda.modello3d && (
+              <div class="sg-3d reveal">
+                <div class="sg-3d-txt">
+                  <h3>{scheda.modello3d.titolo}</h3>
+                  <p>{scheda.modello3d.testo}</p>
+                </div>
+                <a
+                  href={scheda.modello3d.href}
+                  class="btn btn-light"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  {t.apriModello3d}
+                  <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+                </a>
+              </div>
+            )
+          }
+        </div>
+      </section>
+    )
+  }
 
   <!-- ==================== 4. DATI TECNICI ==================== -->
   <section class="block sg-dati-s">
@@ -513,6 +575,109 @@ const jsonLd = {
     margin-top: 18px;
     letter-spacing: -0.025em;
     line-height: 1.05;
+  }
+
+  /* Modello 3D in pagina. La banda tocca i due bordi e prende l'altezza
+     dello schermo: dentro c'è un'interfaccia con testata, due fasce laterali
+     e piede, che rientrata e a 80vh finiva compressa. Le fasce laterali del
+     visualizzatore sono dello stesso blu della sezione, quindi a tutta
+     larghezza le due continuano invece di disegnare una cornice nella
+     cornice. Non è però una presa dello schermo: la pagina resta una pagina.
+
+     I 96px tolti sono la testata del sito, che è fissa: senza, il piede del
+     visualizzatore resterebbe sempre sotto il bordo dello schermo. È la
+     stessa misura di `scroll-padding-top`, così quando la banda si ferma
+     sotto la testata ci sta esatta. */
+  .sg-sez-3d .sg-sez-head {
+    margin-bottom: 56px;
+  }
+  .sg-sez-intro {
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.72);
+    max-width: 56ch;
+  }
+  .sg-viewer {
+    position: relative;
+    height: calc(100svh - 96px);
+    min-height: 560px;
+    max-height: 940px;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    overflow: hidden;
+    background: var(--navy);
+  }
+  .sg-viewer iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* Velo per il tocco: con il mouse la rotellina scorre comunque la pagina,
+     quindi esiste solo sui dispositivi senza puntatore fine. */
+  .sg-velo {
+    display: none;
+  }
+  @media (pointer: coarse) {
+    .sg-velo {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 4px;
+      padding: 0 var(--pad) 36px;
+      border: 0;
+      background: linear-gradient(to top, rgba(17, 25, 46, 0.82), rgba(17, 25, 46, 0) 45%);
+      color: #fff;
+      font-family: var(--ui-font);
+      cursor: pointer;
+      /* Lo scorrimento verticale passa alla pagina: il velo intercetta solo
+         il tocco secco. */
+      touch-action: pan-y;
+    }
+    .sg-velo.via {
+      display: none;
+    }
+  }
+  .sg-velo-t {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 17px;
+    padding: 12px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: var(--r-sm);
+    background: rgba(17, 25, 46, 0.6);
+  }
+  .sg-velo-s {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 6px;
+  }
+
+  .sg-viewer-ns {
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .sg-viewer-ns a {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  .sg-viewer-foot {
+    margin-top: 32px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .sg-viewer-foot p {
+    max-width: 52ch;
+    font-size: 14.5px;
+    color: rgba(255, 255, 255, 0.66);
   }
 
   /* Rimando al modello 3D. Sta sotto il disegno, separato da un filo: è un
@@ -865,6 +1030,22 @@ const jsonLd = {
   }
 
   @media (max-width: 700px) {
+    /* L'altezza si misura in svh: con vh la barra del browser che si ritira
+       farebbe saltare la banda mentre si ruota il modello. In verticale
+       l'interfaccia del visualizzatore va in pila, quindi le serve tutta
+       l'altezza che c'è. */
+    .sg-viewer {
+      height: calc(100svh - 76px);
+      min-height: 540px;
+    }
+    .sg-viewer-foot {
+      align-items: stretch;
+      gap: 20px;
+      margin-top: 24px;
+    }
+    .sg-viewer-foot .btn {
+      justify-content: center;
+    }
     .sg-3d {
       align-items: stretch;
       gap: 22px;
@@ -947,3 +1128,22 @@ const jsonLd = {
     }
   }
 </style>
+
+<script>
+  /* Velo del modello 3D sui dispositivi al tocco: un tocco lo toglie e passa
+     il controllo al modello; quando il modello esce dallo schermo il velo
+     torna, così risalendo la pagina non ci si ritrova di nuovo bloccati. */
+  const viewer = document.getElementById('sgViewer');
+  const velo = document.getElementById('sgVelo');
+
+  if (viewer && velo) {
+    velo.addEventListener('click', () => {
+      velo.classList.add('via');
+      viewer.querySelector('iframe')?.focus();
+    });
+
+    new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) velo.classList.remove('via');
+    }).observe(viewer);
+  }
+</script>
