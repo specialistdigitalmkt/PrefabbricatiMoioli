@@ -104,12 +104,14 @@ export const tecnowing: SchedaTecnica = {
     intro: 'Cross section through the roof. Select a point to see how it is resolved.',
   },
 
-  modello3dInPagina: {
-    /* Il configuratore 3D non e' tradotto: la pagina inglese carica lo stesso
-       visualizzatore di quella italiana, e lo dice. */
-    src: it.modello3dInPagina!.src,
-    intro:
-      'The roof assembled, not drawn. It turns on its own until you touch it; then drag to walk around it, select a component to isolate it, change the infill and the configuration: the model rebuilds itself. The model interface is in Italian.',
+  modello3d: {
+    /* Il configuratore 3D e' una pagina a se', non tradotta: il collegamento
+       porta alla versione italiana, che e' comunque un modello da guardare
+       piu' che da leggere. */
+    href: it.modello3d!.href,
+    titolo: 'The same system, in three dimensions.',
+    testo:
+      'The configurator shows the roof assembled: rotate the model, isolate a component, change the infill and the configuration. It opens in a separate tab because it is heavy. The configurator interface is in Italian.',
   },
 
   applicazioni: [
@@ -209,15 +211,6 @@ export const ui = {
   diCosaSiTratta: 'What it is',
   laSezione: 'The section',
   apriModello3d: 'Open the 3D model',
-  esploraModello: 'Explore the 3D model',
-  ilModello: 'The model',
-  toccaModello: 'Tap to explore the model',
-  trascinaModello: 'Then drag to rotate it',
-  titoloModello: (nome: string) => `Three-dimensional model of the ${nome} roof`,
-  modelloNoJs: 'The three-dimensional model requires JavaScript.',
-  apriSchedaParte: 'Open it in a separate tab',
-  notaModello:
-    'The model is a reading aid: the dimensions that count are those in the table below.',
   datiTecnici: 'Technical data',
   ilSistema: 'The system',
   doveSiUsa: 'Where it is used',

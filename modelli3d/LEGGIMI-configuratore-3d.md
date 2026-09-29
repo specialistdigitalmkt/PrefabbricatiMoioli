@@ -1,11 +1,11 @@
 # Configuratore 3D Tecnowing — dove sta e come è collegato
 
-Le versioni sono **due**, ma il sito ne usa una sola: quella a fasce.
+Le versioni sono **due**, e servono due pagine diverse.
 
 | file in `modelli3d/` | servito da | usato da |
 | --- | --- | --- |
-| `tecnowing-viewer.html` | `public/soluzioni/tecnowing/configuratore-3d/index.html` | nessuna pagina: resta come sorgente della variante a fasce |
-| `tecnowing-viewer-fasce.html` | `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` | `/soluzioni/tecnowing` e `/en/solutions/tecnowing` |
+| `tecnowing-viewer.html` | `public/soluzioni/tecnowing/configuratore-3d/index.html` | `/soluzioni/tecnowing` |
+| `tecnowing-viewer-fasce.html` | `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` | `/soluzioni/tecnowing-3d` |
 
 Il file in `modelli3d/` e la sua copia in `public/` devono restare identici.
 Per l'originale la copia è a mano:
@@ -103,20 +103,22 @@ porta dentro.
 
 ## Chi lo usa
 
-La scheda Tecnowing, in italiano (`/soluzioni/tecnowing`, da
-`src/pages/soluzioni/[slug].astro`) e in inglese (`/en/solutions/tecnowing`).
-Tutte e due passano da `src/components/pagine/SchedaSoluzione.astro`, che
-carica la versione **a fasce** al posto del disegno in sezione e dei sei
-punti: sta in una banda che tocca i due bordi della pagina e alta quanto lo
-schermo meno la testata fissa, con `loading="lazy"` perché i suoi megabyte non
-partano all'apertura della pagina. L'interfaccia del modello è solo in
-italiano, e la pagina inglese lo dice.
+Due pagine, in due modi diversi.
 
-Il collegamento non è scritto nel markup: è il campo `modello3dInPagina` in
-`src/data/soluzioni-tecniche.ts` (e in `src/i18n/en/tecnowing.ts`). Toglierlo
-riporta la scheda al disegno in sezione; darlo a un'altra scheda accende il
-modello lì. Il vecchio indirizzo della variante, `/soluzioni/tecnowing-3d`,
-rimanda alla scheda da `vercel.json`.
+**`/soluzioni/tecnowing`** — la scheda corrente, generata da
+`src/pages/soluzioni/[slug].astro`. Il blocco centrale resta il disegno in
+sezione con i sei punti; il modello è un rimando che apre una scheda nuova.
+Il collegamento non è scritto nel markup: è il campo `modello3d` in
+`src/data/soluzioni-tecniche.ts`. Toglierlo spegne il rimando, darlo a
+un'altra scheda lo accende lì.
+
+**`/soluzioni/tecnowing-3d`** — la variante in valutazione,
+`src/pages/soluzioni/tecnowing-3d.astro`, che usa la versione **a fasce**.
+Qui il modello **prende il posto** del disegno e dei sei punti: sta in una
+banda che tocca i due bordi della pagina e alta quanto lo schermo meno la
+testata fissa, con `loading="lazy"` perché i suoi megabyte non partano
+all'apertura della pagina. È `noindex` e fuori dalla sitemap finché è una
+prova.
 
 **Se `index.html` non è al suo posto, l'iframe resta vuoto e il rimando dà
 404.**

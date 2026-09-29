@@ -42,13 +42,6 @@ export type SchedaTecnica = {
    * l'`href` accende Coverplan nell'indice. Senza campo, niente collegamento.
    */
   modello3d?: { href: string; titolo: string; testo: string };
-  /**
-   * Modello 3D dentro la pagina, al posto del disegno in sezione. `src` è il
-   * visualizzatore in `public/`, caricato in un iframe; `intro` è il testo
-   * sotto il titolo della fascia 02. Se c'è questo campo, `modello3d` e gli
-   * `hotspots` della scheda non vengono mostrati.
-   */
-  modello3dInPagina?: { src: string; intro: string };
   applicazioni: { num: string; titolo: string; testo: string }[];
   hotspots: Hotspot[];
 };
@@ -110,12 +103,11 @@ const tecnowing: SchedaTecnica = {
     intro: 'Sezione trasversale della copertura. Seleziona un punto per vedere come è risolto.',
   },
 
-  /* Versione «a fasce» del configuratore: i pannelli stanno nelle due fasce
-     blu ai lati del modello, che continuano il blu della sezione. */
-  modello3dInPagina: {
-    src: '/soluzioni/tecnowing/configuratore-3d-fasce',
-    intro:
-      'La copertura montata, non disegnata. Gira da sola finché non la tocchi; poi trascina per girarci intorno, seleziona un componente per isolarlo, cambia interposto e configurazione: il modello si ricompone.',
+  modello3d: {
+    href: '/soluzioni/tecnowing/configuratore-3d',
+    titolo: 'Lo stesso sistema, in tre dimensioni.',
+    testo:
+      'Il configuratore mostra la copertura montata: ruota il modello, isola un componente, cambia interposto e configurazione. Si apre in una scheda a parte perché è pesante.',
   },
 
   applicazioni: [
