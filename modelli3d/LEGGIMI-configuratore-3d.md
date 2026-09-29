@@ -5,7 +5,7 @@ Le versioni sono **due**, e servono due pagine diverse.
 | file in `modelli3d/` | servito da | usato da |
 | --- | --- | --- |
 | `tecnowing-viewer.html` | `public/soluzioni/tecnowing/configuratore-3d/index.html` | `/soluzioni/tecnowing` |
-| `tecnowing-viewer-fasce.html` | `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` | `/soluzioni/tecnowing` |
+| `tecnowing-viewer-fasce.html` | `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` | `/soluzioni/tecnowing` e `/en/solutions/tecnowing` |
 
 Il file in `modelli3d/` e la sua copia in `public/` devono restare identici.
 Per l'originale la copia è a mano:
@@ -110,13 +110,14 @@ Due pagine, in due modi diversi.
 Il modello **prende il posto** del disegno e dei sei punti: sta in una banda
 che tocca i due bordi della pagina e alta quanto lo schermo meno la testata
 fissa, con `loading="lazy"` perché i suoi megabyte non partano all'apertura
-della pagina. Parte dalla vista in sezione. Era la variante su
-`/soluzioni/tecnowing-3d`, che ora rimanda qui.
+della pagina. Parte fermo sulla vista in sezione, leggermente di tre quarti:
+niente rotazione automatica. Era la variante su `/soluzioni/tecnowing-3d`, che
+ora rimanda qui.
 
-**`/en/solutions/tecnowing`** — la scheda inglese, da
-`SchedaSoluzione.astro`. Il blocco centrale resta il disegno in sezione con i
-sei punti; il modello originale è un rimando che apre una scheda nuova, acceso
-dal campo `modello3d` in `src/i18n/en/tecnowing.ts`.
+**`/en/solutions/tecnowing`** — la scheda inglese,
+`src/pages/en/solutions/tecnowing.astro`: copia della pagina italiana con i
+testi tradotti, stesso visualizzatore. L'interfaccia del modello resta in
+italiano, e il testo della sezione lo dice.
 
 **Se `index.html` non è al suo posto, l'iframe resta vuoto e il rimando dà
 404.**

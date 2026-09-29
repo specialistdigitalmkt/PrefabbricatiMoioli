@@ -26,11 +26,12 @@ COSA CAMBIA rispetto all'originale, che resta intoccato sotto
      dell'esportazione, intatta;
   3. le viste da fuori si inquadrano sul volume visibile, a 30 gradi, e si
      rifanno quando cambia la geometria;
-  4. il primo comando ferma la rotazione automatica, non solo il primo
-     trascinamento;
+  4. niente rotazione automatica: il modello si muove solo se lo si
+     trascina;
   5. in sezione il tamponamento della facciata vicina non si disegna, e il
      taglio resta anche dopo aver cambiato interposto o posa;
-  6. la vista di partenza, e quella a cui riporta il reset, e' la sezione.
+  6. la vista di partenza, e quella a cui riporta il reset, e' la sezione,
+     vista leggermente di tre quarti e dall'alto.
 
 Le versioni dell'esportazione precedenti a settembre 2026 non avevano
 rotazione automatica, posature dei tamponamenti, inquadratura adattiva ne'
@@ -241,67 +242,38 @@ sub("""    if (this.tween) cancelAnimationFrame(this.tween);
     if (this.tween) cancelAnimationFrame(this.tween);
     clearTimeout(this.tweenEnd);""")
 
-# Rotazione automatica: l'esportazione la ferma al primo trascinamento. Qui
-# anche al primo comando dei pannelli, che i controlli non vedono passare.
-sub("""  layer(k) { return this.scene && this.scene.layers[k]; }""",
-    """  layer(k) { return this.scene && this.scene.layers[k]; }
+# Niente rotazione automatica: il modello sta fermo sulla sezione, che e' la
+# vista da leggere, e si muove solo quando lo si trascina.
+sub("""    /* Giostra lenta all'apertura: lo stage la ferma da solo al primo
+       trascinamento sul modello, e riparte a ogni ricaricamento. */
+    stage.setAttribute('autorotate', '');
+""", '')
 
-  /* Il modello gira finche' non lo si tocca: al primo gesto si ferma dov'e'
-     ed e' definitivo, anche il reset vista non lo rimette a girare. */
-  stopSpin() {
-    const c = this.stage && this.stage._controls;
-    if (c) c.autoRotate = false;
-  }""")
-sub("""  select(key) {
-    const s = this.state;""",
-    """  select(key) {
-    this.stopSpin();
-    const s = this.state;""")
-sub("""      onCanvasTap: e => {
-        this.tapStart""",
-    """      onCanvasTap: e => {
-        this.stopSpin();
-        this.tapStart""")
-sub("""s.view, label => {
-        this.setState({ view: label }""",
-    """s.view, label => {
-        this.stopSpin();
-        this.setState({ view: label }""")
-sub("""s.interposto, label => {
-        this.setState({ interposto: label }""",
-    """s.interposto, label => {
-        this.stopSpin();
-        this.setState({ interposto: label }""")
-sub("""        const spegni = s.tamp && s.tamponamento === label;""",
-    """        this.stopSpin();
-        const spegni = s.tamp && s.tamponamento === label;""")
-sub("""s.config, label => {
-        const keep""",
-    """s.config, label => {
-        this.stopSpin();
-        const keep""")
+# Accendere o spegnere un layer cambia il volume visibile: si reinquadra
+# ovunque, non solo su telefono.
 sub("""        onClick: () => this.setState({ [key]: !s[key] }, () => {
           this.applyVisibility();
           if (this.state.mobile) this.reframe(true);
         })""",
-    """        onClick: () => {
-          this.stopSpin();
-          this.setState({ [key]: !s[key] }, () => {
-            this.applyVisibility();
-            this.reframe(true);
-          });
-        }""")
+    """        onClick: () => this.setState({ [key]: !s[key] }, () => {
+          this.applyVisibility();
+          this.reframe(true);
+        })""")
 sub("""      onReset: () => this.setState({ sel: null, detail: false, view: 'Assonometria' }, () => {
         this.setView('Assonometria');
         this.applyVisibility();
       }),""",
-    """      onReset: () => {
-        this.stopSpin();
-        this.setState({ sel: null, detail: false, view: 'Sezione' }, () => {
-          this.setView('Sezione');
-          this.applyVisibility();
-        });
-      },""")
+    """      onReset: () => this.setState({ sel: null, detail: false, view: 'Sezione' }, () => {
+        this.setView('Sezione');
+        this.applyVisibility();
+      }),""")
+
+# La sezione di partenza non e' un prospetto piatto: la camera gira di circa
+# 10 gradi di lato e sale di circa 5, cosi' il taglio mostra anche la
+# profondita' della campata. Il resto dell'inquadratura (mira e distanza) lo
+# calcola frameFor sul volume visibile, qui cambia solo la direzione.
+sub("""      Sezione: [[-dims.LX * 0.15, dims.Q_TOP * 0.55, dims.LY * 2.4], [-dims.LX * 0.15, dims.Q_TOP * 0.5, 0]],""",
+    """      Sezione: [[-dims.LX * 0.15 + dims.LY * 0.42, dims.Q_TOP * 0.55 + dims.LY * 0.21, dims.LY * 2.4], [-dims.LX * 0.15, dims.Q_TOP * 0.5, 0]],""")
 
 # Sezione: la facciata vicina sta fra chi guarda e il taglio.
 sub("""        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;""",

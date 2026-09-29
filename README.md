@@ -112,9 +112,11 @@ perché tutto ciò che entra in `public/` è pubblicabile, e una nota interna no
 su `/soluzioni/tecnowing-3d`; approvata, è diventata
 `src/pages/soluzioni/tecnowing.astro` e `[slug].astro` non genera più
 Tecnowing. Il modello prende il posto del disegno in sezione e dei suoi sei
-punti, dentro un iframe alto quasi quanto lo schermo, e parte dalla vista in
-sezione. L'impaginato è una copia di `SchedaSoluzione.astro`: una correzione va
-fatta in tutti e due i file. La scheda inglese usa ancora il disegno.
+punti, dentro un iframe alto quasi quanto lo schermo; parte fermo sulla vista
+in sezione, leggermente di tre quarti. La scheda inglese,
+`src/pages/en/solutions/tecnowing.astro`, è una copia della stessa pagina con i
+testi tradotti. L'impaginato delle due è una copia di `SchedaSoluzione.astro`:
+una correzione va fatta in tutti e tre i file.
 
 **Coverplan non ha pagina.** È l'unica soluzione senza materiale: né catalogo
 tecnico né fotografie. Resta nell'indice come scheda con riquadro dichiarato.
