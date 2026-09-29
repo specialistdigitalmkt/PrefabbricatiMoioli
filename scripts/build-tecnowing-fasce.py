@@ -31,7 +31,7 @@ COSA CAMBIA rispetto all'originale, che resta intoccato sotto
   5. in sezione il tamponamento della facciata vicina non si disegna, e il
      taglio resta anche dopo aver cambiato interposto o posa;
   6. la vista di partenza, e quella a cui riporta il reset, e' la sezione,
-     vista leggermente di tre quarti e dall'alto.
+     vista dall'alto e appena di tre quarti.
 
 Le versioni dell'esportazione precedenti a settembre 2026 non avevano
 rotazione automatica, posature dei tamponamenti, inquadratura adattiva ne'
@@ -269,11 +269,12 @@ sub("""      onReset: () => this.setState({ sel: null, detail: false, view: 'Ass
       }),""")
 
 # La sezione di partenza non e' un prospetto piatto: la camera gira di circa
-# 10 gradi di lato e sale di circa 5, cosi' il taglio mostra anche la
-# profondita' della campata. Il resto dell'inquadratura (mira e distanza) lo
+# 8 gradi di lato e guarda dall'alto di circa 13, cosi' si leggono insieme il
+# profilo a V delle ali, davanti, e la profondita' della campata. Piu' in
+# basso vincevano i pilastri; piu' in alto il tetto copriva il profilo. Il resto dell'inquadratura (mira e distanza) lo
 # calcola frameFor sul volume visibile, qui cambia solo la direzione.
 sub("""      Sezione: [[-dims.LX * 0.15, dims.Q_TOP * 0.55, dims.LY * 2.4], [-dims.LX * 0.15, dims.Q_TOP * 0.5, 0]],""",
-    """      Sezione: [[-dims.LX * 0.15 + dims.LY * 0.42, dims.Q_TOP * 0.55 + dims.LY * 0.21, dims.LY * 2.4], [-dims.LX * 0.15, dims.Q_TOP * 0.5, 0]],""")
+    """      Sezione: [[-dims.LX * 0.15 + dims.LY * 0.34, dims.Q_TOP * 0.55 + dims.LY * 0.55, dims.LY * 2.4], [-dims.LX * 0.15, dims.Q_TOP * 0.5, 0]],""")
 
 # Sezione: la facciata vicina sta fra chi guarda e il taglio.
 sub("""        m.visible = !sez || Math.abs(m.position.x + dims.LX / 2 - dims.PITCH * 3) < dims.PITCH * 2.2;""",
