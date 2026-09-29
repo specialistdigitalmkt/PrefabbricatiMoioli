@@ -5,7 +5,9 @@
  *
  * Tecnoshed e Stegos restano pagine scritte a mano: sono già approvate e in
  * Astro una route statica vince su una dinamica, quindi convivono senza
- * conflitti.
+ * conflitti. Tecnowing ha la sua pagina, soluzioni/tecnowing.astro, con il
+ * modello 3D al posto del disegno: qui si salta, così non ci sono due route
+ * per lo stesso indirizzo.
  *
  * Markup e stili stanno nel componente condiviso con la versione inglese
  * (/en/solutions/tecnowing): src/components/pagine/SchedaSoluzione.astro.
@@ -15,10 +17,12 @@ import { schedeTecniche } from '../../data/soluzioni-tecniche';
 import { soluzioni } from '../../data/soluzioni';
 
 export function getStaticPaths() {
-  return schedeTecniche.map((scheda) => ({
-    params: { slug: scheda.slug },
-    props: { scheda },
-  }));
+  return schedeTecniche
+    .filter((scheda) => scheda.slug !== 'tecnowing')
+    .map((scheda) => ({
+      params: { slug: scheda.slug },
+      props: { scheda },
+    }));
 }
 
 const { scheda } = Astro.props;

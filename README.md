@@ -86,7 +86,8 @@ Solo queste sei. Il menu contiene solo ciò che è navigabile e finito.
 | `/azienda/riconoscimenti` | Certificazioni e network |
 | `/contatti` | Modulo, dati, mappa |
 | `/soluzioni/tecnowing/configuratore-3d` | Modello 3D navigabile, file statico in `public/` |
-| `/soluzioni/tecnowing-3d` | Variante in valutazione: il modello al posto del disegno |
+| `/soluzioni/tecnowing` | Scheda Tecnowing con il modello 3D (`soluzioni/tecnowing.astro`) |
+| `/soluzioni/tecnowing-3d` | Non esiste più: rimanda a `/soluzioni/tecnowing` (`vercel.json`) |
 
 **Le schede di soluzione sono di due tipi.** Tecnoshed e Stegos hanno una
 pagina scritta a mano, già approvata. Le altre quattro condividono
@@ -107,13 +108,13 @@ dalla sitemap perché è uno strumento, non un contenuto. Dettagli in
 `modelli3d/LEGGIMI-configuratore-3d.md` — sta lì e non accanto al file servito
 perché tutto ciò che entra in `public/` è pubblicabile, e una nota interna no.
 
-**`/soluzioni/tecnowing-3d` è una variante da valutare, non una pagina del
-sito.** È la scheda Tecnowing in cui il modello prende il posto del disegno in
-sezione e dei suoi sei punti, dentro un iframe alto quasi quanto lo schermo:
-serve ad aprirla accanto a `/soluzioni/tecnowing` e decidere quale delle due
-racconta meglio la copertura. È `noindex` e fuori dalla sitemap. L'impaginato è
-una copia di `[slug].astro`, l'unico modo di non toccare la pagina esistente:
-finché convivono, una correzione va fatta in tutti e due i file.
+**La scheda Tecnowing italiana è quella con il modello 3D.** Era la variante
+su `/soluzioni/tecnowing-3d`; approvata, è diventata
+`src/pages/soluzioni/tecnowing.astro` e `[slug].astro` non genera più
+Tecnowing. Il modello prende il posto del disegno in sezione e dei suoi sei
+punti, dentro un iframe alto quasi quanto lo schermo, e parte dalla vista in
+sezione. L'impaginato è una copia di `SchedaSoluzione.astro`: una correzione va
+fatta in tutti e due i file. La scheda inglese usa ancora il disegno.
 
 **Coverplan non ha pagina.** È l'unica soluzione senza materiale: né catalogo
 tecnico né fotografie. Resta nell'indice come scheda con riquadro dichiarato.

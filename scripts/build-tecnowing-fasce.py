@@ -29,7 +29,8 @@ COSA CAMBIA rispetto all'originale, che resta intoccato sotto
   4. il primo comando ferma la rotazione automatica, non solo il primo
      trascinamento;
   5. in sezione il tamponamento della facciata vicina non si disegna, e il
-     taglio resta anche dopo aver cambiato interposto o posa.
+     taglio resta anche dopo aver cambiato interposto o posa;
+  6. la vista di partenza, e quella a cui riporta il reset, e' la sezione.
 
 Le versioni dell'esportazione precedenti a settembre 2026 non avevano
 rotazione automatica, posature dei tamponamenti, inquadratura adattiva ne'
@@ -219,11 +220,18 @@ sub("""    stage.style.cssText = 'display:block;width:100%;height:100%';""",
        height:100vh, che dentro una riga della griglia sarebbe di troppo. */
     stage.style.cssText = 'position:absolute;inset:0;display:block;width:auto;height:auto';""")
 
+# Si parte dalla sezione: nella scheda il modello sta dove prima c'era il
+# disegno in sezione, e il taglio e' la cosa che racconta il sistema.
+sub("""    view: 'Assonometria',
+    listOpen: true,""",
+    """    view: 'Sezione',
+    listOpen: true,""")
+
 # L'inquadratura segue la cella anche quando cambia senza che cambi la
 # finestra — il carattere che arriva, le fasce che si allargano.
 sub("""    this.setView('Assonometria');
     this.setState({ ready: true });""",
-    """    this.setView('Assonometria');
+    """    this.setView('Sezione');
     this.ro = new ResizeObserver(() => this.onResize());
     this.ro.observe(this.hostEl);
     this.setState({ ready: true });""")
@@ -289,8 +297,8 @@ sub("""      onReset: () => this.setState({ sel: null, detail: false, view: 'Ass
       }),""",
     """      onReset: () => {
         this.stopSpin();
-        this.setState({ sel: null, detail: false, view: 'Assonometria' }, () => {
-          this.setView('Assonometria');
+        this.setState({ sel: null, detail: false, view: 'Sezione' }, () => {
+          this.setView('Sezione');
           this.applyVisibility();
         });
       },""")

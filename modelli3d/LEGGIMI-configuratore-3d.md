@@ -5,7 +5,7 @@ Le versioni sono **due**, e servono due pagine diverse.
 | file in `modelli3d/` | servito da | usato da |
 | --- | --- | --- |
 | `tecnowing-viewer.html` | `public/soluzioni/tecnowing/configuratore-3d/index.html` | `/soluzioni/tecnowing` |
-| `tecnowing-viewer-fasce.html` | `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` | `/soluzioni/tecnowing-3d` |
+| `tecnowing-viewer-fasce.html` | `public/soluzioni/tecnowing/configuratore-3d-fasce/index.html` | `/soluzioni/tecnowing` |
 
 Il file in `modelli3d/` e la sua copia in `public/` devono restare identici.
 Per l'originale la copia è a mano:
@@ -105,20 +105,18 @@ porta dentro.
 
 Due pagine, in due modi diversi.
 
-**`/soluzioni/tecnowing`** — la scheda corrente, generata da
-`src/pages/soluzioni/[slug].astro`. Il blocco centrale resta il disegno in
-sezione con i sei punti; il modello è un rimando che apre una scheda nuova.
-Il collegamento non è scritto nel markup: è il campo `modello3d` in
-`src/data/soluzioni-tecniche.ts`. Toglierlo spegne il rimando, darlo a
-un'altra scheda lo accende lì.
+**`/soluzioni/tecnowing`** — la scheda italiana,
+`src/pages/soluzioni/tecnowing.astro`, che usa la versione **a fasce**.
+Il modello **prende il posto** del disegno e dei sei punti: sta in una banda
+che tocca i due bordi della pagina e alta quanto lo schermo meno la testata
+fissa, con `loading="lazy"` perché i suoi megabyte non partano all'apertura
+della pagina. Parte dalla vista in sezione. Era la variante su
+`/soluzioni/tecnowing-3d`, che ora rimanda qui.
 
-**`/soluzioni/tecnowing-3d`** — la variante in valutazione,
-`src/pages/soluzioni/tecnowing-3d.astro`, che usa la versione **a fasce**.
-Qui il modello **prende il posto** del disegno e dei sei punti: sta in una
-banda che tocca i due bordi della pagina e alta quanto lo schermo meno la
-testata fissa, con `loading="lazy"` perché i suoi megabyte non partano
-all'apertura della pagina. È `noindex` e fuori dalla sitemap finché è una
-prova.
+**`/en/solutions/tecnowing`** — la scheda inglese, da
+`SchedaSoluzione.astro`. Il blocco centrale resta il disegno in sezione con i
+sei punti; il modello originale è un rimando che apre una scheda nuova, acceso
+dal campo `modello3d` in `src/i18n/en/tecnowing.ts`.
 
 **Se `index.html` non è al suo posto, l'iframe resta vuoto e il rimando dà
 404.**
