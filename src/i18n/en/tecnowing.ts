@@ -2,7 +2,7 @@
  * Scheda tecnica Tecnowing in inglese.
  *
  * Traduzione di `tecnowing` in src/data/soluzioni-tecniche.ts. I NUMERI NON
- * SI TOCCANO: modulo 250-264 cm, luce oltre 33 m, R90'-R120' estendibile a R180', travi da 90 a
+ * SI TOCCANO: modulo 250-264 cm, luce 33 m e oltre, R90'-R120' estendibile a R180', travi da 90 a
  * 235 cm arrivano dal catalogo ufficiale e sono ricopiati identici. Dove
  * l'italiano dichiara un segnaposto, l'inglese dichiara un segnaposto.
  *
@@ -62,7 +62,7 @@ export const tecnowing: SchedaTecnica = {
   dati: {
     titolo: 'The figures behind the roof.',
     voci: [
-      { label: 'Maximum clear span', valore: 'over 33', unita: 'm' },
+      { label: 'Maximum clear span', valore: '33', unita: 'm', nota: 'and over' },
       { label: 'Module width', valore: '250 – 264', unita: 'cm' },
       { label: 'Fire resistance', valore: 'R90′ to R120′', nota: 'up to R180′' },
       { label: '“I” beam depth', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
@@ -143,7 +143,7 @@ export const tecnowing: SchedaTecnica = {
       sommario: 'The load-bearing wing-section element.',
       descrizione:
         'The prestressed reinforced concrete unit made at the Bagnatica plant. Its wing section lets it span the bay while staying slender at mid-span and deepening at the supports.',
-      specs: ['CLEAR SPAN — over 33 m', 'MODULE WIDTH — 250–264 cm'],
+      specs: ['CLEAR SPAN — 33 m and over', 'MODULE WIDTH — 250–264 cm'],
     },
     {
       id: 'interposto',

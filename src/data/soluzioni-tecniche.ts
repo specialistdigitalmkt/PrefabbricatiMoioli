@@ -77,7 +77,7 @@ const tecnowing: SchedaTecnica = {
   dati: {
     titolo: 'I numeri della copertura.',
     voci: [
-      { label: 'Luce netta massima', valore: 'fino a oltre 33', unita: 'm' },
+      { label: 'Luce netta massima', valore: '33', unita: 'm', nota: 'e oltre' },
       { label: 'Larghezza modulo', valore: '250 – 264', unita: 'cm' },
       { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'fino a R180′' },
       { label: 'Altezza travi “I”', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
@@ -126,7 +126,7 @@ const tecnowing: SchedaTecnica = {
       sommario: 'L’elemento portante a sezione alare.',
       descrizione:
         'Il tegolo in cemento armato precompresso prodotto nello stabilimento di Bagnatica. La sezione ad ala gli permette di coprire la campata restando sottile al centro e ingrossandosi agli appoggi.',
-      specs: ['LUCE NETTA — fino a oltre 33 m', 'LARGHEZZA MODULO — 250–264 cm'],
+      specs: ['LUCE NETTA — 33 m e oltre', 'LARGHEZZA MODULO — 250–264 cm'],
     },
     {
       id: 'interposto',
@@ -446,20 +446,20 @@ const tegoloTT: SchedaTecnica = {
   alias: 'Copertura piana a tegoli “TT”',
   eyebrow: 'Soluzioni · Solai e coperture',
   claim: 'Più livelli, oltre 35 metri di luce.',
-  meta: 'Tegolo TT: sistema mono e pluripiano Moioli per centri commerciali e direzionali. Luce netta fino a oltre 35 m, altezza tegolo da 35 a 100 cm.',
+  meta: 'Tegolo TT: sistema mono e pluripiano Moioli per centri commerciali e direzionali. Luce netta di 35 m e oltre, altezza tegolo da 35 a 100 cm.',
   lead:
     'Il sistema mono e pluripiano “TT” è la soluzione per edifici prefabbricati su più livelli: centri commerciali, edifici polivalenti e direzionali.',
 
   identita: {
     titolo: 'Quando l’edificio cresce in altezza.',
     paragrafi: [
-      'Il tegolo a doppio “TT” è un elemento di solaio prima ancora che di copertura. Regge carichi importanti su luci fino a oltre trentacinque metri, e questo permette di impilare i livelli senza riempire i piani di pilastri.',
+      'Il tegolo a doppio “TT” è un elemento di solaio prima ancora che di copertura. Regge carichi importanti su luci di trentacinque metri e oltre, e questo permette di impilare i livelli senza riempire i piani di pilastri.',
       'È la soluzione degli edifici che devono reggere il confronto anche esteticamente: centri commerciali, direzionali, polivalenti.',
     ],
   },
 
   caratteristiche: [
-    { titolo: 'Grandi luci libere', testo: 'Fino a oltre 35 metri senza appoggi intermedi.' },
+    { titolo: 'Grandi luci libere', testo: '35 metri e oltre senza appoggi intermedi.' },
     { titolo: 'Elevata capacità portante', testo: 'Nasce come elemento di solaio, non solo di copertura.' },
     { titolo: 'Flessibilità compositiva', testo: 'Struttura su più livelli di solaio, mono e pluripiano.' },
     { titolo: 'Nodi sismici certificati', testo: 'I collegamenti fra gli elementi sono oggetto di certificazione.' },
@@ -468,7 +468,7 @@ const tegoloTT: SchedaTecnica = {
   dati: {
     titolo: 'I numeri dell’elemento.',
     voci: [
-      { label: 'Luce netta massima', valore: 'fino a oltre 35', unita: 'm' },
+      { label: 'Luce netta massima', valore: '35', unita: 'm', nota: 'e oltre' },
       { label: 'Larghezza modulo', valore: '250', unita: 'cm' },
       { label: 'Altezza tegolo', valore: '35 · 45 · 55 · 65 · 75 · 85 · 95 · 100', unita: 'cm' },
       { label: 'Spessore gamba nervatura', valore: '9 · 16 · 20', unita: 'cm' },
@@ -558,8 +558,8 @@ const tegoloTT: SchedaTecnica = {
       titolo: 'Luce netta',
       sommario: 'Quanto spazio resta libero sotto.',
       descrizione:
-        'Il tegolo copre luci fino a oltre trentacinque metri senza appoggi intermedi. È la misura che decide quanti pilastri restano in mezzo alla superficie di vendita o all’ufficio.',
-      specs: ['LUCE NETTA MASSIMA — fino a oltre 35 m'],
+        'Il tegolo copre luci di trentacinque metri e oltre senza appoggi intermedi. È la misura che decide quanti pilastri restano in mezzo alla superficie di vendita o all’ufficio.',
+      specs: ['LUCE NETTA MASSIMA — 35 m e oltre'],
     },
   ],
 };
