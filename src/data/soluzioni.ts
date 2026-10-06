@@ -121,14 +121,15 @@ export const soluzioni: Soluzione[] = [
   {
     slug: 'coverplan',
     nome: 'Coverplan',
-    claim: 'Copertura piana continua.',
+    alias: 'Copertura a intradosso piano',
+    claim: 'Piano sotto, due falde sopra, grandi luci.',
     intro:
-      'Sistema di copertura piana della gamma Moioli, pensato per edifici dove la quinta facciata deve restare pulita e regolare.',
-    /* Unica soluzione senza materiale: né catalogo tecnico né fotografie.
-       Resta in elenco con segnaposto dichiarato, senza pagina dedicata. */
-    img: null,
-    alt: '',
-    specs: ['LUCE NETTA', 'INTERASSE', 'STRATIGRAFIA'],
+      'Elemento realizzato a misura con intradosso piano ed estradosso a due falde al 7%: grandi luci, anche oltre i 35 metri, e sbalzi per le pensiline.',
+    img: 'sol-coverplan-cover',
+    alt: 'Copertura Coverplan in lamiera grecata con impianto fotovoltaico',
+    specs: ['LUNGHEZZA ELEMENTO', 'ALTEZZA AL COLMO', 'PENDENZA'],
+    nota: 'Intradosso piano, su misura',
+    href: '/soluzioni/coverplan',
   },
 ];
 

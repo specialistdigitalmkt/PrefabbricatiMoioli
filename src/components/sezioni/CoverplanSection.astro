@@ -1,0 +1,135 @@
+---
+/**
+ * DISEGNO SEGNAPOSTO — sezione trasversale della copertura Coverplan.
+ *
+ * Schema ricavato dalla tavola «Sezione trasversale della stratigrafia manto
+ * di copertura» del catalogo Coverplan: due elementi affiancati, ciascuno con
+ * soletta piana all'intradosso, anima centrale e capriata in testa; sopra le
+ * capriate i profili omega reggono la lamiera grecata; fra le solette di due
+ * elementi un lucernario in policarbonato alveolare con rete anticaduta.
+ * NON è un disegno esecutivo: proporzioni semplificate, quote come etichette.
+ *
+ * SOSTITUZIONE
+ * Rimpiazzare il contenuto mantenendo `viewBox="0 0 1200 700"` e
+ * l'orientamento. I punti caldi stanno in src/data/soluzioni-tecniche.ts.
+ */
+import '../../styles/disegno.css';
+
+/* Assi delle anime dei due elementi e semilarghezza della soletta. */
+const ELEMENTI = [305, 895];
+const MEZZA = 215;
+
+const Y_LAMIERA = 176;
+const Y_OMEGA = 192;
+const Y_CAPRIATA = 208;
+const Y_ANIMA = 238;
+const Y_RACCORDO = 430;
+const Y_SOLETTA = 470;
+const SP_SOLETTA = 20;
+const SP_COIBENTE = 22;
+
+/* Lamiera grecata: greche trapezie a passo costante su tutta la campata. */
+const PASSO = 60;
+const greche = (da: number, a: number) => {
+  let d = `M${da},${Y_LAMIERA + 14}`;
+  for (let x = da; x < a; x += PASSO) {
+    d += ` L${x + 12},${Y_LAMIERA + 14} L${x + 20},${Y_LAMIERA} L${x + 40},${Y_LAMIERA} L${x + 48},${Y_LAMIERA + 14} L${x + PASSO},${Y_LAMIERA + 14}`;
+  }
+  return d;
+};
+
+/* Zona del lucernario fra le due solette. */
+const LUC_SX = ELEMENTI[0] + MEZZA;
+const LUC_DX = ELEMENTI[1] - MEZZA;
+---
+
+<svg
+  class="dt"
+  viewBox="0 0 1200 700"
+  role="img"
+  aria-labelledby="cpTitle cpDesc"
+  preserveAspectRatio="xMidYMid meet"
+>
+  <title id="cpTitle">Sezione trasversale segnaposto della copertura Coverplan</title>
+  <desc id="cpDesc">
+    Disegno schematico: due elementi Coverplan affiancati, ciascuno con soletta
+    piana all'intradosso, anima centrale e capriata in testa. Sulle capriate i
+    profili omega reggono la lamiera grecata, in policarbonato sopra il
+    lucernario. Sulle solette lo strato coibente; fra le solette di due
+    elementi un lucernario in policarbonato alveolare con rete anticaduta,
+    chiuso ai bordi da listoni in abete.
+  </desc>
+
+  <defs>
+    <pattern id="cpCoib" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="10" class="ln-hatch" />
+    </pattern>
+    <pattern id="cpVetro" width="8" height="8" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="0" y2="8" class="ln-hatch" />
+    </pattern>
+  </defs>
+
+  <!-- ============ ELEMENTI COVERPLAN ============ -->
+  <!-- Soletta piana sotto, anima al centro che si allarga verso la soletta,
+       capriata in testa: l'intradosso resta piano, la pendenza sta sopra. -->
+  {
+    ELEMENTI.map((c) => (
+      <g>
+        <path
+          d={`M${c - MEZZA},${Y_SOLETTA} H${c - 70} L${c - 12},${Y_RACCORDO} V${Y_ANIMA} L${c - 60},${Y_CAPRIATA + 12} V${Y_CAPRIATA} H${c + 60} V${Y_CAPRIATA + 12} L${c + 12},${Y_ANIMA} V${Y_RACCORDO} L${c + 70},${Y_SOLETTA} H${c + MEZZA} V${Y_SOLETTA + SP_SOLETTA} H${c - MEZZA} Z`}
+          class="ln-solid"
+        />
+        {/* strato coibente sulla soletta, ai due lati dell'anima */}
+        <rect x={c - MEZZA + 12} y={Y_SOLETTA - SP_COIBENTE} width={MEZZA - 82 - 12} height={SP_COIBENTE} fill="url(#cpCoib)" class="ln-thin" />
+        <rect x={c + 70} y={Y_SOLETTA - SP_COIBENTE} width={MEZZA - 82 - 12} height={SP_COIBENTE} fill="url(#cpCoib)" class="ln-thin" />
+        {/* profilo omega in testa alla capriata */}
+        <path
+          d={`M${c - 54},${Y_CAPRIATA} V${Y_OMEGA + 6} H${c - 30} V${Y_OMEGA} H${c + 30} V${Y_OMEGA + 6} H${c + 54} V${Y_CAPRIATA}`}
+          class="ln-strong"
+        />
+      </g>
+    ))
+  }
+
+  <!-- ============ LISTONI IN ABETE ============ -->
+  <g>
+    <rect x={LUC_SX - 14} y={Y_SOLETTA - 14} width="14" height="14" class="ln-getto" />
+    <rect x={LUC_DX} y={Y_SOLETTA - 14} width="14" height="14" class="ln-getto" />
+  </g>
+
+  <!-- ============ LUCERNARIO ============ -->
+  <!-- Lastra in policarbonato alveolare a filo soletta, rete anticaduta sopra. -->
+  <g>
+    <rect x={LUC_SX} y={Y_SOLETTA + 6} width={LUC_DX - LUC_SX} height="10" fill="url(#cpVetro)" class="ln-strong" />
+    <line x1={LUC_SX} y1={Y_SOLETTA - 4} x2={LUC_DX} y2={Y_SOLETTA - 4} class="ln-dash" />
+  </g>
+  <g class="g-raggi">
+    <line x1="560" y1="200" x2="560" y2="250" />
+    <line x1="600" y1="196" x2="600" y2="256" />
+    <line x1="640" y1="200" x2="640" y2="250" />
+    <line x1="580" y1="500" x2="580" y2="560" />
+    <line x1="620" y1="500" x2="620" y2="560" />
+  </g>
+
+  <!-- ============ MANTO DI COPERTURA ============ -->
+  <!-- Lamiera grecata continua; sopra il lucernario la stessa greca è in
+       policarbonato, quindi tratteggiata. -->
+  <g>
+    <path d={greche(70, LUC_SX - 20)} class="ln-strong" />
+    <path d={greche(LUC_SX - 20, LUC_DX + 20)} class="ln-dash" />
+    <path d={greche(LUC_DX + 20, 1130)} class="ln-strong" />
+  </g>
+
+  <!-- ============ QUOTE ============ -->
+  <g>
+    <line x1={ELEMENTI[0] - MEZZA} y1="560" x2={ELEMENTI[0] + MEZZA} y2="560" class="ln-dim" />
+    <line x1={ELEMENTI[0] - MEZZA} y1="548" x2={ELEMENTI[0] - MEZZA} y2="572" class="ln-dim" />
+    <line x1={ELEMENTI[0] + MEZZA} y1="548" x2={ELEMENTI[0] + MEZZA} y2="572" class="ln-dim" />
+    <text x={ELEMENTI[0]} y="596" class="tx-dim" text-anchor="middle">B DA 80 A 250 CM</text>
+
+    <line x1="1160" y1={Y_CAPRIATA} x2="1160" y2={Y_SOLETTA + SP_SOLETTA} class="ln-dim" />
+    <line x1="1148" y1={Y_CAPRIATA} x2="1172" y2={Y_CAPRIATA} class="ln-dim" />
+    <line x1="1148" y1={Y_SOLETTA + SP_SOLETTA} x2="1172" y2={Y_SOLETTA + SP_SOLETTA} class="ln-dim" />
+    <text x="1146" y="356" class="tx-dim" text-anchor="end">HC DA 86 A 149 CM</text>
+  </g>
+</svg>

@@ -12,8 +12,8 @@ const ROUTES = [
   { path: '/soluzioni', priority: '0.9', changefreq: 'monthly' },
 
   /* Le schede di soluzione si aggiungono da sé: `href` esiste solo dove la
-     pagina esiste davvero, quindi Coverplan — che è senza materiale — resta
-     fuori dalla sitemap senza bisogno di ricordarselo. */
+     pagina esiste davvero, quindi una soluzione senza pagina resta fuori
+     dalla sitemap senza bisogno di ricordarselo. */
   ...soluzioni
     .filter((s) => s.href)
     .map((s) => ({ path: s.href!, priority: '0.9', changefreq: 'monthly' })),

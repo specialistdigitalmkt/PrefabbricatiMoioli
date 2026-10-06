@@ -141,18 +141,20 @@ const testiSoluzioni: Record<
     nota: 'The most common geometry',
   },
   coverplan: {
-    claim: 'Continuous flat roofing.',
+    alias: 'Flat-soffit roofing',
+    claim: 'Flat underneath, two pitches on top, long spans.',
     intro:
-      'The flat roofing system in the Moioli range, for buildings where the fifth elevation has to stay clean and regular.',
-    alt: '',
-    specs: ['CLEAR SPAN', 'SPACING', 'BUILD-UP'],
+      'A made-to-measure element with a flat soffit and a two-pitch top surface at 7%: long spans, even beyond 35 metres, and cantilevers for canopies.',
+    alt: 'Coverplan roof in profiled metal sheeting with a photovoltaic system',
+    specs: ['ELEMENT LENGTH', 'RIDGE HEIGHT', 'PITCH'],
+    nota: 'Flat soffit, made to measure',
   },
 };
 
 /**
  * In inglese esiste una sola scheda di dettaglio: Tecnowing.
- * Le altre sei tipologie hanno quindi `href` vuoto, esattamente come
- * Coverplan in italiano: la card rimanda all'indice invece di puntare a una
+ * Le altre sei tipologie hanno quindi `href` vuoto: la card resta
+ * nell'indice senza collegamento invece di puntare a una
  * pagina che in inglese non c'e'. Il giorno che una scheda viene tradotta,
  * si aggiunge il suo slug qui e il collegamento compare da solo.
  */

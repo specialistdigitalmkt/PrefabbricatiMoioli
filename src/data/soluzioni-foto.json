@@ -38,6 +38,37 @@
     ],
     "totale": 11
   },
+  "coverplan": {
+    "cover": "sol-coverplan-cover",
+    "coverRatio": 1.498,
+    "galleria": [
+      {
+        "id": "sol-coverplan-1",
+        "ratio": 1
+      },
+      {
+        "id": "sol-coverplan-2",
+        "ratio": 1.5012
+      },
+      {
+        "id": "sol-coverplan-3",
+        "ratio": 1.7779
+      },
+      {
+        "id": "sol-coverplan-4",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-coverplan-5",
+        "ratio": 1.3333
+      },
+      {
+        "id": "sol-coverplan-6",
+        "ratio": 1.6667
+      }
+    ],
+    "totale": 7
+  },
   "doppia-falda": {
     "cover": "sol-doppia-falda-cover",
     "coverRatio": 1.5,

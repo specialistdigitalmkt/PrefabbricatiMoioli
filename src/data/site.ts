@@ -51,9 +51,8 @@ export type VoceMenu = {
 };
 
 /* Le voci della tendina Soluzioni si costruiscono dai dati: una soluzione
-   entra nel menu solo quando ha davvero una pagina. Coverplan resta fuori
-   finché non arriva il materiale, e il giorno che arriva non c'è niente da
-   ricordarsi di aggiungere qui. */
+   entra nel menu solo quando ha davvero una pagina, cioè quando in
+   soluzioni.ts ha un `href`. Non c'è niente da ricordarsi di aggiungere qui. */
 const vociSoluzioni = [
   /* Deve restare la prima: la testata la usa come destinazione del genitore
      e il menu mobile salta proprio questa voce, perché lì il link «Soluzioni»

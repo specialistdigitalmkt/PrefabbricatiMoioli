@@ -26,6 +26,7 @@ import TecnowingSection from '../../components/sezioni/TecnowingSection.astro';
 import BacacierSection from '../../components/sezioni/BacacierSection.astro';
 import DoppiaFaldaSection from '../../components/sezioni/DoppiaFaldaSection.astro';
 import TegoloTTSection from '../../components/sezioni/TegoloTTSection.astro';
+import CoverplanSection from '../../components/sezioni/CoverplanSection.astro';
 import type { SchedaTecnica } from '../../data/soluzioni-tecniche';
 import type { Soluzione } from '../../data/soluzioni';
 import foto from '../../data/soluzioni-foto.json';
@@ -52,6 +53,7 @@ const DISEGNI = {
   bacacier: BacacierSection,
   'doppia-falda': DoppiaFaldaSection,
   'tegolo-tt': TegoloTTSection,
+  coverplan: CoverplanSection,
 } as const;
 const Disegno = DISEGNI[scheda.slug as keyof typeof DISEGNI];
 

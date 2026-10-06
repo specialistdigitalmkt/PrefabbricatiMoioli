@@ -32,6 +32,7 @@ const MIN_UTILE = 1000;
 /** Cartella sorgente → slug della soluzione sul sito. */
 const MAPPA = {
   Bacacier: 'bacacier',
+  Coverplan: 'coverplan',
   'Doppia Pendenza': 'doppia-falda',
   Stegos: 'stegos',
   Tecnoshed: 'microshed',
@@ -40,13 +41,13 @@ const MAPPA = {
 };
 
 /**
- * Solo queste quattro hanno la galleria automatica.
+ * Solo queste cinque hanno la galleria automatica.
  * Stegos e microSHED hanno pagine scritte a mano, con una galleria scelta a
  * mano: generare anche le loro derivate significherebbe produrre decine di
- * file che nessuna pagina richiede. La copertina invece serve a tutte e sei,
+ * file che nessuna pagina richiede. La copertina invece serve a tutte e sette,
  * perché la usa la scheda nell'indice.
  */
-const CON_GALLERIA = new Set(['bacacier', 'doppia-falda', 'tecnowing', 'tegolo-tt']);
+const CON_GALLERIA = new Set(['bacacier', 'coverplan', 'doppia-falda', 'tecnowing', 'tegolo-tt']);
 
 const LEGGIBILI = /\.(jpe?g|png|tiff?)$/i;
 

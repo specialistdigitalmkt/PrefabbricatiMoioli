@@ -564,6 +564,138 @@ const tegoloTT: SchedaTecnica = {
   ],
 };
 
+/* ========================================================================
+   COVERPLAN — copertura a intradosso piano
+   Fonte: catalogo «Copertura Coverplan» (versione v2 in
+   `cataloghi v2 moioli/8 Coverplan`, contenuti dal 4 ante Coverplan 2023).
+   Resistenza al fuoco riportata come nel catalogo: REI, non R.
+   ======================================================================== */
+const coverplan: SchedaTecnica = {
+  slug: 'coverplan',
+  nome: 'Coverplan',
+  alias: 'Copertura a intradosso piano',
+  eyebrow: 'Soluzioni · Coperture',
+  claim: 'Piano sotto, due falde sopra, grandi luci.',
+  meta: 'Coverplan, la copertura Moioli realizzata a misura: intradosso piano, estradosso a due falde al 7%, luci anche oltre i 35 m, resistenza al fuoco REI 120′ fino a REI 240′.',
+  lead:
+    'Elemento prefabbricato realizzato a misura, secondo richiesta del cliente: intradosso piano ed estradosso a due falde con pendenza del 7%, per grandi luci e pensiline a sbalzo.',
+
+  identita: {
+    titolo: 'Fatto su misura, piano sotto.',
+    paragrafi: [
+      'Il Coverplan nasce su richiesta: ogni elemento è realizzato a misura del progetto. Sotto resta un intradosso piano, pulito; sopra, l’estradosso a due falde con pendenza del 7% porta via l’acqua.',
+      'Dal punto di vista strutturale consente grandi luci, anche oltre i 35 metri, e sbalzi importanti per realizzare pensiline. Coibentazione e impermeabilizzazione si scelgono secondo le disposizioni dei Vigili del Fuoco.',
+    ],
+  },
+
+  caratteristiche: [
+    { titolo: 'Realizzato a misura', testo: 'Ogni elemento è prodotto secondo la richiesta del cliente.' },
+    { titolo: 'Grandi luci e sbalzi', testo: 'Luci anche oltre i 35 metri, sbalzi importanti per le pensiline.' },
+    { titolo: 'Intradosso piano', testo: 'Sotto una superficie regolare; la pendenza del 7% sta sopra, a due falde.' },
+    { titolo: 'Resistenza al fuoco', testo: 'REI 120′ secondo normativa, fino a REI 240′ in caso di necessità.' },
+  ],
+
+  dati: {
+    titolo: 'I numeri dell’elemento.',
+    voci: [
+      { label: 'Lunghezza elemento (L)', valore: 'da 1300 a 3100', unita: 'cm' },
+      { label: 'Altezza al colmo (Hc)', valore: 'da 86 a 149', unita: 'cm' },
+      { label: 'Larghezza elemento (B)', valore: 'da 80 a 250', unita: 'cm' },
+      { label: 'Pendenza estradosso', valore: '7', unita: '%', nota: 'a due falde' },
+      { label: 'Resistenza al fuoco', valore: 'REI 120′', nota: 'fino a REI 240′' },
+    ],
+    nota: 'Misure indicate in centimetri. Gli spessori delle opere complementari variano in base alle dimensioni dei lucernari e alla distanza tra gli elementi. Fonte: catalogo Copertura Coverplan.',
+  },
+
+  sistema: {
+    titolo: 'Gli elementi del sistema.',
+    intro: 'L’elemento Coverplan appoggia sulle travi; sopra, un pacchetto di copertura scelto in base al progetto.',
+    componenti: [
+      { nome: 'Elemento Coverplan', testo: 'Soletta piana, anima e capriata in un unico pezzo, realizzato a misura.' },
+      { nome: 'Travi a “I”', testo: 'Per gli impieghi centrali e i canali laterali.' },
+      { nome: 'Travi a “L” e a “T” rovescia', testo: 'Per i canali laterali e centrali.' },
+      { nome: 'Canale in lamiera', testo: 'Raccoglie l’acqua delle falde lungo la trave.' },
+      { nome: 'Manto di copertura', testo: 'Profili omega, lamiera grecata e strato coibente; pannelli sandwich in alternativa.' },
+      { nome: 'Lucernari', testo: 'In policarbonato alveolare o compatto, o in vetroresina, a richiesta.' },
+    ],
+  },
+
+  sezione: {
+    titolo: 'I punti che contano.',
+    intro: 'Sezione trasversale della copertura. Seleziona un punto per vedere come è risolto.',
+  },
+
+  applicazioni: [
+    { num: '01', titolo: 'Edifici commerciali e showroom', testo: 'Intradosso piano e grandi luci per spazi espositivi aperti.' },
+    { num: '02', titolo: 'Edifici direzionali', testo: 'Una copertura regolare che si presta alla finitura degli interni.' },
+    { num: '03', titolo: 'Capannoni industriali e logistici', testo: 'Grandi luci libere e lucernari dove serve luce naturale.' },
+    { num: '04', titolo: 'Pensiline', testo: 'Gli sbalzi importanti permettono pensiline integrate nella copertura.' },
+  ],
+
+  hotspots: [
+    {
+      id: 'lamiera',
+      x: 16.7,
+      y: 26.3,
+      titolo: 'Lamiera grecata',
+      sommario: 'Il manto che chiude la copertura.',
+      descrizione:
+        'Il manto è in lamiera grecata, appoggiata sui profili omega. In alternativa si usano pannelli sandwich o lamiera di Allunzink o alluminio con interposta lana di vetro o poliuretano, secondo le disposizioni dei Vigili del Fuoco.',
+      specs: ['MANTO — lamiera grecata o pannello sandwich'],
+    },
+    {
+      id: 'omega',
+      x: 25.4,
+      y: 28.6,
+      titolo: 'Profili omega',
+      sommario: 'Il collegamento fra elemento e manto.',
+      descrizione:
+        'In testa a ogni capriata i profili omega ricevono la lamiera grecata. Sono il punto in cui il manto si appoggia alla struttura.',
+      specs: ['APPOGGIO — in testa alla capriata'],
+    },
+    {
+      id: 'elemento',
+      x: 74.6,
+      y: 47,
+      titolo: 'Anima e capriata',
+      sommario: 'La parte che porta.',
+      descrizione:
+        'L’anima centrale collega la soletta alla capriata in testa: è la parte che dà all’elemento l’altezza per coprire la luce. L’altezza al colmo va da 86 a 149 cm in funzione della lunghezza.',
+      specs: ['ALTEZZA AL COLMO (Hc) — da 86 a 149 cm', 'LUNGHEZZA (L) — da 1300 a 3100 cm'],
+    },
+    {
+      id: 'coibente',
+      x: 13.3,
+      y: 65.6,
+      titolo: 'Strato coibente',
+      sommario: 'L’isolamento sulla soletta.',
+      descrizione:
+        'Lo strato coibente si stende sulla soletta, ai lati dell’anima. Tipo e spessore si scelgono in base al progetto e alle normative.',
+      specs: ['COIBENTAZIONE — secondo progetto e normativa VV.FF.'],
+    },
+    {
+      id: 'lucernario',
+      x: 50,
+      y: 68.9,
+      titolo: 'Lucernario',
+      sommario: 'La luce fra un elemento e l’altro.',
+      descrizione:
+        'Fra le solette di due elementi si inserisce una lastra in policarbonato alveolare con rete anticaduta, chiusa ai bordi da listoni in abete. Sopra, la lamiera grecata è sostituita da una lastra grecata in policarbonato.',
+      specs: ['LUCERNARIO — policarbonato alveolare o compatto, vetroresina a richiesta'],
+    },
+    {
+      id: 'soletta',
+      x: 83.3,
+      y: 68.6,
+      titolo: 'Intradosso piano',
+      sommario: 'Sotto resta una superficie regolare.',
+      descrizione:
+        'La soletta dell’elemento forma l’intradosso: una superficie piana, senza nervature in vista. La pendenza del 7% sta tutta nell’estradosso, a due falde.',
+      specs: ['LARGHEZZA (B) — da 80 a 250 cm', 'PENDENZA ESTRADOSSO — 7%'],
+    },
+  ],
+};
+
 /* ======================================================================== */
 
 export const schedeTecniche: SchedaTecnica[] = [
@@ -571,6 +703,7 @@ export const schedeTecniche: SchedaTecnica[] = [
   bacacier,
   doppiaFalda,
   tegoloTT,
+  coverplan,
 ];
 
 export const getScheda = (slug: string) => schedeTecniche.find((s) => s.slug === slug);

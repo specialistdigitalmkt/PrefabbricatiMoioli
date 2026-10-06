@@ -27,10 +27,8 @@
     ...SOLUZIONI.map((s, i) => ({
       id: 'UT-0' + (i + 1), reparto: 'UT', tipo: 'file',
       titolo: 'Disegni 2D — ' + s,
-      testo: s === 'Coverplan'
-        ? 'È l’unica soluzione senza alcun materiale. Con i disegni può nascere la sua pagina.'
-        : 'Sul sito sostituiscono lo schema segnaposto della sezione interattiva. Servono anche fuori dal sito: offerte, schede tecniche, presentazioni.',
-      dove: s === 'Coverplan' ? 'Pagina Coverplan (da creare)' : 'Scheda ' + s + ' › sezione 02',
+      testo: 'Sul sito sostituiscono lo schema segnaposto della sezione interattiva. Servono anche fuori dal sito: offerte, schede tecniche, presentazioni.',
+      dove: 'Scheda ' + s + ' › sezione 02',
       consegne: CONSEGNE_DISEGNI,
       formati: 'DWG, DXF, PDF vettoriale o SVG',
     })),
