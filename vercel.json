@@ -6,7 +6,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/soluzioni/tecnowing-3d", "destination": "/soluzioni/tecnowing", "permanent": true }
+    { "source": "/soluzioni/tecnowing-3d", "destination": "/soluzioni/tecnowing", "permanent": true },
+    { "source": "/soluzioni/tecnoshed", "destination": "/soluzioni/microshed", "permanent": true }
   ],
   "headers": [
     {

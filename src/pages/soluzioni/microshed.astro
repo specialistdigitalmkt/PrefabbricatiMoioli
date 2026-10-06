@@ -1,6 +1,6 @@
 ---
 /**
- * /soluzioni/tecnoshed — pagina vetrina.
+ * /soluzioni/microshed — pagina vetrina.
  * Scorrimento verticale, sezioni a tutta larghezza, progressione narrativa:
  * hero → descrizione → tecnologia → sezione interattiva → vantaggi → gallery
  * → altre soluzioni → CTA.
@@ -10,11 +10,11 @@ import Breadcrumb from '../../components/Breadcrumb.astro';
 import Picture from '../../components/Picture.astro';
 import HotspotExplainer from '../../components/HotspotExplainer.astro';
 import ShedSection from '../../components/ShedSection.astro';
-import { pagina, hotspots } from '../../data/tecnoshed';
+import { pagina, hotspots } from '../../data/microshed';
 import { soluzioni } from '../../data/soluzioni';
 import Icon from '../../components/Icon.astro';
 
-const altre = soluzioni.filter((s) => s.slug !== 'tecnoshed').slice(0, 3);
+const altre = soluzioni.filter((s) => s.slug !== 'microshed').slice(0, 3);
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -22,14 +22,14 @@ const jsonLd = {
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.prefabbricatimoioli.it/' },
     { '@type': 'ListItem', position: 2, name: 'Soluzioni', item: 'https://www.prefabbricatimoioli.it/soluzioni' },
-    { '@type': 'ListItem', position: 3, name: 'Tecnoshed' },
+    { '@type': 'ListItem', position: 3, name: 'microSHED' },
   ],
 };
 ---
 
 <BaseLayout
-  title="Tecnoshed — Copertura a shed prefabbricata | Prefabbricati Moioli"
-  description="Tecnoshed: copertura a shed in cemento armato precompresso. Luce naturale diffusa e costante sul piano di lavoro, senza abbagliamento. Prefabbricati Moioli, Bagnatica (BG)."
+  title="microSHED — Copertura a shed prefabbricata | Prefabbricati Moioli"
+  description="microSHED: copertura a shed in cemento armato precompresso. Luce naturale diffusa e costante sul piano di lavoro, senza abbagliamento. Prefabbricati Moioli, Bagnatica (BG)."
   preloadImage="shed-hero"
   jsonLd={jsonLd}
 >
@@ -54,7 +54,7 @@ const jsonLd = {
         items={[
           { label: 'Home', href: '/' },
           { label: 'Soluzioni', href: '/soluzioni' },
-          { label: 'Tecnoshed' },
+          { label: 'microSHED' },
         ]}
       />
       <p class="eyebrow ts-eyebrow">{pagina.eyebrow}</p>
@@ -211,7 +211,7 @@ const jsonLd = {
       <div class="other-head reveal">
         <div>
           <p class="eyebrow">Altre soluzioni</p>
-          <h2>Tecnoshed non è l'unica strada.</h2>
+          <h2>microSHED non è l'unica strada.</h2>
         </div>
         <a href="/soluzioni" class="btn btn-ghost">
           Tutte le soluzioni <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
@@ -251,7 +251,7 @@ const jsonLd = {
       <div class="cta-inner reveal">
         <div>
           <p class="eyebrow">Il passo successivo</p>
-          <h2>Verifichiamo se Tecnoshed è adatta al tuo lotto.</h2>
+          <h2>Verifichiamo se microSHED è adatta al tuo lotto.</h2>
           <p class="cta-p">
             Superficie, destinazione d'uso, orientamento e vincoli: con questi quattro dati
             possiamo già dirti se ha senso.

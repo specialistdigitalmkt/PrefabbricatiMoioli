@@ -69,16 +69,16 @@ export const soluzioni: Soluzione[] = [
     inEvidenza: true,
   },
   {
-    slug: 'tecnoshed',
-    nome: 'Tecnoshed',
+    slug: 'microshed',
+    nome: 'microSHED',
     claim: 'Luce naturale costante, senza abbagliamento.',
     intro:
       'Copertura a shed: la superficie vetrata orientata a nord porta luce diffusa e uniforme sul piano di lavoro per tutta la giornata. La soluzione di riferimento dove il capannone è anche un ambiente in cui si sta.',
     img: 'sol-tecnoshed-cover',
-    alt: 'Vista dall’alto di una copertura Tecnoshed: file parallele di finestrature verticali',
+    alt: 'Vista dall’alto di una copertura microSHED: file parallele di finestrature verticali',
     specs: ['LUCE NETTA', 'ALTEZZA FINESTRA', 'LARGHEZZA MODULO'],
     nota: 'Luce naturale da nord',
-    href: '/soluzioni/tecnoshed',
+    href: '/soluzioni/microshed',
   },
   {
     slug: 'tegolo-tt',

@@ -1,6 +1,6 @@
 /**
  * Schede tecniche delle soluzioni che non hanno una pagina dedicata scritta
- * a mano (Tecnoshed e Stegos ce l'hanno).
+ * a mano (microSHED e Stegos ce l'hanno).
  *
  * FONTE DEI DATI TECNICI
  * Cataloghi ufficiali in `CARTELLA IMMAGINI/CATALOGHI TECNICI PDF A4`.

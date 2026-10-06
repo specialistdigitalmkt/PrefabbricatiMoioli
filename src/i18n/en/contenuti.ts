@@ -11,7 +11,7 @@
  *    inglese, «Dove la forma prende volume». Porta lang="it" perché un
  *    lettore di schermo in inglese lo pronunci correttamente.
  *
- * 2. I NOMI DI PRODOTTO. Tecnowing, Stegos, Tecnoshed, Tegolo TT, Bacacier,
+ * 2. I NOMI DI PRODOTTO. Tecnowing, Stegos, microSHED, Tegolo TT, Bacacier,
  *    Coverplan restano invariati: sono nomi commerciali. Sono tradotti solo
  *    gli alias descrittivi («Copertura alare» → «Wing roof»).
  *
@@ -106,11 +106,11 @@ const testiSoluzioni: Record<
     specs: ['DISTINCTIVE FEATURE', 'CLEAR SPAN', 'GEOMETRY'],
     nota: 'The exclusive Moioli element',
   },
-  tecnoshed: {
+  microshed: {
     claim: 'Steady daylight, without glare.',
     intro:
       'North-light roofing: the glazed face turned north brings soft, even daylight onto the working floor all day long. The reference solution where the shed is also a place people spend time in.',
-    alt: 'Overhead view of a Tecnoshed roof: parallel rows of vertical glazing',
+    alt: 'Overhead view of a microSHED roof: parallel rows of vertical glazing',
     specs: ['CLEAR SPAN', 'GLAZING HEIGHT', 'MODULE WIDTH'],
     nota: 'North daylight',
   },

@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const SOLUZIONI = ['Tecnoshed', 'Stegos', 'Tecnowing', 'Tegolo TT', 'Bacacier', 'Doppia falda', 'Coverplan'];
+  const SOLUZIONI = ['microSHED', 'Stegos', 'Tecnowing', 'Tegolo TT', 'Bacacier', 'Doppia falda', 'Coverplan'];
   const CONSEGNE_DISEGNI = [
     'Sezione trasversale della copertura',
     'Stratigrafia del pacchetto (strato per strato)',

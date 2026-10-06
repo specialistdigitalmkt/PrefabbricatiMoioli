@@ -33,7 +33,7 @@ const hrefAltraLingua = altro ?? (lang === 'it' ? '/en' : '/');
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
-/** Una voce è attiva anche sulle sue sottopagine (/soluzioni/tecnoshed). */
+/** Una voce è attiva anche sulle sue sottopagine (/soluzioni/microshed). */
 const isActive = (href: string) => {
   if (href.startsWith('/#')) return false;
   if (href === '/') return path === '/';

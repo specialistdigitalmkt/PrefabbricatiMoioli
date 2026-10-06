@@ -34,14 +34,14 @@ const MAPPA = {
   Bacacier: 'bacacier',
   'Doppia Pendenza': 'doppia-falda',
   Stegos: 'stegos',
-  Tecnoshed: 'tecnoshed',
+  Tecnoshed: 'microshed',
   Tecnowing: 'tecnowing',
   'Tegolo TT': 'tegolo-tt',
 };
 
 /**
  * Solo queste quattro hanno la galleria automatica.
- * Stegos e Tecnoshed hanno pagine scritte a mano, con una galleria scelta a
+ * Stegos e microSHED hanno pagine scritte a mano, con una galleria scelta a
  * mano: generare anche le loro derivate significherebbe produrre decine di
  * file che nessuna pagina richiede. La copertina invece serve a tutte e sei,
  * perché la usa la scheda nell'indice.

@@ -1,5 +1,5 @@
 /**
- * Contenuti della pagina /soluzioni/tecnoshed.
+ * Contenuti della pagina /soluzioni/microshed.
  *
  * I MARKER SONO DATI, NON CODICE.
  * Per aggiungere, togliere o spostare un punto caldo si modifica solo
@@ -80,7 +80,7 @@ export const hotspots: Hotspot[] = [
 /** Testi di pagina. Redazionali, da validare. */
 export const pagina = {
   eyebrow: 'Soluzioni · Coperture',
-  titolo: 'Tecnoshed',
+  titolo: 'microSHED',
   claim: 'Luce naturale costante, senza abbagliamento.',
   lead:
     'La copertura a shed porta luce diffusa e uniforme sul piano di lavoro per tutta la giornata. È la soluzione da scegliere quando il capannone non è solo un volume da coprire, ma un ambiente in cui si lavora.',
@@ -91,7 +91,7 @@ export const pagina = {
     paragrafi: [
       'In un edificio produttivo la luce non è un dettaglio estetico: determina la qualità del lavoro che ci si svolge dentro. La copertura a shed nasce esattamente per questo — orientare le superfici vetrate a nord e trasformare l’intera copertura in una fonte di luce naturale diffusa.',
       'Il risultato è un ambiente illuminato in modo uniforme, senza le zone d’ombra tipiche dell’illuminazione artificiale puntuale e senza l’irraggiamento diretto che rende inutilizzabili le postazioni sotto un lucernario mal orientato.',
-      'Tecnoshed è la declinazione Moioli di questo principio, realizzata con elementi prefabbricati in cemento armato precompresso prodotti nello stabilimento di Bagnatica.',
+      'microSHED è la declinazione Moioli di questo principio, realizzata con elementi prefabbricati in cemento armato precompresso prodotti nello stabilimento di Bagnatica.',
     ],
   },
 
@@ -161,7 +161,7 @@ export const pagina = {
 
   gallery: {
     eyebrow: 'Realizzazioni',
-    titolo: 'Tecnoshed in opera.',
+    titolo: 'microSHED in opera.',
     immagini: [
       { id: 'shed-copertura', alt: 'Dettaglio della copertura a shed vista dall’estradosso' },
       { id: 'shed-interno', alt: 'Interno di un capannone con copertura a shed illuminato da luce naturale' },
