@@ -64,7 +64,7 @@ export const tecnowing: SchedaTecnica = {
     voci: [
       { label: 'Maximum clear span', valore: 'over 33', unita: 'm' },
       { label: 'Module width', valore: '250 – 264', unita: 'cm' },
-      { label: 'Fire resistance', valore: 'R90′ to R120′', nota: 'extendable to R180′' },
+      { label: 'Fire resistance', valore: 'R90′ to R120′', nota: 'up to R180′' },
       { label: '“I” beam depth', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
       { label: 'Water disposal', valore: 'outwards', nota: '“V” geometry' },
     ],

@@ -79,7 +79,7 @@ const tecnowing: SchedaTecnica = {
     voci: [
       { label: 'Luce netta massima', valore: 'fino a oltre 33', unita: 'm' },
       { label: 'Larghezza modulo', valore: '250 – 264', unita: 'cm' },
-      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R180′' },
+      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'fino a R180′' },
       { label: 'Altezza travi “I”', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
       { label: 'Smaltimento acque', valore: 'verso l’esterno', nota: 'geometria a “V”' },
     ],
@@ -205,7 +205,7 @@ const bacacier: SchedaTecnica = {
     { titolo: 'Numero ridotto di pilastri interni', testo: 'La maglia si dimensiona sulle necessità del layout, non il contrario.' },
     { titolo: 'Nodi e vincoli sismici certificati', testo: 'I collegamenti fra gli elementi sono oggetto di certificazione.' },
     { titolo: 'Copertura in lamiera grecata', testo: 'Integrabile con isolamento, lucernari e impianti fotovoltaici.' },
-    { titolo: 'Resistenza al fuoco estesa', testo: 'Da R60′ e R90′ fino a R120′, estendibile a R240′.' },
+    { titolo: 'Resistenza al fuoco estesa', testo: 'Da R60′ · R90′ a R120′, fino a R240′.' },
   ],
 
   dati: {
@@ -215,7 +215,7 @@ const bacacier: SchedaTecnica = {
       { label: 'Altezza trave “I”', valore: 'da 90 a 140 · da 180 a 235', unita: 'cm' },
       { label: 'Altezza arcareccio', valore: 'da 36 a 96', unita: 'cm' },
       { label: 'Pendenza copertura', valore: '2 – 4', unita: '%' },
-      { label: 'Resistenza al fuoco', valore: 'da R60′ e R90′ a R120′', nota: 'estendibile fino a R240′' },
+      { label: 'Resistenza al fuoco', valore: 'da R60′ · R90′ a R120′', nota: 'fino a R240′' },
       { label: 'Nodi sismici', valore: 'certificati' },
     ],
     nota: 'Misure indicate in centimetri. Fonte: catalogo Bacacier.',
@@ -334,7 +334,7 @@ const doppiaFalda: SchedaTecnica = {
     { titolo: 'Luci libere fino a 40 metri', testo: 'Nessun appoggio intermedio sulla campata principale.' },
     { titolo: 'Pendenza integrata del 10%', testo: 'Lo smaltimento è nella geometria della trave, non nel pacchetto.' },
     { titolo: 'Compatibile con lucernari e shed', testo: 'Lucernari in falda, shed semplice e doppio, inserti fotovoltaici.' },
-    { titolo: 'Portata non penalizzata dal fuoco', testo: 'R90′, R120′ e R180′ senza riduzione di portata.' },
+    { titolo: 'Portata non penalizzata dal fuoco', testo: 'R90′, R120′, R180′ e R240′ senza riduzione di portata.' },
   ],
 
   dati: {
@@ -343,7 +343,7 @@ const doppiaFalda: SchedaTecnica = {
       { label: 'Luci libere', valore: 'fino a 40', unita: 'm' },
       { label: 'Pendenza copertura', valore: '10', unita: '%' },
       { label: 'Altezza trave', valore: 'variabile' },
-      { label: 'Resistenza al fuoco', valore: 'da R60′ e R90′ a R120′', nota: 'estendibile fino a R240′' },
+      { label: 'Resistenza al fuoco', valore: 'da R60′ - R90′ a R120′', nota: 'estendibile fino a R240′' },
       { label: 'Nodi sismici', valore: 'certificati' },
     ],
     nota: 'Misure indicate in centimetri salvo diversa indicazione. Fonte: catalogo Doppia falda.',
@@ -472,7 +472,7 @@ const tegoloTT: SchedaTecnica = {
       { label: 'Larghezza modulo', valore: '250', unita: 'cm' },
       { label: 'Altezza tegolo', valore: '35 · 45 · 55 · 65 · 75 · 85 · 95 · 100', unita: 'cm' },
       { label: 'Spessore gamba nervatura', valore: '9 · 16 · 20', unita: 'cm' },
-      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R240′' },
+      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'fino a R240′' },
     ],
     nota: 'Misure indicate in centimetri salvo diversa indicazione. Fonte: catalogo Copertura piana a tegoli “TT”.',
   },
@@ -559,7 +559,7 @@ const tegoloTT: SchedaTecnica = {
       sommario: 'Quanto spazio resta libero sotto.',
       descrizione:
         'Il tegolo copre luci fino a oltre trentacinque metri senza appoggi intermedi. È la misura che decide quanti pilastri restano in mezzo alla superficie di vendita o all’ufficio.',
-      specs: ['LUCE NETTA MASSIMA — oltre 35 m'],
+      specs: ['LUCE NETTA MASSIMA — fino a oltre 35 m'],
     },
   ],
 };
