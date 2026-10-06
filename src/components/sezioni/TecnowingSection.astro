@@ -5,7 +5,7 @@
  * NON è un disegno esecutivo e NON riproduce la tavola di catalogo: è uno
  * schema costruito dalla sola descrizione testuale del sistema (tegoli alari
  * ripetuti, interposti opachi o luminosi fra un tegolo e il successivo,
- * geometria a "V" che scarica verso l'esterno, travi a "U" e a "I", pilastri).
+ * geometria a "V" che scarica verso l'esterno, travi a "L" e a "I", pilastri).
  * Geometria neutra, quote sostituite da segnaposto.
  *
  * SOSTITUZIONE
@@ -49,13 +49,13 @@ const ETICHETTE = {
     titoloSvg: 'Sezione trasversale segnaposto della copertura alare Tecnowing',
     larghezzaModulo: 'LARGHEZZA MODULO',
     altTrave: 'ALT. TRAVE',
-    desc: 'Disegno schematico: tre tegoli alari a profilo curvo, separati da due interposti — uno luminoso e uno opaco — appoggiati su una trave a “U” di raccolta a sinistra e una trave a “I” a destra, sostenute da pilastri su plinti. Le quote sono segnaposto in attesa del disegno definitivo.',
+    desc: 'Disegno schematico: tre tegoli alari a profilo curvo, separati da due interposti — uno luminoso e uno opaco — appoggiati su una trave a “L” di bordo a sinistra e una trave a “I” a destra, sostenute da pilastri su plinti. Le quote sono segnaposto in attesa del disegno definitivo.',
   },
   en: {
     titoloSvg: 'Placeholder cross section of the Tecnowing wing roof',
     larghezzaModulo: 'MODULE WIDTH',
     altTrave: 'BEAM DEPTH',
-    desc: 'Schematic drawing: three curved wing units, separated by two infill panels — one glazed and one solid — bearing on a “U” collector beam to the left and an “I” beam to the right, carried by columns on pad foundations. The dimensions are placeholders pending the final drawing.',
+    desc: 'Schematic drawing: three curved wing units, separated by two infill panels — one glazed and one solid — bearing on an “L” edge beam to the left and an “I” beam to the right, carried by columns on pad foundations. The dimensions are placeholders pending the final drawing.',
   },
 };
 const t = ETICHETTE[lang];
@@ -96,8 +96,8 @@ const t = ETICHETTE[lang];
 
   <!-- ============ TRAVI ============ -->
   <g>
-    <!-- Sinistra: trave a "U", l'invaso raccoglie l'acqua che scende dal tegolo -->
-    <path d="M104,356 H128 V414 H212 V356 H236 V430 H104 Z" class="ln-struct" />
+    <!-- Sinistra: trave a "L" di bordo, il tegolo appoggia sull'ala -->
+    <path d="M104,356 H150 V400 H236 V430 H104 Z" class="ln-struct" />
     <!-- Destra: trave a "I" per impieghi centrali -->
     <path
       d="M964,356 H1096 V378 H1050 V408 H1096 V430 H964 V408 H1010 V378 H964 Z"
