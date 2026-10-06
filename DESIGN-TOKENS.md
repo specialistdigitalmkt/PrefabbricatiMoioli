@@ -197,14 +197,15 @@ Composizione in tre gruppi di path:
 
 | Elemento | Riempimento |
 |---|---|
-| Lettering "PREFABBRICATI" (riga superiore) | `#1F2A43` |
+| Lettering "PREFABBRICATI" (riga superiore) | `#2A3F65` |
 | Lettering "MOIOLI" (riga principale) | `#E42829` |
-| Simbolo a barre (sinistra) | Misto `#1F2A43` + `#E42829` |
+| Simbolo a barre (sinistra) | Misto `#2A3F65` + `#E42829` |
 | ~~Payoff, terza riga~~ | **rimosso** — vedi nota |
 
-> **Nota sui colori.** Il navy del logo è `#1F2A43`, quello dei token è
-> `#1D2A44`. Sono percettivamente identici (ΔE ≈ 1). I riempimenti restano ai
-> valori originali del file vettoriale.
+> **Nota sui colori.** Il navy del logo è `#2A3F65`, dal logo revisionato del
+> 16-09-2026 (`LOGHI REVISIONATI 16-09-2026/logo web moioli new - senza payoff.svg`).
+> È più chiaro del navy dei token (`#1D2A44`), che resta il colore di fondi e
+> testi: il logo non usa il token.
 
 ### 7.1 La riga di payoff dentro il marchio
 

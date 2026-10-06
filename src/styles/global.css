@@ -14,7 +14,7 @@
 @property --lg-n {
   syntax: '<color>';
   inherits: true;
-  initial-value: #1f2a43;
+  initial-value: #2a3f65;
 }
 @property --lg-r {
   syntax: '<color>';

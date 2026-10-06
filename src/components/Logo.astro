@@ -7,8 +7,8 @@
  * la sigla e la riga di payoff. Accendere o spegnere la riga non cambia le
  * proporzioni della sigla e non sposta nulla in pagina.
  *
- * Colori invariati rispetto al vettoriale originale: navy #1F2A43 e rosso
- * marchio #E42829. Il marchio non si ritocca.
+ * Colori del logo revisionato (16-09-2026): navy #2A3F65 e rosso
+ * marchio #E42829. Il marchio non si ritocca: i colori vengono da LOGHI REVISIONATI 16-09-2026.
  */
 interface Props {
   variant?: 'auto' | 'light';
@@ -62,7 +62,7 @@ const {
     transition: 0.4s var(--ease);
 
     /* Valori del vettoriale originale */
-    --lg-n: #1f2a43;
+    --lg-n: #2a3f65;
     --lg-r: #e42829;
 
     /* I due riempimenti NON si transiscono.
@@ -70,7 +70,7 @@ const {
        custom property viene interpolata, dentro lo shadow tree di <use> il
        valore non e' un colore scritto a mano, `fill: var(--lg-n)` risulta
        invalido e `fill` ripiega sul proprio valore iniziale, che e' il nero.
-       Fuori dalla transizione --lg-n e' sempre e solo #1f2a43 o #ffffff,
+       Fuori dalla transizione --lg-n e' sempre e solo #2a3f65 o #ffffff,
        quindi il nero non ha piu' una finestra in cui esistere. Il marchio
        passa da bianco a colori insieme alla barra, senza sfumatura. */
     transition-property: width, height;
