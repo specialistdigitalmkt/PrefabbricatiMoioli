@@ -84,7 +84,7 @@ export const soluzioni: Soluzione[] = [
     slug: 'tegolo-tt',
     nome: 'Tegolo TT',
     alias: 'Copertura piana a tegoli',
-    claim: 'Più livelli, fino a 33 metri di luce.',
+    claim: 'Più livelli, oltre 35 metri di luce.',
     intro:
       'Il sistema mono e pluripiano “TT”: la soluzione per edifici prefabbricati su più livelli, centri commerciali, edifici polivalenti e direzionali.',
     img: 'sol-tegolo-tt-cover',

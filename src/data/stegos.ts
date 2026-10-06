@@ -58,7 +58,7 @@ export const pagina = {
     {
       titolo: 'Resistenza al fuoco senza penalizzazioni',
       testo:
-        'Da R90′ a R120′, estendibile fino a R180′, senza riduzione di portata.',
+        'Da R90′ a R120′, estendibile fino a R240′, senza riduzione di portata.',
     },
   ],
 
@@ -75,10 +75,10 @@ export const pagina = {
     eyebrow: 'Dati tecnici',
     titolo: 'I numeri della copertura.',
     voci: [
-      { label: 'Altezza', valore: 'da 30 a 85', unita: 'cm' },
+      { label: 'Altezza', valore: 'da 30 a 100', unita: 'cm' },
       { label: 'Larghezza modulo', valore: '250', unita: 'cm' },
       { label: 'Luce netta massima', valore: 'Variabile', unita: '' },
-      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R180′' },
+      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R240′' },
       { label: 'Pendenza integrata', valore: '2', unita: '%', nota: 'se impiegato in copertura' },
     ],
     nota: 'Misure indicate in centimetri. Fonte: catalogo Stegos.',

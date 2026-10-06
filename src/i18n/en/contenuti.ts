@@ -116,7 +116,7 @@ const testiSoluzioni: Record<
   },
   'tegolo-tt': {
     alias: 'Flat double-tee roof',
-    claim: 'Several floors, spans up to 33 metres.',
+    claim: 'Several floors, spans of over 35 metres.',
     intro:
       'The single and multi-storey “TT” system: the answer for precast buildings on more than one level, shopping centres, mixed-use and office buildings.',
     alt: 'Interior of a flat-roofed building with double-tee units and racking',

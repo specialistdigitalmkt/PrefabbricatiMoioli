@@ -55,7 +55,7 @@ const tecnowing: SchedaTecnica = {
   alias: 'Copertura alare',
   eyebrow: 'Soluzioni · Coperture',
   claim: 'La forma a “V” porta la luce e scarica l’acqua.',
-  meta: 'Tecnowing, la copertura alare Moioli: tegoli alari e interposti opachi o luminosi, modulo 250 cm, resistenza al fuoco da R90′ a R180′.',
+  meta: 'Tecnowing, la copertura alare Moioli: tegoli alari e interposti opachi o luminosi, modulo 250–264 cm, resistenza al fuoco da R90′ a R180′.',
   lead:
     'Sistema di copertura alare per edifici industriali, commerciali e logistici. Fra un tegolo alare e il successivo si alternano elementi opachi o luminosi, lucernari continui o a shed, scelti in base alla destinazione d’uso.',
 
@@ -77,7 +77,8 @@ const tecnowing: SchedaTecnica = {
   dati: {
     titolo: 'I numeri della copertura.',
     voci: [
-      { label: 'Larghezza modulo', valore: '250', unita: 'cm' },
+      { label: 'Luce netta massima', valore: 'fino a oltre 33', unita: 'm' },
+      { label: 'Larghezza modulo', valore: '250 – 264', unita: 'cm' },
       { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R180′' },
       { label: 'Altezza travi “I”', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
       { label: 'Smaltimento acque', valore: 'verso l’esterno', nota: 'geometria a “V”' },
@@ -93,7 +94,6 @@ const tecnowing: SchedaTecnica = {
       { nome: 'Interposto', testo: 'Leggero o in CLS, opaco o luminoso: si sceglie in base alla destinazione d’uso.' },
       { nome: 'Travi a “I”', testo: 'Elementi precompressi per impieghi centrali. Altezze da 90 a 235 cm.' },
       { nome: 'Travi a “L” e “T”', testo: 'Soluzioni speciali per impieghi laterali e centrali.' },
-      { nome: 'Travi a “U”', testo: 'Elemento con ampio invaso, per il convogliamento delle acque su grandi superfici.' },
       { nome: 'Pilastro con armatubo', testo: 'Pilastri di adeguata sezione, con mensole per impalcati e sistema armatubo.' },
     ],
   },
@@ -126,7 +126,7 @@ const tecnowing: SchedaTecnica = {
       sommario: 'L’elemento portante a sezione alare.',
       descrizione:
         'Il tegolo in cemento armato precompresso prodotto nello stabilimento di Bagnatica. La sezione ad ala gli permette di coprire la campata restando sottile al centro e ingrossandosi agli appoggi.',
-      specs: ['LUCE NETTA — da catalogo', 'LARGHEZZA MODULO — 250 cm'],
+      specs: ['LUCE NETTA — fino a oltre 33 m', 'LARGHEZZA MODULO — 250–264 cm'],
     },
     {
       id: 'interposto',
@@ -165,7 +165,7 @@ const tecnowing: SchedaTecnica = {
       titolo: 'Trave a “I”',
       sommario: 'Dove il tegolo appoggia.',
       descrizione:
-        'Le travi precompresse per impieghi centrali, disponibili in altezze da 90 a 235 cm. Ai bordi si usano travi a “L” o a “U”, quest’ultima quando serve un invaso ampio per le acque.',
+        'Le travi precompresse per impieghi centrali, disponibili in altezze da 90 a 235 cm. Ai bordi si usano travi a “L”.',
       specs: ['ALTEZZA TRAVE — 90 · 110 · 140 · 180 · 235 cm'],
     },
     {
@@ -189,7 +189,7 @@ const bacacier: SchedaTecnica = {
   nome: 'Bacacier',
   eyebrow: 'Soluzioni · Coperture',
   claim: 'Grandi luci libere, pochi pilastri in mezzo.',
-  meta: 'Bacacier, copertura per edifici logistici a grande luce: travi a “I”, arcarecci precompressi, lamiera grecata, pendenza 4%, nodi sismici certificati.',
+  meta: 'Bacacier, copertura per edifici logistici a grande luce: travi a “I”, arcarecci precompressi, lamiera grecata, pendenza 2–4%, nodi sismici certificati.',
   lead:
     'La risposta Moioli per edifici logistici a grande luce libera. Struttura in pilastri, travi principali a “I”, arcarecci e canali in cemento armato precompresso, con copertura in lamiera grecata.',
 
@@ -205,17 +205,17 @@ const bacacier: SchedaTecnica = {
     { titolo: 'Numero ridotto di pilastri interni', testo: 'La maglia si dimensiona sulle necessità del layout, non il contrario.' },
     { titolo: 'Nodi e vincoli sismici certificati', testo: 'I collegamenti fra gli elementi sono oggetto di certificazione.' },
     { titolo: 'Copertura in lamiera grecata', testo: 'Integrabile con isolamento, lucernari e impianti fotovoltaici.' },
-    { titolo: 'Resistenza al fuoco estesa', testo: 'Da R60′ e R90′ fino a R120′, estendibile a R180′.' },
+    { titolo: 'Resistenza al fuoco estesa', testo: 'Da R60′ e R90′ fino a R120′, estendibile a R240′.' },
   ],
 
   dati: {
     titolo: 'I numeri della copertura.',
     voci: [
       { label: 'Maglia strutturale', valore: 'a seconda della necessità' },
-      { label: 'Altezza trave “I”', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
-      { label: 'Altezza arcareccio', valore: '56 · 66 · 86 · 96', unita: 'cm' },
-      { label: 'Pendenza copertura', valore: '4', unita: '%' },
-      { label: 'Resistenza al fuoco', valore: 'da R60′ e R90′ a R120′', nota: 'estendibile fino a R180′' },
+      { label: 'Altezza trave “I”', valore: 'da 90 a 140 · da 180 a 235', unita: 'cm' },
+      { label: 'Altezza arcareccio', valore: 'da 36 a 96', unita: 'cm' },
+      { label: 'Pendenza copertura', valore: '2 – 4', unita: '%' },
+      { label: 'Resistenza al fuoco', valore: 'da R60′ e R90′ a R120′', nota: 'estendibile fino a R240′' },
       { label: 'Nodi sismici', valore: 'certificati' },
     ],
     nota: 'Misure indicate in centimetri. Fonte: catalogo Bacacier.',
@@ -228,7 +228,7 @@ const bacacier: SchedaTecnica = {
       { nome: 'Pilastri in c.a.v.', testo: 'In cemento armato vibrato, con sistema armatubo per il collegamento.' },
       { nome: 'Travi centrali a “I”', testo: 'Le travi principali. Altezze da 90 a 235 cm.' },
       { nome: 'Travi a “U” laterali', testo: 'Elemento di bordo con invaso, per la raccolta delle acque.' },
-      { nome: 'Arcarecci precompressi', testo: 'Elementi secondari appoggiati sulle travi. Altezze da 56 a 96 cm.' },
+      { nome: 'Arcarecci precompressi', testo: 'Elementi secondari appoggiati sulle travi. Altezze da 36 a 96 cm.' },
       { nome: 'Copertura in lamiera grecata', testo: 'Integrabile con isolamento, lucernari e impianti fotovoltaici.' },
     ],
   },
@@ -263,18 +263,18 @@ const bacacier: SchedaTecnica = {
       titolo: 'Arcareccio',
       sommario: 'L’elemento secondario che regge il manto.',
       descrizione:
-        'Gli arcarecci precompressi corrono fra una trave e l’altra e sostengono la lamiera. L’altezza si sceglie fra 56, 66, 86 e 96 cm in funzione della campata.',
-      specs: ['ALTEZZA ARCARECCIO — 56 · 66 · 86 · 96 cm'],
+        'Gli arcarecci precompressi corrono fra una trave e l’altra e sostengono la lamiera. L’altezza va da 36 a 96 cm, in funzione dei carichi e della campata.',
+      specs: ['ALTEZZA ARCARECCIO — da 36 a 96 cm'],
     },
     {
       id: 'pendenza',
       x: 66.7,
       y: 38.1,
-      titolo: 'Pendenza del 4%',
+      titolo: 'Pendenza dal 2 al 4%',
       sommario: 'Lo scarico delle acque.',
       descrizione:
-        'La copertura ha pendenza del 4% verso i canali di raccolta. Non è una pendenza da creare in opera: è nella geometria degli elementi.',
-      specs: ['PENDENZA — 4%'],
+        'La copertura ha pendenza dal 2 al 4% verso i canali di raccolta. Non è una pendenza da creare in opera: è nella geometria degli elementi.',
+      specs: ['PENDENZA — 2–4%'],
     },
     {
       id: 'trave',
@@ -283,8 +283,8 @@ const bacacier: SchedaTecnica = {
       titolo: 'Trave principale a “I”',
       sommario: 'La struttura portante della campata.',
       descrizione:
-        'Le travi a “I” in cemento armato precompresso reggono gli arcarecci. Altezze da 90 a 235 cm: è la scelta che determina quanto può essere ampia la maglia e quindi quanti pilastri restano a terra.',
-      specs: ['ALTEZZA TRAVE — 90 · 110 · 140 · 180 · 235 cm', 'LUCE — da verifica geometra'],
+        'Le travi a “I” in cemento armato precompresso reggono gli arcarecci. Altezze da 90 a 140 e da 180 a 235 cm: è la scelta che determina quanto può essere ampia la maglia e quindi quanti pilastri restano a terra.',
+      specs: ['ALTEZZA TRAVE — da 90 a 140 · da 180 a 235 cm', 'LUCE — da verifica geometra'],
     },
     {
       id: 'nodo',
@@ -318,7 +318,7 @@ const doppiaFalda: SchedaTecnica = {
   alias: 'Trave a doppia pendenza',
   eyebrow: 'Soluzioni · Coperture',
   claim: 'La geometria più collaudata, fino a 40 metri di luce.',
-  meta: 'Doppia falda: la struttura prefabbricata Moioli più diffusa. Luci libere fino a 40 metri, pendenza 10%, resistenza al fuoco fino a R180′.',
+  meta: 'Doppia falda: la struttura prefabbricata Moioli più diffusa. Luci libere fino a 40 metri, pendenza 10%, resistenza al fuoco fino a R240′.',
   lead:
     'La soluzione più diffusa per edifici industriali, commerciali e logistici. Semplice nella configurazione geometrica, resta attuale per la flessibilità progettuale e la versatilità di utilizzo.',
 
@@ -343,7 +343,7 @@ const doppiaFalda: SchedaTecnica = {
       { label: 'Luci libere', valore: 'fino a 40', unita: 'm' },
       { label: 'Pendenza copertura', valore: '10', unita: '%' },
       { label: 'Altezza trave', valore: 'variabile' },
-      { label: 'Resistenza al fuoco', valore: 'da R60′ e R90′ a R120′', nota: 'estendibile fino a R180′' },
+      { label: 'Resistenza al fuoco', valore: 'da R60′ e R90′ a R120′', nota: 'estendibile fino a R240′' },
       { label: 'Nodi sismici', valore: 'certificati' },
     ],
     nota: 'Misure indicate in centimetri salvo diversa indicazione. Fonte: catalogo Doppia falda.',
@@ -445,21 +445,21 @@ const tegoloTT: SchedaTecnica = {
   nome: 'Tegolo TT',
   alias: 'Copertura piana a tegoli “TT”',
   eyebrow: 'Soluzioni · Solai e coperture',
-  claim: 'Più livelli, fino a 33 metri di luce.',
-  meta: 'Tegolo TT: sistema mono e pluripiano Moioli per centri commerciali e direzionali. Luce netta fino a 33 m, altezza tegolo da 35 a 100 cm.',
+  claim: 'Più livelli, oltre 35 metri di luce.',
+  meta: 'Tegolo TT: sistema mono e pluripiano Moioli per centri commerciali e direzionali. Luce netta fino a oltre 35 m, altezza tegolo da 35 a 100 cm.',
   lead:
     'Il sistema mono e pluripiano “TT” è la soluzione per edifici prefabbricati su più livelli: centri commerciali, edifici polivalenti e direzionali.',
 
   identita: {
     titolo: 'Quando l’edificio cresce in altezza.',
     paragrafi: [
-      'Il tegolo a doppio “TT” è un elemento di solaio prima ancora che di copertura. Regge carichi importanti su luci fino a trentatré metri, e questo permette di impilare i livelli senza riempire i piani di pilastri.',
+      'Il tegolo a doppio “TT” è un elemento di solaio prima ancora che di copertura. Regge carichi importanti su luci fino a oltre trentacinque metri, e questo permette di impilare i livelli senza riempire i piani di pilastri.',
       'È la soluzione degli edifici che devono reggere il confronto anche esteticamente: centri commerciali, direzionali, polivalenti.',
     ],
   },
 
   caratteristiche: [
-    { titolo: 'Grandi luci libere', testo: 'Fino a 33 metri senza appoggi intermedi.' },
+    { titolo: 'Grandi luci libere', testo: 'Fino a oltre 35 metri senza appoggi intermedi.' },
     { titolo: 'Elevata capacità portante', testo: 'Nasce come elemento di solaio, non solo di copertura.' },
     { titolo: 'Flessibilità compositiva', testo: 'Struttura su più livelli di solaio, mono e pluripiano.' },
     { titolo: 'Nodi sismici certificati', testo: 'I collegamenti fra gli elementi sono oggetto di certificazione.' },
@@ -468,11 +468,11 @@ const tegoloTT: SchedaTecnica = {
   dati: {
     titolo: 'I numeri dell’elemento.',
     voci: [
-      { label: 'Luce netta massima', valore: '33', unita: 'm' },
+      { label: 'Luce netta massima', valore: 'fino a oltre 35', unita: 'm' },
       { label: 'Larghezza modulo', valore: '250', unita: 'cm' },
       { label: 'Altezza tegolo', valore: '35 · 45 · 55 · 65 · 75 · 85 · 95 · 100', unita: 'cm' },
-      { label: 'Spessore gamba nervatura', valore: '9 · 15 · 20', unita: 'cm' },
-      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R180′' },
+      { label: 'Spessore gamba nervatura', valore: '9 · 16 · 20', unita: 'cm' },
+      { label: 'Resistenza al fuoco', valore: 'da R90′ a R120′', nota: 'estendibile fino a R240′' },
     ],
     nota: 'Misure indicate in centimetri salvo diversa indicazione. Fonte: catalogo Copertura piana a tegoli “TT”.',
   },
@@ -518,8 +518,8 @@ const tegoloTT: SchedaTecnica = {
       titolo: 'Nervature',
       sommario: 'Le due gambe del doppio “TT”.',
       descrizione:
-        'Le due nervature sono la parte che porta: scendono sotto il piano e danno all’elemento l’altezza strutturale necessaria per coprire la luce. Lo spessore si sceglie fra 9, 15 e 20 cm.',
-      specs: ['SPESSORE GAMBA — 9 · 15 · 20 cm', 'ALTEZZA TEGOLO — da 35 a 100 cm'],
+        'Le due nervature sono la parte che porta: scendono sotto il piano e danno all’elemento l’altezza strutturale necessaria per coprire la luce. Lo spessore si sceglie fra 9, 16 e 20 cm.',
+      specs: ['SPESSORE GAMBA — 9 · 16 · 20 cm', 'ALTEZZA TEGOLO — da 35 a 100 cm'],
     },
     {
       id: 'trave',
@@ -558,8 +558,8 @@ const tegoloTT: SchedaTecnica = {
       titolo: 'Luce netta',
       sommario: 'Quanto spazio resta libero sotto.',
       descrizione:
-        'Il tegolo copre luci fino a trentatré metri senza appoggi intermedi. È la misura che decide quanti pilastri restano in mezzo alla superficie di vendita o all’ufficio.',
-      specs: ['LUCE NETTA MASSIMA — 33 m'],
+        'Il tegolo copre luci fino a oltre trentacinque metri senza appoggi intermedi. È la misura che decide quanti pilastri restano in mezzo alla superficie di vendita o all’ufficio.',
+      specs: ['LUCE NETTA MASSIMA — oltre 35 m'],
     },
   ],
 };

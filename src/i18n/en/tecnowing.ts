@@ -2,7 +2,7 @@
  * Scheda tecnica Tecnowing in inglese.
  *
  * Traduzione di `tecnowing` in src/data/soluzioni-tecniche.ts. I NUMERI NON
- * SI TOCCANO: modulo 250 cm, R90'-R120' estendibile a R180', travi da 90 a
+ * SI TOCCANO: modulo 250-264 cm, luce oltre 33 m, R90'-R120' estendibile a R180', travi da 90 a
  * 235 cm arrivano dal catalogo ufficiale e sono ricopiati identici. Dove
  * l'italiano dichiara un segnaposto, l'inglese dichiara un segnaposto.
  *
@@ -32,7 +32,7 @@ export const tecnowing: SchedaTecnica = {
   alias: 'Wing roof',
   eyebrow: 'Solutions · Roofing',
   claim: 'The “V” shape brings in the light and sheds the water.',
-  meta: 'Tecnowing, the Moioli wing roof: wing units with solid or glazed infill panels, 250 cm module, fire resistance from R90′ to R180′.',
+  meta: 'Tecnowing, the Moioli wing roof: wing units with solid or glazed infill panels, 250–264 cm module, fire resistance from R90′ to R180′.',
   lead: 'A wing roofing system for industrial, commercial and logistics buildings. Between one wing unit and the next, solid or glazed panels alternate — continuous or north-light rooflights — chosen according to how the building will be used.',
 
   identita: {
@@ -62,7 +62,8 @@ export const tecnowing: SchedaTecnica = {
   dati: {
     titolo: 'The figures behind the roof.',
     voci: [
-      { label: 'Module width', valore: '250', unita: 'cm' },
+      { label: 'Maximum clear span', valore: 'over 33', unita: 'm' },
+      { label: 'Module width', valore: '250 – 264', unita: 'cm' },
       { label: 'Fire resistance', valore: 'R90′ to R120′', nota: 'extendable to R180′' },
       { label: '“I” beam depth', valore: '90 · 110 · 140 · 180 · 235', unita: 'cm' },
       { label: 'Water disposal', valore: 'outwards', nota: '“V” geometry' },
@@ -88,10 +89,6 @@ export const tecnowing: SchedaTecnica = {
         testo: 'Prestressed elements for central positions. Depths from 90 to 235 cm.',
       },
       { nome: '“L” and “T” beams', testo: 'Special solutions for edge and central positions.' },
-      {
-        nome: '“U” beams',
-        testo: 'An element with a wide channel, to carry water across large roof areas.',
-      },
       {
         nome: 'Column with armatubo system',
         testo: 'Columns of suitable section, with corbels for floors and the armatubo connection system.',
@@ -146,7 +143,7 @@ export const tecnowing: SchedaTecnica = {
       sommario: 'The load-bearing wing-section element.',
       descrizione:
         'The prestressed reinforced concrete unit made at the Bagnatica plant. Its wing section lets it span the bay while staying slender at mid-span and deepening at the supports.',
-      specs: ['CLEAR SPAN — from catalogue', 'MODULE WIDTH — 250 cm'],
+      specs: ['CLEAR SPAN — over 33 m', 'MODULE WIDTH — 250–264 cm'],
     },
     {
       id: 'interposto',
@@ -185,7 +182,7 @@ export const tecnowing: SchedaTecnica = {
       titolo: '“I” beam',
       sommario: 'Where the unit bears.',
       descrizione:
-        'Prestressed beams for central positions, available in depths from 90 to 235 cm. At the edges “L” or “U” beams are used, the latter where a wide channel is needed for water.',
+        'Prestressed beams for central positions, available in depths from 90 to 235 cm. At the edges “L” beams are used.',
       specs: ['BEAM DEPTH — 90 · 110 · 140 · 180 · 235 cm'],
     },
     {
