@@ -2,16 +2,16 @@
 /**
  * /progetti/[slug] — scheda di una realizzazione.
  *
- * Una pagina per ciascuna delle 25 realizzazioni fotografate.
- * Le fotografie sono reali; i dati di commessa non sono stati forniti e
- * restano segnaposto dichiarati, uno per riga, così in presentazione si vede
- * esattamente cosa manca.
+ * Una pagina per ciascuna realizzazione pubblicata. I dati di commessa
+ * vengono da progetti.ts; un campo non compilato resta segnaposto
+ * dichiarato, così in presentazione si vede esattamente cosa manca.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Picture from '../../components/Picture.astro';
 import Icon from '../../components/Icon.astro';
-import { realizzazioni, schedaDettaglio, etichetta } from '../../data/progetti';
+import { realizzazioni, schedaDettaglio, etichetta, commesse } from '../../data/progetti';
+import { soluzioni } from '../../data/soluzioni';
 import images from '../../data/images.json';
 
 export function getStaticPaths() {
@@ -20,6 +20,15 @@ export function getStaticPaths() {
 
 const { r } = Astro.props;
 const nome = etichetta(r);
+const c = commesse[r.slug] ?? { nome };
+
+/* Valore da mostrare per ogni riga, o null se il campo non è compilato. */
+const valore = (k: string): string | null => {
+  if (k === 'superficie') return c.superficie ? `${c.superficie.toLocaleString('it-IT')} m²` : null;
+  return (c as Record<string, string | undefined>)[k] ?? null;
+};
+/* La soluzione impiegata porta alla sua scheda, quando ne ha una. */
+const soluzione = soluzioni.find((s) => s.nome === c.copertura);
 
 /* Le larghezze si leggono dal manifesto, non si scrivono a mano: le
    sorgenti hanno dimensioni diverse fra loro e dichiarare un taglio che non
@@ -37,7 +46,7 @@ const succ = realizzazioni[i + 1] ?? realizzazioni[0];
 
 <BaseLayout
   title={`${nome} — Realizzazioni | Prefabbricati Moioli`}
-  description={`${nome}: struttura prefabbricata in cemento armato realizzata da Prefabbricati Moioli, Bagnatica (BG).`}
+  description={`${nome}${c.comune ? `, ${c.comune}` : ''}: struttura prefabbricata in cemento armato realizzata da Prefabbricati Moioli, Bagnatica (BG).`}
   preloadImage={r.cover}
 >
   <!-- ==================== APERTURA ==================== -->
@@ -78,12 +87,23 @@ const succ = realizzazioni[i + 1] ?? realizzazioni[0];
           <h2 class="dati-t">{schedaDettaglio.datiTitolo}</h2>
           <dl class="dati-l">
             {
-              schedaDettaglio.dati.map((d) => (
-                <div>
-                  <dt>{d.label}</dt>
-                  <dd><span class="spec">{d.spec}</span></dd>
-                </div>
-              ))
+              schedaDettaglio.dati.map((d) => {
+                const v = valore(d.k);
+                return (
+                  <div>
+                    <dt>{d.label}</dt>
+                    <dd>
+                      {v === null ? (
+                        <span class="spec">{d.spec}</span>
+                      ) : d.k === 'copertura' && soluzione ? (
+                        <a href={soluzione.href} class="dati-v dati-link">{v}</a>
+                      ) : (
+                        <span class="dati-v">{v}</span>
+                      )}
+                    </dd>
+                  </div>
+                );
+              })
             }
           </dl>
         </div>
@@ -272,6 +292,21 @@ const succ = realizzazioni[i + 1] ?? realizzazioni[0];
     font-size: 15px;
     color: var(--navy);
     font-weight: 500;
+  }
+  .dati-v {
+    font-size: 15px;
+    color: var(--text-2);
+    font-variant-numeric: tabular-nums;
+  }
+  .dati-link {
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--red);
+  }
+  .dati-link:hover {
+    color: var(--red);
   }
   .dati-btn {
     margin-top: 24px;

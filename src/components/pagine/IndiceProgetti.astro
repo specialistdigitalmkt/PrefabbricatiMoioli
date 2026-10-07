@@ -83,6 +83,7 @@ const daNominare = realizzazioni.filter((r) => r.numerata);
         }
       </ul>
 
+      {daNominare.length > 0 && (<>
       <!-- ============ DA NOMINARE ============ -->
       <div class="grp-h grp-h2 reveal">
         <h2>{t.daNominare}</h2>
@@ -114,6 +115,7 @@ const daNominare = realizzazioni.filter((r) => r.numerata);
           ))
         }
       </ul>
+      </>)}
 
       <p class="ph-note prj-note">{paginaProgetti.nota}</p>
     </div>
