@@ -49,6 +49,15 @@ const MAPPA = {
  */
 const CON_GALLERIA = new Set(['bacacier', 'coverplan', 'doppia-falda', 'tecnowing', 'tegolo-tt']);
 
+/**
+ * Copertine scelte a mano, che vincono sulla scelta automatica.
+ * Doppia falda (Luca, 7/10/2026): la trave a doppia pendenza in sollevamento,
+ * scansione d'archivio 641px ingrandita da Luca. La facciata in mattoni
+ * (_MG_0734) esce anche dalla galleria: è quasi uguale a _MG_0735.
+ */
+const COPERTINA = { 'Doppia Pendenza': '1-upscalata2.jpg' };
+const ESCLUSE = new Set(['Doppia Pendenza/_MG_0734.TIF']);
+
 const LEGGIBILI = /\.(jpe?g|png|tiff?)$/i;
 
 async function scrivi(file, id, widths) {
@@ -101,7 +110,7 @@ async function run() {
       }
     }
 
-    const utili = misurate.filter((x) => x.w >= MIN_UTILE);
+    const utili = misurate.filter((x) => x.w >= MIN_UTILE && !ESCLUSE.has(`${cartella}/${x.f}`));
     if (utili.length === 0) {
       console.log(`saltata ${cartella}: nessuna immagine utilizzabile`);
       continue;
@@ -112,7 +121,9 @@ async function run() {
     const orizzontali = utili.filter((x) => x.land);
     const candidate = orizzontali.length ? orizzontali : utili;
     const drone = candidate.filter((x) => /DJI/i.test(x.f));
-    const cover = (drone.length ? drone : candidate).sort((a, b) => b.area - a.area)[0];
+    const cover =
+      utili.find((x) => x.f === COPERTINA[cartella]) ??
+      (drone.length ? drone : candidate).sort((a, b) => b.area - a.area)[0];
 
     const idCover = `sol-${slug}-cover`;
     const infoCover = await scrivi(path.join(dir, cover.f), idCover, W_COVER);

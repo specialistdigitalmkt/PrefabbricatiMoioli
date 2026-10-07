@@ -136,7 +136,7 @@ const testiSoluzioni: Record<
     claim: 'The most proven geometry, spans up to 40 metres.',
     intro:
       'The most widely used solution for industrial, commercial and logistics buildings. Simple in its geometry, it stays current thanks to design flexibility and range of use.',
-    alt: 'Moioli double-pitch industrial building with a brick frontage and loading doors',
+    alt: 'Precast double-pitch beam lifted by the gantry crane in the Moioli yard',
     specs: ['CLEAR SPANS', 'ROOF PITCH', 'BEAM DEPTH'],
     nota: 'The most common geometry',
   },

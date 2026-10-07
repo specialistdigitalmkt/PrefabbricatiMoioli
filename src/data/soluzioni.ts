@@ -113,7 +113,7 @@ export const soluzioni: Soluzione[] = [
     intro:
       'La soluzione più diffusa per edifici industriali, commerciali e logistici. Semplice nella configurazione geometrica, resta attuale per la flessibilità progettuale e la versatilità di utilizzo.',
     img: 'sol-doppia-falda-cover',
-    alt: 'Edificio industriale Moioli a doppia falda con fronte in laterizio e portoni',
+    alt: 'Trave prefabbricata a doppia pendenza sollevata dal carroponte nel piazzale Moioli',
     specs: ['LUCI LIBERE', 'PENDENZA COPERTURA', 'ALTEZZA TRAVE'],
     nota: 'La geometria più diffusa',
     href: '/soluzioni/doppia-falda',
