@@ -17,9 +17,14 @@ Thumbs.db
 # Materiale sorgente fornito dal cliente: centinaia di MB di originali.
 # Le derivate ottimizzate finiscono in public/img e sono quelle versionate.
 CARTELLA IMMAGINI/
-Cataloghi tecnici/
-Brand kit/
-brand-kit-moioli.zip
+# PDF dei cataloghi rivisti da Moioli: fonte dei dati tecnici, non si toccano.
+Dati catalogo rivisti e corretti ny MOIOLI/
+# Archivio consegnato dall'agenzia, con i collegamenti dei vecchi impaginati.
+informa adv x moioli/
+# Riprese drone di cantiere: video da centinaia di MB e foto HEIC.
+DRONATE/
+# Export della pagina raccolta dati: contiene risposte e contatti del cliente.
+raccolta-export.json
 # Contiene il timelapse originale: 112 MB, HEVC con audio. Quello che il sito
 # serve è public/video/chiavi-in-mano.mp4 — 41", muto, 4,4 MB — ed è versionato.
 PROGETTO CHIAVI IN MANO/
