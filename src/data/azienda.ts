@@ -20,7 +20,7 @@ export const profilo = {
     'Prefabbricati Moioli nasce a Bagnatica alla fine del 1972 dalla volontà e dalle esperienze combinate dei fratelli Moioli con alcuni progettisti. Da allora produce strutture prefabbricate in cemento armato per edilizia industriale, commerciale e civile.',
 
   paragrafi: [
-    'Fin dall’inizio un’azienda ad alto profilo tecnologico, capace di realizzare progetti unici. In un settore che richiede qualità, competitività e sicurezza, la consulenza sul progetto vale quanto il prodotto: è per questo che progettazione, produzione e montaggio restano dentro la stessa azienda.',
+    'Fin dall’inizio un’azienda dal profilo tecnologico evoluto, con spirito innovativo e una visione ambiziosa. In un settore che richiede qualità, competitività e sicurezza, la consulenza sul progetto vale quanto il prodotto: è per questo che progettazione, produzione e montaggio restano dentro la stessa azienda.',
     'Dall’ideazione al coordinamento di fornitori e maestranze, fino alla consegna, il committente ha un solo interlocutore. È il metodo chiavi in mano che l’azienda ha consolidato in mezzo secolo di lavoro.',
   ],
 
@@ -29,8 +29,8 @@ export const profilo = {
      stabilimento, organico e fatturato. */
   numeri: [
     { valore: '1972', label: 'Anno di fondazione', stato: 'ok' },
-    { valore: '700.000', unita: 'mq', label: 'Superficie realizzata', stato: 'ok' },
-    { valore: '100', unita: '+', label: 'Committenti serviti', stato: 'ok' },
+    { valore: '3.000.000', unita: 'mq', label: 'Superficie realizzata', stato: 'ok' },
+    { valore: '1500', unita: '+', label: 'Aziende servite', stato: 'ok' },
     { valore: '50', unita: '+', label: 'Anni di attività', stato: 'ok' },
     { spec: 'SUPERFICIE STABILIMENTO', label: 'Stabilimento di Bagnatica', stato: 'manca' },
     { spec: 'ORGANICO', label: 'Persone in azienda', stato: 'manca' },
@@ -41,7 +41,7 @@ export const profilo = {
   sistema: {
     eyebrow: 'Il sistema proprietario',
     nome: 'Stegos',
-    claim: 'Sviluppato esclusivamente da Prefabbricati Moioli.',
+    claim: 'Progettato e sviluppato esclusivamente da Prefabbricati Moioli.',
     testo:
       'Elemento di copertura e solaio in cemento armato precompresso, con lucernario continuo centrale integrato nella sezione. Non è un prodotto acquistato da un catalogo di fornitori: nasce e si produce nello stabilimento di Bagnatica.',
     href: '/soluzioni/stegos',
@@ -56,10 +56,10 @@ export const profilo = {
 
   /* Tappe. Dato verificato, già in uso in home. */
   tappe: [
-    { anno: '1972', testo: 'I fratelli Moioli fondano l’azienda a Bagnatica.' },
-    { anno: '1985', testo: 'Lo stabilimento si amplia: nuove linee di casseri e travi precompresse.' },
+    { anno: '1972', testo: 'I fratelli Moioli fondano l’azienda a Bagnatica (BG): profilo tecnologico evoluto, spirito innovativo e una visione ambiziosa.' },
+    { anno: '1985', testo: 'Nuove linee di produzione, con nuovi casseri per tegoli e travi precompresse.' },
     { anno: '2005', testo: 'Grandi commesse industriali e logistiche in tutto il Nord Italia.' },
-    { anno: 'Oggi', testo: 'Oltre 700.000 mq realizzati e un metodo chiavi in mano consolidato.' },
+    { anno: 'Oggi', testo: 'Oltre 3.000.000 mq realizzati e un metodo chiavi in mano consolidato.' },
   ],
 
   /* Baraclit ha un video istituzionale. Moioli no: dichiarato. */
@@ -77,7 +77,7 @@ export type Committente = { nome: string; settore: string };
 
 /**
  * ELENCO PARZIALE. Sono i dieci nomi già presenti nei materiali Moioli.
- * L'azienda dichiara oltre cento committenti: la lista completa e i loghi
+ * L'azienda dichiara oltre 1500 aziende servite: la lista completa e i loghi
  * vanno forniti.
  *
  * L'attribuzione di settore è una nostra classificazione, da confermare.
@@ -108,9 +108,9 @@ export const referenze = {
   eyebrow: 'Referenze',
   titolo: 'Chi ci ha affidato uno stabilimento.',
   lead:
-    'Più di cento aziende hanno costruito con Moioli. Qui una selezione, divisa per settore.',
+    'Oltre 1500 aziende hanno costruito con Moioli. Qui una selezione, divisa per settore.',
   nota:
-    'Elenco parziale: dieci committenti sui più di cento serviti. I loghi e la lista completa sono da fornire, così come la conferma dell’attribuzione di settore.',
+    'Elenco parziale: dieci committenti sulle oltre 1500 aziende servite. I loghi e la lista completa sono da fornire, così come la conferma dell’attribuzione di settore.',
 } as const;
 
 /* =========================================================================

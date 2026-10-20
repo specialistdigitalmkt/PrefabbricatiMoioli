@@ -30,8 +30,8 @@ export const descrizione = 'Precast reinforced concrete structures';
 /** Numeri d'impresa mostrati nell'apertura. Valori invariati: solo etichette. */
 export const numeri = [
   { valore: 50, suffisso: '+', label: 'Years in business' },
-  { prefisso: '+', valore: 700, label: 'Thousand m² built' },
-  { valore: 100, suffisso: '+', label: 'Companies served' },
+  { prefisso: '+', valore: 3, label: 'Million m² built' },
+  { valore: 1500, suffisso: '+', label: 'Companies served' },
   { statico: '100%', label: 'Made in Italy' },
 ];
 
@@ -40,11 +40,11 @@ export const timeline = [
   {
     anno: '1972',
     testo:
-      'The Moioli brothers found the company in Bagnatica, technically ambitious from the very start.',
+      'The Moioli brothers found the company in Bagnatica (BG): an advanced technological profile, an innovative spirit and an ambitious vision.',
   },
   {
     anno: '1985',
-    testo: 'The plant expands: new formwork lines and prestressed beams.',
+    testo: 'New production lines, with new moulds for prestressed roof elements and beams.',
   },
   {
     anno: '2005',
@@ -52,7 +52,7 @@ export const timeline = [
   },
   {
     anno: 'Today',
-    testo: 'More than 700,000 m² built and an established turnkey method.',
+    testo: 'More than 3,000,000 m² built and an established turnkey method.',
   },
 ];
 

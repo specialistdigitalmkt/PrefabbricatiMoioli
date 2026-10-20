@@ -97,8 +97,8 @@ export const etichetta = (r: Realizzazione) =>
  */
 export const paginaProgetti = {
   eyebrow: 'Realizzazioni',
-  titolo: 'Oltre 700.000 mq costruiti.',
-  lead: 'Più di cento aziende ci hanno affidato i loro stabilimenti. Qui il costruito: capannoni industriali, poli logistici, sedi direzionali.',
+  titolo: 'Oltre 3.000.000 mq costruiti.',
+  lead: 'Oltre 1500 aziende ci hanno affidato i loro stabilimenti. Qui il costruito: capannoni industriali, poli logistici, sedi direzionali.',
   nota: 'Nota per la revisione: nomi e dati di commessa sono quelli inseriti da commerciale e marketing nella raccolta dati di settembre 2026. Dove un dato manca, la scheda lo segnala.',
 } as const;
 

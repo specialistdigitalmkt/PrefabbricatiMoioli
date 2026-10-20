@@ -26,7 +26,7 @@ import type { Hotspot } from './tipi';
 export const pagina = {
   eyebrow: 'Soluzioni · Solai e coperture',
   titolo: 'Stegos',
-  claim: 'Sviluppato esclusivamente da Prefabbricati Moioli.',
+  claim: 'Progettato e sviluppato esclusivamente da Prefabbricati Moioli.',
   lead:
     'Sistema di copertura e solaio in cemento armato precompresso, con lucernario continuo centrale integrato nell’elemento. Progettato per edifici industriali e commerciali, mono e pluripiano.',
 

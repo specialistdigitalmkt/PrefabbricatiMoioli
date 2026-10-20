@@ -118,8 +118,8 @@ export const clienti = [
 /** Numeri d'impresa mostrati nell'hero. Dato verificato. */
 export const numeri = [
   { valore: 50, suffisso: '+', label: 'Anni di attività' },
-  { prefisso: '+', valore: 700, label: 'Mila mq realizzati' },
-  { valore: 100, suffisso: '+', label: 'Aziende servite' },
+  { prefisso: '+', valore: 3, label: 'Milioni di mq realizzati' },
+  { valore: 1500, suffisso: '+', label: 'Aziende servite' },
   { statico: '100%', label: 'Made in Italy' },
 ] as const;
 
@@ -128,11 +128,11 @@ export const timeline = [
   {
     anno: '1972',
     testo:
-      "I fratelli Moioli fondano l'azienda a Bagnatica: da subito alto profilo tecnologico.",
+      "I fratelli Moioli fondano l'azienda a Bagnatica (BG): profilo tecnologico evoluto, spirito innovativo e una visione ambiziosa.",
   },
   {
     anno: '1985',
-    testo: 'Lo stabilimento si amplia: nuove linee di casseri e travi precompresse.',
+    testo: 'Nuove linee di produzione, con nuovi casseri per tegoli e travi precompresse.',
   },
   {
     anno: '2005',
@@ -140,7 +140,7 @@ export const timeline = [
   },
   {
     anno: 'Oggi',
-    testo: 'Oltre 700.000 mq realizzati e un metodo chiavi in mano consolidato.',
+    testo: 'Oltre 3.000.000 mq realizzati e un metodo chiavi in mano consolidato.',
   },
 ] as const;
 

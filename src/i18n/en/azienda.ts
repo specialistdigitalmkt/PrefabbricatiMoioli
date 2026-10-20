@@ -2,12 +2,12 @@
  * Profilo aziendale in inglese.
  *
  * Traduzione di `profilo` in src/data/azienda.ts. I numeri verificati
- * restano identici (1972, 700.000 mq, 100+ committenti, 50+ anni); i due
+ * restano identici (1972, 3.000.000 mq, 1500+ aziende, 50+ anni); i due
  * segnaposto dichiarati — superficie dello stabilimento e organico — restano
  * segnaposto anche in inglese, perche' il dato non e' stato fornito.
  *
- * Il formato dei numeri cambia con la lingua: 700.000 in italiano,
- * 700,000 in inglese. E' l'unica differenza numerica ammessa.
+ * Il formato dei numeri cambia con la lingua: 3.000.000 in italiano,
+ * 3,000,000 in inglese. E' l'unica differenza numerica ammessa.
  *
  * TERMINOLOGIA — da confermare
  * - «cemento armato precompresso» → prestressed reinforced concrete
@@ -24,14 +24,14 @@ export const profilo = {
   lead: 'Prefabbricati Moioli was founded in Bagnatica at the end of 1972, out of the determination and combined experience of the Moioli brothers and a group of designers. Since then it has produced precast reinforced concrete structures for industrial, commercial and civic construction.',
 
   paragrafi: [
-    'A technically ambitious company from the very start, able to deliver singular projects. In a sector that demands quality, competitiveness and safety, advice on the design counts as much as the product itself: which is why design, production and erection all stay inside the same company.',
+    'From the very start, a company with an advanced technological profile, an innovative spirit and an ambitious vision. In a sector that demands quality, competitiveness and safety, advice on the design counts as much as the product itself: which is why design, production and erection all stay inside the same company.',
     'From the first idea to the coordination of suppliers and trades, right through to handover, the client has a single point of contact. This is the turnkey method the company has built up over half a century of work.',
   ],
 
   numeri: [
     { valore: '1972', label: 'Year founded', stato: 'ok' },
-    { valore: '700,000', unita: 'm²', label: 'Floor area built', stato: 'ok' },
-    { valore: '100', unita: '+', label: 'Clients served', stato: 'ok' },
+    { valore: '3,000,000', unita: 'm²', label: 'Floor area built', stato: 'ok' },
+    { valore: '1500', unita: '+', label: 'Companies served', stato: 'ok' },
     { valore: '50', unita: '+', label: 'Years in business', stato: 'ok' },
     { spec: 'PLANT FLOOR AREA', label: 'The Bagnatica plant', stato: 'manca' },
     { spec: 'HEADCOUNT', label: 'People in the company', stato: 'manca' },
@@ -40,7 +40,7 @@ export const profilo = {
   sistema: {
     eyebrow: 'The proprietary system',
     nome: 'Stegos',
-    claim: 'Developed exclusively by Prefabbricati Moioli.',
+    claim: 'Designed and developed exclusively by Prefabbricati Moioli.',
     testo:
       'A roof and floor element in prestressed reinforced concrete, with a continuous rooflight integrated into the section itself. It is not a product bought from a supplier’s catalogue: it originates and is made at the Bagnatica plant.',
     /* La scheda Stegos non e' tradotta: il collegamento porta all'indice
@@ -56,15 +56,15 @@ export const profilo = {
   },
 
   tappe: [
-    { anno: '1972', testo: 'The Moioli brothers found the company in Bagnatica.' },
+    { anno: '1972', testo: 'The Moioli brothers found the company in Bagnatica (BG): an advanced technological profile, an innovative spirit and an ambitious vision.' },
     {
       anno: '1985',
-      testo: 'The plant expands: new mould lines and prestressed beams.',
+      testo: 'New production lines, with new moulds for prestressed roof elements and beams.',
     },
     { anno: '2005', testo: 'Major industrial and logistics contracts across northern Italy.' },
     {
       anno: 'Today',
-      testo: 'More than 700,000 m² built and an established turnkey method.',
+      testo: 'More than 3,000,000 m² built and an established turnkey method.',
     },
   ],
 
@@ -78,7 +78,7 @@ export const profilo = {
 export const ui = {
   seoTitolo: 'The company — Prefabbricati Moioli, Bagnatica, Italy',
   seoDescrizione:
-    'Prefabbricati Moioli: in Bagnatica, near Bergamo, since 1972. Precast reinforced concrete structures for industrial, commercial and civic construction. More than 700,000 m² built.',
+    'Prefabbricati Moioli: in Bagnatica, near Bergamo, since 1972. Precast reinforced concrete structures for industrial, commercial and civic construction. More than 3,000,000 m² built.',
   home: 'Home',
   briciola: 'Company',
   daCliente: '— from the client',
