@@ -76,7 +76,7 @@ export const profilo = {
 
 /** Etichette dell'interfaccia della pagina azienda. */
 export const ui = {
-  seoTitolo: 'The company — Prefabbricati Moioli, Bagnatica, Italy',
+  seoTitolo: 'The company | Prefabbricati Moioli, Bagnatica, Italy',
   seoDescrizione:
     'Prefabbricati Moioli: in Bagnatica, near Bergamo, since 1972. Precast reinforced concrete structures for industrial, commercial and civic construction. More than 3,000,000 m² built.',
   home: 'Home',

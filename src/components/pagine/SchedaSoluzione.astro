@@ -8,25 +8,20 @@
  * un collegamento inglese verso cui puntare.
  *
  * IMPOSTAZIONE
- * Il baricentro e' la sezione interattiva, in posizione 02: subito dopo
- * l'introduzione, a fascia intera. Dati, sistema e applicazioni vengono dopo
- * e la commentano.
+ * In posizione 02, a fascia intera, c'era la sezione costruttiva con i punti
+ * cliccabili su un disegno segnaposto. Ora c'è ModelloInArrivo: è lo spazio
+ * in cui arriveranno i modelli 3D, come quello già online di Tecnowing.
+ * I disegni (components/sezioni/*) restano nel progetto ma non si vedono.
  *
  * FONTI
  * Dati tecnici dai cataloghi ufficiali (src/data/soluzioni-tecniche.ts): dai
- * PDF si prendono SOLO LE INFORMAZIONI, nessuna tavola e' riprodotta. I
- * disegni in sezione sono segnaposto dichiarati.
+ * PDF si prendono SOLO LE INFORMAZIONI, nessuna tavola e' riprodotta.
  */
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Picture from '../../components/Picture.astro';
 import Icon from '../../components/Icon.astro';
-import HotspotExplainer from '../../components/HotspotExplainer.astro';
-import TecnowingSection from '../../components/sezioni/TecnowingSection.astro';
-import BacacierSection from '../../components/sezioni/BacacierSection.astro';
-import DoppiaFaldaSection from '../../components/sezioni/DoppiaFaldaSection.astro';
-import TegoloTTSection from '../../components/sezioni/TegoloTTSection.astro';
-import CoverplanSection from '../../components/sezioni/CoverplanSection.astro';
+import ModelloInArrivo from '../../components/ModelloInArrivo.astro';
 import type { SchedaTecnica } from '../../data/soluzioni-tecniche';
 import type { Soluzione } from '../../data/soluzioni';
 import foto from '../../data/soluzioni-foto.json';
@@ -47,15 +42,6 @@ const hrefHome = lang === 'en' ? '/en' : '/';
 const hrefSoluzioni = lang === 'en' ? '/en/solutions' : '/soluzioni';
 const hrefContatti = lang === 'en' ? '/en/contact' : '/contatti';
 
-/* Ogni sistema ha una geometria sua: il disegno non e' parametrizzabile. */
-const DISEGNI = {
-  tecnowing: TecnowingSection,
-  bacacier: BacacierSection,
-  'doppia-falda': DoppiaFaldaSection,
-  'tegolo-tt': TegoloTTSection,
-  coverplan: CoverplanSection,
-} as const;
-const Disegno = DISEGNI[scheda.slug as keyof typeof DISEGNI];
 
 const galleria = (foto as Record<string, { cover: string; galleria: { id: string }[] }>)[
   scheda.slug
@@ -83,7 +69,7 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title={`${scheda.nome} — ${scheda.alias ?? t.sistemaGenerico} | Prefabbricati Moioli`}
+  title={`${scheda.nome} | ${scheda.alias ?? t.sistemaGenerico} | Prefabbricati Moioli`}
   description={scheda.meta}
   preloadImage={cover}
   jsonLd={jsonLd}
@@ -122,8 +108,8 @@ const jsonLd = {
       <p class="lead sg-lead">{scheda.lead}</p>
 
       <div class="sg-hero-cta">
-        <a href="#sezione" class="btn btn-red">
-          {t.esploraSezione}
+        <a href="#dati" class="btn btn-red">
+          {t.vediDati}
           <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
         </a>
         <a href={hrefContatti} class="btn btn-light">{t.chiediAdatto}</a>
@@ -133,7 +119,6 @@ const jsonLd = {
 
   <!-- ==================== 2. DI COSA SI TRATTA ==================== -->
   <section class="block sg-id">
-    <div class="sec-num" aria-hidden="true">01</div>
     <div class="wrap">
       <div class="sg-id-grid">
         <div class="reveal">
@@ -158,52 +143,15 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- ==================== 3. SEZIONE INTERATTIVA — il blocco centrale ==== -->
+  <!-- ==================== 3. MODELLO 3D (in arrivo) ==================== -->
   <section class="sg-sez on-dark" id="sezione">
-    <div class="sec-num" aria-hidden="true">02</div>
     <div class="wrap">
-      <div class="sg-sez-head reveal">
-        <p class="eyebrow">{t.laSezione}</p>
-        <h2>{scheda.sezione.titolo}</h2>
-      </div>
-
-      <HotspotExplainer
-        hotspots={scheda.hotspots}
-        intro={scheda.sezione.intro}
-        etichettaFoto={ui[lang].fotoDettaglio}
-        didascalia={ui[lang].disegnoSegnaposto}
-      >
-        <Disegno lang={lang} />
-      </HotspotExplainer>
-
-      {/* Il modello 3D sta qui perché racconta la stessa cosa del disegno in
-          sezione, montata. Scheda nuova: è una pagina a sé, pesante, e non
-          deve rubare la posizione a questa. */}
-      {
-        scheda.modello3d && (
-          <div class="sg-3d reveal">
-            <div class="sg-3d-txt">
-              <h3>{scheda.modello3d.titolo}</h3>
-              <p>{scheda.modello3d.testo}</p>
-            </div>
-            <a
-              href={scheda.modello3d.href}
-              class="btn btn-light"
-              target="_blank"
-              rel="noopener"
-            >
-              {t.apriModello3d}
-              <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
-            </a>
-          </div>
-        )
-      }
+      <ModelloInArrivo nome={scheda.nome} />
     </div>
   </section>
 
   <!-- ==================== 4. DATI TECNICI ==================== -->
-  <section class="block sg-dati-s">
-    <div class="sec-num" aria-hidden="true">03</div>
+  <section class="block sg-dati-s" id="dati">
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.datiTecnici}</p>
@@ -230,7 +178,6 @@ const jsonLd = {
 
   <!-- ==================== 5. IL SISTEMA ==================== -->
   <section class="block sg-sis on-dark">
-    <div class="sec-num" aria-hidden="true">04</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.ilSistema}</p>
@@ -256,7 +203,6 @@ const jsonLd = {
 
   <!-- ==================== 6. APPLICAZIONI ==================== -->
   <section class="block sg-app">
-    <div class="sec-num" aria-hidden="true">05</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.doveSiUsa}</p>
@@ -281,7 +227,6 @@ const jsonLd = {
   {
     galleria && galleria.galleria.length > 0 && (
       <section class="block sg-gal on-dark">
-        <div class="sec-num" aria-hidden="true">06</div>
         <div class="wrap">
           <div class="sec-head reveal">
             <p class="eyebrow">{t.realizzazioni}</p>
@@ -519,31 +464,6 @@ const jsonLd = {
 
   /* Rimando al modello 3D. Sta sotto il disegno, separato da un filo: è un
      approfondimento, non un secondo contenuto della sezione. */
-  .sg-3d {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 32px;
-    flex-wrap: wrap;
-    margin-top: 56px;
-    padding-top: 36px;
-    border-top: 1px solid rgba(255, 255, 255, 0.16);
-  }
-  .sg-3d-txt {
-    max-width: 52ch;
-  }
-  .sg-3d h3 {
-    font-family: var(--brand);
-    font-weight: 600;
-    font-size: clamp(21px, 2.2vw, 27px);
-    letter-spacing: -0.015em;
-    line-height: 1.2;
-    color: #fff;
-  }
-  .sg-3d p {
-    margin-top: 10px;
-    color: rgba(255, 255, 255, 0.72);
-  }
 
   /* ==================== 4. DATI TECNICI ==================== */
   .sg-dati-s {
@@ -867,14 +787,6 @@ const jsonLd = {
   }
 
   @media (max-width: 700px) {
-    .sg-3d {
-      align-items: stretch;
-      gap: 22px;
-      margin-top: 40px;
-    }
-    .sg-3d .btn {
-      justify-content: center;
-    }
     .sg-hero {
       min-height: auto;
     }

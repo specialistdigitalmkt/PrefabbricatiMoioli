@@ -45,7 +45,7 @@ const succ = realizzazioni[i + 1] ?? realizzazioni[0];
 ---
 
 <BaseLayout
-  title={`${nome} — Realizzazioni | Prefabbricati Moioli`}
+  title={`${nome} | Realizzazioni | Prefabbricati Moioli`}
   description={`${nome}${c.comune ? `, ${c.comune}` : ''}: struttura prefabbricata in cemento armato realizzata da Prefabbricati Moioli, Bagnatica (BG).`}
   preloadImage={r.cover}
 >
@@ -56,7 +56,7 @@ const succ = realizzazioni[i + 1] ?? realizzazioni[0];
         src={coverSrc}
         srcset={coverSrcset}
         sizes="100vw"
-        alt={`${nome} — vista d'insieme`}
+        alt={`${nome}, vista d'insieme`}
         fetchpriority="high"
         decoding="sync"
       />
@@ -134,7 +134,7 @@ const succ = realizzazioni[i + 1] ?? realizzazioni[0];
               <figure class:list={['gal-item', { wide: g.ratio >= 1.6 }]}>
                 <Picture
                   id={g.id}
-                  alt={`${nome} — fotografia ${n + 1}`}
+                  alt={`${nome}, fotografia ${n + 1}`}
                   ratio={g.ratio >= 1.6 ? '16/9' : g.ratio >= 1.1 ? '3/2' : '3/4'}
                   sizes="(max-width: 700px) 100vw, 50vw"
                 />

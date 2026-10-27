@@ -35,7 +35,7 @@ export const azienda = {
   },
   /* Coordinate della sede, usate per i dati strutturati e il link mappa. */
   geo: { lat: 45.6592, lng: 9.7796 },
-  accesso: 'Autostrada A4 — Uscita Seriate',
+  accesso: 'Autostrada A4, uscita Seriate',
   mapsUrl:
     'https://www.google.com/maps/search/?api=1&query=Prefabbricati+Moioli+Via+F.lli+Kennedy+24+Bagnatica+BG',
 } as const;
@@ -83,6 +83,7 @@ export const nav: VoceMenu[] = [
         href: '/azienda/riconoscimenti',
         nota: 'Certificazioni e appartenenze',
       },
+      { label: 'Lavora con noi', href: '/azienda/lavora-con-noi', nota: 'Le posizioni aperte' },
     ],
   },
   { label: 'Contatti', href: '/contatti' },

@@ -89,7 +89,7 @@ export const pagina = {
     eyebrow: 'La soluzione',
     titolo: 'Un capannone che si illumina da solo.',
     paragrafi: [
-      'In un edificio produttivo la luce non è un dettaglio estetico: determina la qualità del lavoro che ci si svolge dentro. La copertura a shed nasce esattamente per questo — orientare le superfici vetrate a nord e trasformare l’intera copertura in una fonte di luce naturale diffusa.',
+      'In un edificio produttivo la luce non è un dettaglio estetico: determina la qualità del lavoro che ci si svolge dentro. La copertura a shed nasce esattamente per questo: orientare le superfici vetrate a nord e trasformare l’intera copertura in una fonte di luce naturale diffusa.',
       'Il risultato è un ambiente illuminato in modo uniforme, senza le zone d’ombra tipiche dell’illuminazione artificiale puntuale e senza l’irraggiamento diretto che rende inutilizzabili le postazioni sotto un lucernario mal orientato.',
       'microSHED è la declinazione Moioli di questo principio, realizzata con elementi prefabbricati in cemento armato precompresso prodotti nello stabilimento di Bagnatica.',
     ],

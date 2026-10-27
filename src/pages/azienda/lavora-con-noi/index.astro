@@ -1,0 +1,250 @@
+---
+/**
+ * /azienda/lavora-con-noi — l'elenco delle posizioni aperte.
+ *
+ * È la pagina a cui puntano gli annunci (LinkedIn, passaparola): deve dire
+ * in una schermata cosa cerchiamo e portare subito al dettaglio. Ogni
+ * posizione ha la sua pagina, dove si legge l'annuncio e ci si candida.
+ *
+ * L'elenco si costruisce da `src/data/posizioni.ts`: aggiungere o chiudere
+ * una ricerca è una modifica ai dati, non al markup. Quando non c'è nessuna
+ * posizione aperta la pagina lo dice e lascia la candidatura spontanea.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import SezioneNav from '../../../components/SezioneNav.astro';
+import Icon from '../../../components/Icon.astro';
+import { posizioniAperte, emailCandidature } from '../../../data/posizioni';
+
+const mailSpontanea = `mailto:${emailCandidature}?subject=${encodeURIComponent('Candidatura spontanea')}`;
+---
+
+<BaseLayout
+  title="Lavora con noi | Prefabbricati Moioli"
+  description="Le posizioni aperte in Prefabbricati Moioli, strutture prefabbricate in cemento armato a Bagnatica (BG). Leggi gli annunci e invia la tua candidatura."
+>
+  <PageHero
+    eyebrow="Lavora con noi"
+    title="Costruiamo da oltre cinquant’anni. Cerchiamo chi vuole farlo con noi."
+    lead="Progettiamo, produciamo e montiamo strutture prefabbricate in cemento armato da Bagnatica, in provincia di Bergamo. Qui trovi le ricerche aperte e come candidarti."
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Azienda', href: '/azienda' },
+      { label: 'Lavora con noi' },
+    ]}
+  />
+
+  <SezioneNav sezione="/azienda" />
+
+  <section class="block lcn">
+    <div class="wrap">
+      <div class="lcn-head reveal">
+        <h2>
+          {posizioniAperte.length === 1
+            ? 'Una posizione aperta'
+            : posizioniAperte.length > 1
+              ? `${posizioniAperte.length} posizioni aperte`
+              : 'Nessuna posizione aperta in questo momento'}
+        </h2>
+      </div>
+
+      {
+        posizioniAperte.length > 0 && (
+          <ul class="pos-list">
+            {posizioniAperte.map((p) => (
+              <li class="reveal">
+                <a href={`/azienda/lavora-con-noi/${p.slug}`} class="pos">
+                  <div class="pos-main">
+                    <p class="pos-rep">Reparto {p.reparto}</p>
+                    <h3>{p.titolo}</h3>
+                    <p class="pos-sint">{p.sintesi}</p>
+                  </div>
+                  <dl class="pos-dati">
+                    <div>
+                      <dt>Sede</dt>
+                      <dd>{p.sede}</dd>
+                    </div>
+                    <div>
+                      <dt>Impiego</dt>
+                      <dd>{p.impiego}</dd>
+                    </div>
+                    <div>
+                      <dt>Inserimento</dt>
+                      <dd>{p.inserimento}</dd>
+                    </div>
+                  </dl>
+                  <span class="pos-cta">
+                    Leggi e candidati <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <div class="spont reveal">
+        <div>
+          <h2 class="spont-h">Non trovi la posizione giusta?</h2>
+          <p>
+            Mandaci comunque il tuo CV con due righe su di te: lo teniamo presente per le
+            prossime ricerche.
+          </p>
+        </div>
+        <a href={mailSpontanea} class="btn btn-ghost">
+          <Icon nome="email" dim={18} /> {emailCandidature}
+        </a>
+      </div>
+
+      <p class="lcn-legal">
+        Le ricerche sono rivolte a candidati di entrambi i sessi (L. 903/77 e D.Lgs.
+        198/2006). Come trattiamo i dati dei candidati è scritto nell’<a
+          href="/privacy#candidature">informativa privacy</a
+        >.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lcn {
+    background: var(--bg1);
+  }
+
+  .lcn-head h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(26px, 3vw, 36px);
+    letter-spacing: -0.015em;
+    color: var(--navy);
+    margin-bottom: 32px;
+  }
+
+  /* --- Elenco posizioni ---------------------------------------------------- */
+  .pos-list {
+    list-style: none;
+    display: grid;
+    gap: 16px;
+  }
+
+  .pos {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) auto;
+    gap: 40px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-left: 4px solid var(--red);
+    border-radius: var(--r-md);
+    padding: 34px 36px;
+    transition:
+      box-shadow 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+  .pos:hover {
+    box-shadow: var(--sh-lift);
+    transform: translateY(-2px);
+  }
+  .pos:active {
+    transform: translateY(0);
+  }
+
+  .pos-rep {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--red);
+    margin-bottom: 6px;
+  }
+  .pos h3 {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: clamp(26px, 2.6vw, 34px);
+    letter-spacing: -0.02em;
+    color: var(--navy);
+    line-height: 1.1;
+  }
+  .pos-sint {
+    margin-top: 10px;
+    color: var(--text);
+    max-width: 58ch;
+  }
+
+  .pos-dati {
+    display: grid;
+    gap: 10px;
+  }
+  .pos-dati div {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+    font-size: 15px;
+  }
+  .pos-dati dt {
+    color: var(--text-2);
+  }
+  .pos-dati dd {
+    color: var(--navy);
+    font-weight: 500;
+  }
+
+  .pos-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--brand);
+    font-weight: 600;
+    color: var(--red);
+    white-space: nowrap;
+  }
+  .pos-cta .arr {
+    transition: transform 0.3s var(--ease);
+  }
+  .pos:hover .pos-cta .arr {
+    transform: translateX(4px);
+  }
+
+  /* --- Candidatura spontanea ---------------------------------------------- */
+  .spont {
+    margin-top: 72px;
+    padding-top: 40px;
+    border-top: 1px solid var(--bg2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .spont-h {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .spont p {
+    max-width: 56ch;
+  }
+  .spont .btn {
+    gap: 10px;
+  }
+
+  .lcn-legal {
+    margin-top: 40px;
+    font-size: 13.5px;
+    color: var(--text-2);
+    max-width: 78ch;
+  }
+  .lcn-legal a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 960px) {
+    .pos {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 28px 24px;
+    }
+  }
+</style>

@@ -6,6 +6,7 @@ import type { APIRoute } from 'astro';
 import { realizzazioni } from '../data/progetti';
 import { soluzioni } from '../data/soluzioni';
 import { coppieRotte } from '../i18n';
+import { posizioniAperte } from '../data/posizioni';
 
 const ROUTES = [
   { path: '/', priority: '1.0', changefreq: 'monthly' },
@@ -24,7 +25,15 @@ const ROUTES = [
   { path: '/azienda', priority: '0.8', changefreq: 'yearly' },
   { path: '/azienda/referenze', priority: '0.6', changefreq: 'yearly' },
   { path: '/azienda/riconoscimenti', priority: '0.5', changefreq: 'yearly' },
+  { path: '/azienda/lavora-con-noi', priority: '0.7', changefreq: 'weekly' },
+  /* Solo le posizioni aperte: una ricerca chiusa non va riproposta ai motori. */
+  ...posizioniAperte.map((p) => ({
+    path: `/azienda/lavora-con-noi/${p.slug}`,
+    priority: '0.7',
+    changefreq: 'weekly',
+  })),
   { path: '/contatti', priority: '0.7', changefreq: 'yearly' },
+  { path: '/privacy', priority: '0.2', changefreq: 'yearly' },
 
   /* Le schede di realizzazione si aggiungono da sé: nessun elenco da tenere
      allineato a mano quando ne arriva una nuova. */

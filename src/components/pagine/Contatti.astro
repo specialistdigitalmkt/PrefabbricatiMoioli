@@ -3,10 +3,9 @@
  * Corpo della pagina contatti, condiviso fra italiano (/contatti) e inglese
  * (/en/contact).
  *
- * Il form e' INERTE: valida e mostra lo stato di successo senza inviare
- * nulla. Scelta voluta per la demo - nessun invio accidentale durante la
- * presentazione. Per attivarlo basta sostituire il blocco "esito simulato"
- * con una chiamata reale.
+ * Il form spedisce a api/contatto.js, che inoltra la richiesta a
+ * info@prefabbricatimoioli.it. Se l'invio non riesce (servizio di posta non
+ * configurato, rete assente) il messaggio d'errore propone l'email diretta.
  *
  * I messaggi dello script (errore, invio in corso, esito) arrivano dal
  * markup via data-attribute: lo script non conosce la lingua della pagina.
@@ -108,7 +107,7 @@ const { indirizzo } = azienda;
               </g>
               <text x="422" y="264" class="m-tx-strong">Prefabbricati Moioli</text>
               <text x="422" y="284" class="m-tx">
-                {indirizzo.via} — {indirizzo.citta}
+                {indirizzo.via}, {indirizzo.citta}
               </text>
             </svg>
 
@@ -137,6 +136,10 @@ const { indirizzo } = azienda;
             data-msg-invio={t.msgInvio}
             data-msg-ok={t.msgOk}
             data-msg-invia={t.inviaRichiesta}
+            data-msg-ko={t.msgKo}
+            data-msg-oppure={t.oppureEmail}
+            data-email={azienda.email}
+            data-lingua={lang}
           >
             <h2 class="ct-h">{t.richiediPreventivo}</h2>
             <p class="ct-req">{t.campiObbligatori}</p>
@@ -215,16 +218,26 @@ const { indirizzo } = azienda;
               <p class="hint" id="h-msg">{t.hintProgetto}</p>
             </div>
 
+            {/* Trappola per i programmi che compilano i moduli da soli. */}
+            <div class="trappola" aria-hidden="true">
+              <label for="f-sito">Sito web</label>
+              <input id="f-sito" name="sito" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="field">
+              <label class="check" for="f-priv">
+                <input id="f-priv" name="privacy" type="checkbox" required aria-describedby="e-priv" />
+                <span set:html={t.labelPrivacy} />
+              </label>
+              <p class="err" id="e-priv" hidden>{t.errPrivacy}</p>
+            </div>
+
             <button type="submit" class="btn btn-red ct-submit">
               {t.inviaRichiesta} <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
             </button>
 
             <!-- L'esito è annunciato agli screen reader senza rubare il focus -->
             <p class="ct-status" id="ctStatus" role="status" aria-live="polite"></p>
-
-            <p class="ph-note ct-demo-note">
-              {t.notaDemo}
-            </p>
           </form>
         </div>
       </div>
@@ -488,8 +501,42 @@ const { indirizzo } = azienda;
     color: var(--red-deep);
   }
 
-  .ct-demo-note {
-    margin-top: 24px;
+  .ct-status a {
+    color: var(--navy);
+    text-decoration: underline;
+  }
+
+  .trappola {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  label.check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    font-size: 14.5px;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  label.check input {
+    width: 20px;
+    height: 20px;
+    min-height: 0;
+    padding: 0;
+    margin-top: 2px;
+    accent-color: var(--red);
+  }
+  label.check :global(a) {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   /* --- Responsive --------------------------------------------------------- */
@@ -513,9 +560,7 @@ const { indirizzo } = azienda;
 
 <script>
   /**
-   * Validazione lato client.
-   * L'invio è volutamente disattivato: la demo non deve poter spedire nulla.
-   * Per attivarlo, sostituire il blocco "esito simulato" con la fetch reale.
+   * Validazione lato client e invio a /api/contatto.
    */
   const form = document.getElementById('ctForm') as HTMLFormElement | null;
 
@@ -528,6 +573,17 @@ const { indirizzo } = azienda;
       'f-tel': { err: 'e-tel', test: (v) => v.replace(/[^\d+]/g, '').length >= 8 },
       'f-mail': { err: 'e-mail', test: (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) },
     };
+    const priv = document.getElementById('f-priv') as HTMLInputElement;
+    const checkPriv = () => {
+      priv.setAttribute('aria-invalid', String(!priv.checked));
+      document.getElementById('e-priv')!.hidden = priv.checked;
+      return priv.checked;
+    };
+    priv.addEventListener('change', () => {
+      if (priv.getAttribute('aria-invalid') === 'true') checkPriv();
+    });
+    const aperturaModulo = Date.now();
+    const val = (id: string) => (document.getElementById(id) as HTMLInputElement).value.trim();
 
     const check = (id: string) => {
       const el = document.getElementById(id) as HTMLInputElement;
@@ -550,13 +606,13 @@ const { indirizzo } = azienda;
       });
     }
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       status.className = 'ct-status';
       status.textContent = '';
 
-      const ids = Object.keys(regole);
-      const esiti = ids.map(check);
+      const ids = [...Object.keys(regole), 'f-priv'];
+      const esiti = ids.map((id) => (id === 'f-priv' ? checkPriv() : check(id)));
       const primoErrore = ids[esiti.indexOf(false)];
 
       if (primoErrore) {
@@ -566,18 +622,44 @@ const { indirizzo } = azienda;
         return;
       }
 
-      /* --- Esito simulato (demo) --------------------------------------- */
       const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      const etichetta = btn.innerHTML;
       btn.disabled = true;
       btn.textContent = form.dataset.msgInvio ?? '';
 
-      setTimeout(() => {
+      try {
+        const r = await fetch('/api/contatto', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: val('f-nome'),
+            azienda: val('f-az'),
+            telefono: val('f-tel'),
+            email: val('f-mail'),
+            tipo: (document.getElementById('f-tipo') as HTMLSelectElement).value,
+            messaggio: val('f-msg'),
+            privacy: true,
+            sito: val('f-sito'),
+            ms: Date.now() - aperturaModulo,
+            lingua: form.dataset.lingua,
+          }),
+        });
+        if (!r.ok) throw new Error(String(r.status));
         status.classList.add('ok');
         status.textContent = form.dataset.msgOk ?? '';
-        btn.disabled = false;
-        btn.innerHTML = `${form.dataset.msgInvia ?? ''} <span class="arr">→</span>`;
         form.reset();
-      }, 700);
+      } catch {
+        /* L'email diretta funziona sempre: è l'uscita di sicurezza. */
+        status.classList.add('ko');
+        status.textContent = `${form.dataset.msgKo} ${form.dataset.msgOppure} `;
+        const a = document.createElement('a');
+        a.href = `mailto:${form.dataset.email}`;
+        a.textContent = form.dataset.email ?? '';
+        status.append(a, '.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = etichetta;
+      }
     });
   }
 </script>

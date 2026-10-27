@@ -1,0 +1,154 @@
+---
+/**
+ * Segnaposto «modello 3D in arrivo» delle schede di soluzione.
+ *
+ * Prende il posto della sezione costruttiva con i punti cliccabili: i disegni
+ * erano segnaposto, e lo spazio è quello in cui arriveranno i modelli
+ * tridimensionali come quello già online del Tecnowing. Finché il modello
+ * di una soluzione non c'è, il blocco lo dice e rimanda a quello che esiste.
+ *
+ * Il nome della soluzione è disegnato a filo, solo contorno: è lo stesso
+ * segno di «Dove la forma» nell'apertura della home. La forma c'è, il
+ * volume arriva con il modello.
+ *
+ * Va dentro una <section class="on-dark">: i colori sono quelli del fondo navy.
+ * Per togliere il segnaposto quando il modello è pronto si fa come per
+ * Tecnowing: visualizzatore al posto di questo componente.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  nome: string;
+}
+
+const { nome } = Astro.props;
+---
+
+<div class="mia reveal">
+  <div class="mia-txt">
+    <p class="mia-tag">In arrivo</p>
+    <h2>Il modello 3D è in preparazione.</h2>
+    <p>
+      Qui arriverà il modello tridimensionale di {nome}: si potrà girare, scomporre componente per
+      componente e leggere accanto ai dati tecnici. Intanto la sezione costruttiva si richiede
+      all’ufficio tecnico.
+    </p>
+    <div class="mia-cta">
+      <a href="/soluzioni/tecnowing#sezione" class="btn btn-light">
+        Guarda il modello del Tecnowing <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+      </a>
+      <a href="/contatti" class="btn btn-ghost-light">Richiedi la sezione</a>
+    </div>
+  </div>
+
+  <div class="mia-vis" aria-hidden="true">
+    <span class="mia-nome">{nome}</span>
+    <span class="mia-3d">3D</span>
+  </div>
+</div>
+
+<style>
+  .mia {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 64px;
+    align-items: center;
+  }
+
+  .mia-tag {
+    display: inline-block;
+    font-family: var(--brand);
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--red);
+    padding: 5px 11px;
+    border-radius: var(--r-sm);
+    margin-bottom: 18px;
+  }
+
+  .mia h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(28px, 3.2vw, 42px);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 18px;
+  }
+
+  .mia-txt > p:not(.mia-tag) {
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 52ch;
+  }
+
+  .mia-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 32px;
+  }
+
+  .btn-ghost-light {
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: transparent;
+  }
+  .btn-ghost-light:hover {
+    background: #fff;
+    color: var(--navy);
+    border-color: #fff;
+  }
+
+  /* Riquadro a quadretti come un foglio di tavola, con il nome a filo. */
+  .mia-vis {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: var(--r-md);
+    background-color: rgba(255, 255, 255, 0.02);
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 32px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px;
+    overflow: hidden;
+  }
+
+  .mia-nome {
+    font-family: 'Space Grotesk Var', var(--brand);
+    font-weight: 500;
+    font-size: clamp(40px, 5.4vw, 76px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: transparent;
+    -webkit-text-stroke: 1.25px rgba(255, 255, 255, 0.85);
+    overflow-wrap: anywhere;
+  }
+
+  .mia-3d {
+    position: absolute;
+    top: 24px;
+    left: 30px;
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: clamp(48px, 6vw, 88px);
+    line-height: 1;
+    color: var(--red-soft);
+    opacity: 0.9;
+  }
+
+  @media (max-width: 920px) {
+    .mia {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .mia-vis {
+      aspect-ratio: 16 / 9;
+      padding: 22px;
+    }
+  }
+</style>

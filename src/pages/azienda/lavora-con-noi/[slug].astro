@@ -1,0 +1,829 @@
+---
+/**
+ * /azienda/lavora-con-noi/[slug] — l'annuncio di una posizione e la candidatura.
+ *
+ * DUE MODI PER CANDIDARSI, STESSA CASELLA
+ * - il pulsante email apre il programma di posta con indirizzo e oggetto già
+ *   scritti: funziona sempre, anche se il modulo avesse un problema;
+ * - il modulo raccoglie i dati e il CV e li spedisce da api/candidatura.js.
+ * Tutti e due arrivano a `emailCandidature` con lo stesso oggetto.
+ *
+ * IL CV NEL MODULO
+ * Viaggia dentro la richiesta, codificato in base64. Le Vercel Functions
+ * accettano richieste fino a 4,5 MB e il base64 pesa un terzo in più del
+ * file: da qui il limite di 3 MB, controllato sia qui sia dal server.
+ *
+ * POSIZIONE CHIUSA
+ * La pagina resta (i link degli annunci vecchi non finiscono su un 404) ma
+ * dice che la ricerca è chiusa, toglie il modulo e i dati strutturati.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Icon from '../../../components/Icon.astro';
+import { azienda } from '../../../data/site';
+import {
+  posizioni,
+  emailCandidature,
+  oggettoCandidatura,
+  type Posizione,
+} from '../../../data/posizioni';
+
+export function getStaticPaths() {
+  return posizioni.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+
+const { p } = Astro.props as { p: Posizione };
+
+const mailto = `mailto:${emailCandidature}?subject=${encodeURIComponent(oggettoCandidatura(p))}`;
+const MAX_MB = 3;
+
+/* JobPosting: è ciò che permette a Google di mostrare l'annuncio fra le
+   offerte di lavoro, quando il sito sarà indicizzato. */
+const { indirizzo } = azienda;
+const jobLd = p.aperta
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'JobPosting',
+      title: p.titolo,
+      description: [
+        `<p>${p.sintesi}</p>`,
+        ...p.ruolo.map((r) => `<p>${r}</p>`),
+        '<p><strong>Principali responsabilità</strong></p>',
+        `<ul>${p.responsabilita.map((r) => `<li>${r}</li>`).join('')}</ul>`,
+        '<p><strong>Requisiti</strong></p>',
+        `<ul>${p.requisiti.map((r) => `<li>${r}</li>`).join('')}</ul>`,
+        '<p><strong>Contratto e compenso</strong></p>',
+        ...p.contratto.map((r) => `<p>${r}</p>`),
+      ].join(''),
+      datePosted: p.pubblicata,
+      employmentType: p.tipiImpiego,
+      hiringOrganization: {
+        '@type': 'Organization',
+        name: azienda.ragioneSociale,
+        sameAs: Astro.site?.href,
+      },
+      jobLocation: {
+        '@type': 'Place',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: indirizzo.via,
+          postalCode: indirizzo.cap,
+          addressLocality: indirizzo.citta,
+          addressRegion: indirizzo.provincia,
+          addressCountry: indirizzo.paese,
+        },
+      },
+      ...(p.ral && {
+        baseSalary: {
+          '@type': 'MonetaryAmount',
+          currency: 'EUR',
+          value: { '@type': 'QuantitativeValue', minValue: p.ral.min, maxValue: p.ral.max, unitText: 'YEAR' },
+        },
+      }),
+      directApply: true,
+    }
+  : null;
+---
+
+<BaseLayout
+  title={`${p.titolo} | Lavora con noi | Prefabbricati Moioli`}
+  description={p.sintesi}
+  jsonLd={jobLd}
+>
+  <PageHero
+    eyebrow={p.aperta ? `Posizione aperta, reparto ${p.reparto}` : 'Ricerca chiusa'}
+    title={p.titolo}
+    lead={p.sintesi}
+    crumbs={[
+      { label: 'Home', href: '/' },
+      { label: 'Lavora con noi', href: '/azienda/lavora-con-noi' },
+      { label: p.titolo },
+    ]}
+  />
+
+  <section class="block ann">
+    <div class="wrap">
+      {
+        !p.aperta && (
+          <div class="chiusa">
+            <p>
+              Questa ricerca è chiusa. Grazie a chi ha inviato la candidatura: le altre posizioni
+              aperte sono nella pagina <a href="/azienda/lavora-con-noi">Lavora con noi</a>.
+            </p>
+          </div>
+        )
+      }
+
+      <div class="ann-grid">
+        <!-- ==================== ANNUNCIO ==================== -->
+        <article class="ann-testo">
+          <dl class="fatti reveal">
+            <div>
+              <dt>Reparto</dt>
+              <dd>{p.reparto}</dd>
+            </div>
+            <div>
+              <dt>Sede</dt>
+              <dd>{p.sede}</dd>
+            </div>
+            <div>
+              <dt>Impiego</dt>
+              <dd>{p.impiego}</dd>
+            </div>
+            <div>
+              <dt>Inserimento</dt>
+              <dd>{p.inserimento}</dd>
+            </div>
+          </dl>
+
+          <section class="ann-sez reveal">
+            <h2>Il ruolo</h2>
+            {p.ruolo.map((r) => <p>{r}</p>)}
+          </section>
+
+          <section class="ann-sez reveal">
+            <h2>Principali responsabilità</h2>
+            <ul class="punti">
+              {p.responsabilita.map((r) => <li>{r}</li>)}
+            </ul>
+          </section>
+
+          <section class="ann-sez reveal">
+            <h2>Requisiti</h2>
+            <ul class="punti">
+              {p.requisiti.map((r) => <li>{r}</li>)}
+            </ul>
+          </section>
+
+          <section class="ann-sez reveal">
+            <h2>Contratto e compenso</h2>
+            {p.contratto.map((r) => <p>{r}</p>)}
+          </section>
+
+          <p class="ann-legal">
+            La ricerca è rivolta a candidati di entrambi i sessi (L. 903/77 e D.Lgs. 198/2006).
+          </p>
+        </article>
+
+        <!-- ==================== CANDIDATI (riquadro fisso) ==================== -->
+        {
+          p.aperta && (
+            <aside class="cand" aria-labelledby="cand-h">
+              <h2 id="cand-h">Candidati</h2>
+              <p>Scegli come preferisci: le candidature arrivano alla stessa persona.</p>
+              <div class="cand-btns">
+                <a href="#modulo" class="btn btn-red">
+                  <Icon nome="allegato" dim={18} /> Invia il CV dal sito
+                </a>
+                <a href={mailto} class="btn btn-ghost">
+                  <Icon nome="email" dim={18} /> Scrivi un’email
+                </a>
+              </div>
+              <p class="cand-mail">
+                Oppure scrivi a <a href={mailto}>{emailCandidature}</a> con oggetto «
+                {oggettoCandidatura(p)}».
+              </p>
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MODULO ==================== -->
+  {
+    p.aperta && (
+      <section class="block mod-s" id="modulo">
+        <div class="wrap">
+          <div class="mod-grid">
+            <div class="mod-intro reveal">
+              <h2>Invia la tua candidatura</h2>
+              <p>
+                Compila i campi e allega il CV. Ti rispondiamo all’indirizzo email che indichi.
+              </p>
+              <p class="mod-alt">
+                Preferisci la posta? <a href={mailto}>Scrivi a {emailCandidature}</a>.
+              </p>
+            </div>
+
+            <form
+              class="mod reveal"
+              id="candForm"
+              novalidate
+              data-posizione={p.titolo}
+              data-max-mb={MAX_MB}
+              data-mailto={mailto}
+            >
+              <p class="mod-req">Tutti i campi sono obbligatori, tranne il messaggio.</p>
+
+              <div class="field">
+                <label for="c-nome">Nome e cognome</label>
+                <input id="c-nome" name="nome" type="text" autocomplete="name" required aria-describedby="ce-nome" />
+                <p class="err" id="ce-nome" hidden>Scrivi nome e cognome.</p>
+              </div>
+
+              <div class="two">
+                <div class="field">
+                  <label for="c-mail">Email</label>
+                  <input id="c-mail" name="email" type="email" inputmode="email" autocomplete="email" required aria-describedby="ce-mail" />
+                  <p class="err" id="ce-mail" hidden>Serve un indirizzo email valido.</p>
+                </div>
+                <div class="field">
+                  <label for="c-tel">Telefono</label>
+                  <input id="c-tel" name="telefono" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="ce-tel" />
+                  <p class="err" id="ce-tel" hidden>Serve un numero di telefono.</p>
+                </div>
+              </div>
+
+              <div class="field">
+                <span class="lbl" id="c-cv-l">Curriculum vitae</span>
+                <label class="file" for="c-cv">
+                  <Icon nome="allegato" dim={20} />
+                  <span class="file-t" id="c-cv-t">Scegli il file</span>
+                  <span class="file-s">PDF o Word, massimo {MAX_MB} MB</span>
+                </label>
+                <input
+                  id="c-cv"
+                  name="cv"
+                  type="file"
+                  class="sr-only"
+                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  required
+                  aria-labelledby="c-cv-l"
+                  aria-describedby="ce-cv"
+                />
+                <p class="err" id="ce-cv" hidden>Allega il CV in PDF o Word, massimo {MAX_MB} MB.</p>
+              </div>
+
+              <div class="field">
+                <label for="c-msg">Messaggio <span class="opz">(facoltativo)</span></label>
+                <textarea id="c-msg" name="messaggio" rows="4" maxlength="3000"></textarea>
+              </div>
+
+              {/* Trappola per i programmi che compilano i moduli da soli: un
+                  campo che una persona non vede e non raggiunge con il tab. */}
+              <div class="trappola" aria-hidden="true">
+                <label for="c-sito">Sito web</label>
+                <input id="c-sito" name="sito" type="text" tabindex="-1" autocomplete="off" />
+              </div>
+
+              <div class="field">
+                <label class="check" for="c-priv">
+                  <input id="c-priv" name="privacy" type="checkbox" required aria-describedby="ce-priv" />
+                  <span>
+                    Ho letto l’<a href="/privacy#candidature" target="_blank" rel="noopener">informativa
+                    privacy per i candidati</a> e acconsento al trattamento dei miei dati per questa
+                    selezione.
+                  </span>
+                </label>
+                <p class="err" id="ce-priv" hidden>Serve la presa visione dell’informativa.</p>
+              </div>
+
+              <button type="submit" class="btn btn-red mod-submit">
+                <span class="mod-submit-t">Invia candidatura</span>
+                <span class="arr"><Icon nome="freccia-dx" dim={17} /></span>
+              </button>
+
+              <p class="mod-status" id="candStatus" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="mod-ok" id="candOk" hidden tabindex="-1">
+              <h3>Candidatura inviata.</h3>
+              <p>
+                Grazie. L’abbiamo ricevuta insieme al CV: se il profilo è in linea con la ricerca
+                ti contattiamo noi, all’email o al telefono che hai indicato.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .ann {
+    background: #fff;
+  }
+
+  .chiusa {
+    border-left: 4px solid var(--red);
+    background: var(--bg1);
+    padding: 20px 24px;
+    margin-bottom: 48px;
+    max-width: 72ch;
+  }
+  .chiusa a {
+    color: var(--red);
+    text-decoration: underline;
+  }
+
+  .ann-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 80px;
+    align-items: start;
+  }
+
+  /* --- Fatti in testa ----------------------------------------------------- */
+  .fatti {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    padding-bottom: 36px;
+    margin-bottom: 44px;
+    border-bottom: 1px solid var(--bg2);
+  }
+  .fatti dt {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 4px;
+  }
+  .fatti dd {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--navy);
+    line-height: 1.25;
+  }
+
+  /* --- Testo dell'annuncio ------------------------------------------------ */
+  .ann-sez + .ann-sez {
+    margin-top: 48px;
+  }
+  .ann-sez h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(22px, 2.2vw, 28px);
+    letter-spacing: -0.01em;
+    color: var(--navy);
+    margin-bottom: 16px;
+  }
+  .ann-sez p {
+    max-width: 68ch;
+    color: var(--text);
+  }
+  .ann-sez p + p {
+    margin-top: 14px;
+  }
+
+  .punti {
+    list-style: none;
+    display: grid;
+    gap: 14px;
+    max-width: 70ch;
+  }
+  .punti li {
+    position: relative;
+    padding-left: 30px;
+    color: var(--text);
+  }
+  /* Un trattino rosso, non un pallino: è il segno grafico delle liste del sito. */
+  .punti li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.78em;
+    width: 16px;
+    height: 2px;
+    background: var(--red);
+  }
+
+  .ann-legal {
+    margin-top: 48px;
+    font-size: 13.5px;
+    color: var(--text-2);
+  }
+
+  /* --- Riquadro candidati ------------------------------------------------- */
+  .cand {
+    position: sticky;
+    top: 112px;
+    background: var(--navy);
+    color: rgba(255, 255, 255, 0.82);
+    border-radius: var(--r-md);
+    padding: 32px 30px;
+  }
+  .cand h2 {
+    font-family: var(--brand);
+    font-weight: 700;
+    font-size: 26px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .cand > p {
+    font-size: 15px;
+  }
+  .cand-btns {
+    display: grid;
+    gap: 12px;
+    margin: 24px 0 20px;
+  }
+  .cand-btns .btn {
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+  }
+  .cand .btn-ghost {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .cand .btn-ghost:hover {
+    background: #fff;
+    color: var(--navy);
+    border-color: #fff;
+  }
+  .cand-mail {
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .cand-mail a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    word-break: break-all;
+  }
+
+  /* --- Modulo ------------------------------------------------------------- */
+  .mod-s {
+    background: var(--bg1);
+  }
+  .mod-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: 64px;
+    align-items: start;
+  }
+  .mod-intro h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: clamp(28px, 3vw, 38px);
+    letter-spacing: -0.015em;
+    color: var(--navy);
+    margin-bottom: 14px;
+    line-height: 1.1;
+  }
+  .mod-intro p {
+    max-width: 40ch;
+  }
+  .mod-alt {
+    margin-top: 18px;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+  .mod-alt a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* I campi riprendono quelli del modulo contatti (Contatti.astro): stessi
+     valori, così i due moduli del sito si riconoscono come uno solo. */
+  .mod {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-radius: var(--r-md);
+    padding: 38px;
+  }
+  .mod-req {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+  }
+  .field {
+    margin-bottom: 20px;
+  }
+  .mod label:not(.check):not(.file),
+  .lbl {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .opz {
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    color: var(--text-2);
+  }
+  .mod input[type='text'],
+  .mod input[type='email'],
+  .mod input[type='tel'],
+  .mod textarea {
+    font-family: var(--ui-font);
+    width: 100%;
+    background: var(--bg1);
+    border: 1px solid var(--bg2);
+    padding: 14px 15px;
+    color: var(--navy);
+    font-size: 16px;
+    border-radius: var(--r-sm);
+    transition:
+      border-color 0.25s,
+      box-shadow 0.25s,
+      background 0.25s;
+    min-height: 50px;
+  }
+  .mod textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+  .mod input:focus,
+  .mod textarea:focus {
+    outline: none;
+    border-color: var(--red);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(177, 55, 51, 0.16);
+  }
+  .mod input[aria-invalid='true'] {
+    border-color: var(--red);
+    background: rgba(177, 55, 51, 0.04);
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  /* Campo file: il controllo nativo è nascosto (resta accessibile), al suo
+     posto un'etichetta grande che dice cosa è stato scelto. */
+  .file {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 14px;
+    align-items: center;
+    padding: 16px 18px;
+    border: 1px dashed var(--ui);
+    border-radius: var(--r-sm);
+    background: var(--bg1);
+    cursor: pointer;
+    color: var(--navy);
+    transition:
+      border-color 0.25s,
+      background 0.25s;
+  }
+  .file :global(.icon) {
+    grid-row: span 2;
+    color: var(--red);
+  }
+  .file:hover {
+    border-color: var(--navy);
+    background: #fff;
+  }
+  .file-t {
+    font-weight: 600;
+    word-break: break-all;
+  }
+  .file-s {
+    font-size: 13px;
+    color: var(--text-2);
+  }
+  .file.scelto {
+    border-style: solid;
+    border-color: var(--navy);
+    background: #fff;
+  }
+  .field:has(#c-cv:focus-visible) .file {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .field:has(#c-cv[aria-invalid='true']) .file {
+    border-color: var(--red);
+  }
+
+  .check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    align-items: start;
+    font-size: 14.5px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .check input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    accent-color: var(--red);
+  }
+  .check a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .trappola {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .err {
+    font-size: 13px;
+    color: var(--red-deep);
+    margin-top: 7px;
+  }
+
+  .mod-submit {
+    width: 100%;
+    margin-top: 6px;
+  }
+  .mod-submit[disabled] {
+    opacity: 0.7;
+    cursor: progress;
+  }
+
+  .mod-status {
+    margin-top: 16px;
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--red-deep);
+  }
+  .mod-status a {
+    color: var(--navy);
+    text-decoration: underline;
+  }
+
+  .mod-ok {
+    background: #fff;
+    border: 1px solid var(--bg2);
+    border-left: 4px solid #1f6b46;
+    border-radius: var(--r-md);
+    padding: 38px;
+  }
+  .mod-ok:focus {
+    outline: none;
+  }
+  .mod-ok h3 {
+    font-family: var(--brand);
+    font-size: 26px;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+
+  /* --- Responsive --------------------------------------------------------- */
+  @media (max-width: 1080px) {
+    .ann-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    /* Sotto i 1080 il riquadro sale in testa: chi arriva dal telefono vede
+       subito come candidarsi, poi legge l'annuncio. */
+    .cand {
+      position: static;
+      order: -1;
+    }
+    .fatti {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .mod-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+  }
+  @media (max-width: 600px) {
+    .mod,
+    .mod-ok {
+      padding: 26px 20px;
+    }
+    .two {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Validazione e invio della candidatura.
+   * Il CV si legge come data URL e parte in base64 dentro un JSON: niente
+   * multipart da interpretare sul server.
+   */
+  const form = document.getElementById('candForm') as HTMLFormElement | null;
+
+  if (form) {
+    const status = document.getElementById('candStatus')!;
+    const ok = document.getElementById('candOk')!;
+    const fileIn = document.getElementById('c-cv') as HTMLInputElement;
+    const fileBox = form.querySelector('.file')!;
+    const fileT = document.getElementById('c-cv-t')!;
+    const maxByte = Number(form.dataset.maxMb) * 1024 * 1024;
+    const ESTENSIONI = /\.(pdf|docx?)$/i;
+    const aperturaModulo = Date.now();
+
+    const regole: Record<string, { err: string; test: (el: HTMLInputElement) => boolean }> = {
+      'c-nome': { err: 'ce-nome', test: (el) => el.value.trim().length >= 3 },
+      'c-mail': { err: 'ce-mail', test: (el) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(el.value.trim()) },
+      'c-tel': { err: 'ce-tel', test: (el) => el.value.replace(/[^\d+]/g, '').length >= 8 },
+      'c-cv': {
+        err: 'ce-cv',
+        test: (el) => {
+          const f = el.files?.[0];
+          return !!f && ESTENSIONI.test(f.name) && f.size > 0 && f.size <= maxByte;
+        },
+      },
+      'c-priv': { err: 'ce-priv', test: (el) => el.checked },
+    };
+
+    const check = (id: string) => {
+      const el = document.getElementById(id) as HTMLInputElement;
+      const esito = regole[id].test(el);
+      el.setAttribute('aria-invalid', String(!esito));
+      document.getElementById(regole[id].err)!.hidden = esito;
+      return esito;
+    };
+
+    for (const id of Object.keys(regole)) {
+      const el = document.getElementById(id) as HTMLInputElement;
+      el.addEventListener('blur', () => {
+        if (el.type !== 'checkbox' && el.type !== 'file' && el.value !== '') check(id);
+      });
+      el.addEventListener(el.type === 'checkbox' || el.type === 'file' ? 'change' : 'input', () => {
+        if (el.getAttribute('aria-invalid') === 'true') check(id);
+      });
+    }
+
+    fileIn.addEventListener('change', () => {
+      const f = fileIn.files?.[0];
+      fileT.textContent = f ? f.name : 'Scegli il file';
+      fileBox.classList.toggle('scelto', !!f);
+      if (f) check('c-cv');
+    });
+
+    const leggiFile = (f: File) =>
+      new Promise<string>((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(String(r.result).split(',')[1] ?? '');
+        r.onerror = () => rej(r.error);
+        r.readAsDataURL(f);
+      });
+
+    const valore = (id: string) => (document.getElementById(id) as HTMLInputElement).value.trim();
+
+    const fallisci = (testo: string) => {
+      status.innerHTML = '';
+      status.append(testo + ' ');
+      const a = document.createElement('a');
+      a.href = form.dataset.mailto ?? '';
+      a.textContent = 'manda il CV per email';
+      status.append(a, '.');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+
+      const ids = Object.keys(regole);
+      const esiti = ids.map(check);
+      const primo = ids[esiti.indexOf(false)];
+      if (primo) {
+        status.textContent = 'Controlla i campi segnati.';
+        document.getElementById(primo)!.focus();
+        return;
+      }
+
+      const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+      const btnT = btn.querySelector('.mod-submit-t')!;
+      btn.disabled = true;
+      btnT.textContent = 'Invio in corso…';
+
+      try {
+        const f = fileIn.files![0];
+        const risposta = await fetch('/api/candidatura', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            posizione: form.dataset.posizione,
+            nome: valore('c-nome'),
+            email: valore('c-mail'),
+            telefono: valore('c-tel'),
+            messaggio: valore('c-msg'),
+            privacy: true,
+            sito: valore('c-sito'),
+            ms: Date.now() - aperturaModulo,
+            cv: { nome: f.name, tipo: f.type, dati: await leggiFile(f) },
+          }),
+        });
+        const corpo = await risposta.json().catch(() => ({}));
+        if (!risposta.ok) throw new Error(corpo.messaggio || 'Invio non riuscito.');
+
+        form.hidden = true;
+        ok.hidden = false;
+        ok.focus();
+      } catch (err) {
+        fallisci(
+          (err instanceof Error && err.message !== 'Failed to fetch' ? err.message : 'Invio non riuscito.') +
+            ' Puoi riprovare oppure'
+        );
+        btn.disabled = false;
+        btnT.textContent = 'Invia candidatura';
+      }
+    });
+  }
+</script>

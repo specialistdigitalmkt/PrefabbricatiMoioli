@@ -4,8 +4,26 @@
     {
       "name": "moioli",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "4330"],
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "4330"
+      ],
       "port": 4330
+    },
+    {
+      "name": "sito-vecchio-statico",
+      "runtimeExecutable": "python",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "4340",
+        "--directory",
+        "sito-statico-old/da-caricare"
+      ],
+      "port": 4340
     }
   ]
 }

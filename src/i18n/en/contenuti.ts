@@ -93,7 +93,7 @@ const testiSoluzioni: Record<
     alias: 'Wing roof',
     claim: 'The “V” shape brings in light and sheds the water.',
     intro:
-      'Wing-shaped roofing for industrial, commercial and logistics buildings. Between one element and the next, solid or glazed panels alternate — continuous rooflights or north lights — chosen according to how the building will be used.',
+      'Wing-shaped roofing for industrial, commercial and logistics buildings. Between one element and the next, solid or glazed panels alternate (continuous rooflights or north lights), chosen according to how the building will be used.',
     alt: 'Aerial view of a building with a Tecnowing wing roof',
     specs: ['MODULE WIDTH', 'BEAM DEPTH', 'FIRE RESISTANCE'],
     nota: 'Wing roof',

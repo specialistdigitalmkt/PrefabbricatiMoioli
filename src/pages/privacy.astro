@@ -1,0 +1,146 @@
+---
+/**
+ * /privacy — informativa sul trattamento dei dati (art. 13 GDPR) e cookie.
+ *
+ * STATO: needs-client-approval. Testo scritto per la messa online dei
+ * moduli (contatti e candidature): va riletto dall'azienda e, se c'è, dal
+ * consulente privacy. In particolare vanno confermati i tempi di
+ * conservazione, che sono una scelta dell'azienda e non un dato.
+ *
+ * Le due ancore #contatti e #candidature sono quelle a cui puntano le
+ * caselle di consenso dei moduli: non rinominarle.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { azienda } from '../data/site';
+import { emailCandidature } from '../data/posizioni';
+
+const { indirizzo } = azienda;
+const aggiornata = '27 ottobre 2026';
+---
+
+<BaseLayout
+  title="Privacy e cookie | Prefabbricati Moioli"
+  description="Informativa sul trattamento dei dati personali raccolti dal sito di Prefabbricati Moioli S.r.l. e uso dei cookie."
+>
+  <PageHero
+    eyebrow="Note legali"
+    title="Privacy e cookie"
+    lead={`Come trattiamo i dati che ci lasci tramite questo sito. Aggiornata il ${aggiornata}.`}
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Privacy e cookie' }]}
+  />
+
+  <section class="block legale">
+    <div class="wrap">
+      <div class="testo">
+        <h2>Titolare del trattamento</h2>
+        <p>
+          {azienda.ragioneSociale}, {indirizzo.via}, {indirizzo.cap} {indirizzo.citta} ({indirizzo.provincia}),
+          P.IVA {azienda.piva}. Per qualsiasi domanda sui tuoi dati scrivi a
+          <a href={`mailto:${azienda.email}`}>{azienda.email}</a>.
+        </p>
+
+        <h2 id="contatti">Richieste dal modulo contatti</h2>
+        <p>
+          Quando compili il modulo «Richiedi un preventivo» raccogliamo nome, azienda,
+          telefono, email e quello che scrivi sul progetto. Li usiamo solo per rispondere
+          alla richiesta e, se si arriva a un’offerta, per le trattative che ne seguono.
+        </p>
+        <p>
+          La base giuridica è l’esecuzione di misure precontrattuali richieste da te (art. 6,
+          par. 1, lett. b GDPR). Senza questi dati non possiamo risponderti. Conserviamo la
+          richiesta per il tempo necessario a gestirla e comunque non oltre 24 mesi
+          dall’ultimo contatto, salvo che diventi un contratto: in quel caso valgono i tempi
+          previsti dalla legge per la documentazione contrattuale e fiscale.
+        </p>
+
+        <h2 id="candidature">Candidature di lavoro</h2>
+        <p>
+          Quando ti candidi a una posizione, dal modulo del sito o scrivendo a
+          <a href={`mailto:${emailCandidature}`}>{emailCandidature}</a>, raccogliamo i dati che
+          ci invii: nome, recapiti, CV ed eventuale messaggio. Li usiamo esclusivamente per
+          valutare la tua candidatura e contattarti per la selezione.
+        </p>
+        <p>
+          La base giuridica è l’esecuzione di misure precontrattuali richieste da te (art. 6,
+          par. 1, lett. b GDPR). Ti chiediamo di non inserire nel CV dati particolari (salute,
+          opinioni, appartenenze) se non strettamente necessari: se ci sono, li trattiamo
+          solo nei limiti previsti dalla normativa sul lavoro (art. 9, par. 2, lett. b GDPR).
+        </p>
+        <p>
+          Conserviamo la candidatura per la durata della selezione e per i 12 mesi
+          successivi, per poterti ricontattare se si apre una posizione adatta. Puoi chiederne
+          la cancellazione in qualsiasi momento.
+        </p>
+
+        <h2>Chi vede i dati</h2>
+        <p>
+          I dati sono letti dal personale di {azienda.nome} incaricato di gestire le richieste
+          e la selezione. Non li vendiamo e non li cediamo a terzi per finalità commerciali.
+          Per far funzionare il sito ci appoggiamo a fornitori che agiscono come responsabili
+          del trattamento: Vercel Inc., che ospita il sito, e Resend Inc., che recapita alla
+          nostra casella i messaggi inviati dai moduli. Entrambi hanno sede negli Stati Uniti:
+          il trasferimento avviene sulla base delle clausole contrattuali standard approvate
+          dalla Commissione europea.
+        </p>
+
+        <h2>I tuoi diritti</h2>
+        <p>
+          Puoi chiedere in qualsiasi momento di accedere ai tuoi dati, correggerli,
+          cancellarli, limitarne il trattamento, opporti o riceverli in un formato leggibile
+          (artt. 15-22 GDPR), scrivendo a <a href={`mailto:${azienda.email}`}>{azienda.email}</a>.
+          Se ritieni che il trattamento non sia corretto puoi presentare reclamo al Garante per
+          la protezione dei dati personali (<a
+            href="https://www.garanteprivacy.it"
+            target="_blank"
+            rel="noopener noreferrer">garanteprivacy.it</a
+          >).
+        </p>
+
+        <h2 id="cookie">Cookie</h2>
+        <p>
+          Questo sito non usa cookie di profilazione né strumenti di statistica di terze parti,
+          e non installa cookie sul tuo dispositivo. Per questo non trovi un banner per il
+          consenso. Se in futuro aggiungeremo strumenti che li richiedono, aggiorneremo questa
+          pagina e ti chiederemo il consenso prima di attivarli.
+        </p>
+        <p>
+          La mappa nella pagina contatti è un disegno, non una mappa di Google: il link «Apri in
+          Google Maps» porta sul sito di Google, che ha la sua informativa.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legale {
+    background: #fff;
+  }
+  .testo {
+    max-width: 72ch;
+  }
+  .testo h2 {
+    font-family: var(--brand);
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.01em;
+    color: var(--navy);
+    margin: 48px 0 14px;
+    scroll-margin-top: 110px;
+  }
+  .testo h2:first-child {
+    margin-top: 0;
+  }
+  .testo p + p {
+    margin-top: 14px;
+  }
+  .testo a {
+    color: var(--navy);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .testo a:hover {
+    color: var(--red);
+  }
+</style>

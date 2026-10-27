@@ -413,3 +413,15 @@ scheda inglese lo dichiara.
   fosse già scritta in italiano.
 - I nomi di prodotto (Tecnowing, Stegos, Tecnoshed, Tegolo TT, Bacacier,
   Coverplan) non si traducono: sono tradotti solo gli alias descrittivi.
+
+---
+
+## Revisione pre-lancio (27/10/2026)
+
+| Blocco | Stato | Note |
+|---|---|---|
+| Lavora con noi — `/azienda/lavora-con-noi`, `src/data/posizioni.ts` | `ready` | Testo del Capo cantiere copiato dal docx approvato in `assunzione/`. Le candidature vanno a service@prefabbricatimoioli.it |
+| Modulo candidatura (`api/candidatura.js`) e modulo contatti (`api/contatto.js`) | `needs-config` | Funzionano solo con `RESEND_API_KEY` e `MAIL_FROM` su Vercel e il dominio verificato in Resend. Senza, il modulo propone l'email diretta |
+| Informativa privacy `/privacy` | `needs-client-approval` | Scritta per la messa online dei moduli. Da confermare i tempi di conservazione (24 mesi contatti, 12 mesi dopo la selezione per i candidati) |
+| Sezione costruttiva delle schede soluzione | `placeholder` | Sostituita da «Modello 3D in arrivo» (`ModelloInArrivo.astro`) su tutte le schede tranne Tecnowing, che ha già il modello |
+| «Note per la revisione» (`.ph-note`) | nascoste | Si riaccendono con `PUBLIC_NOTE_REVISIONE=1` |

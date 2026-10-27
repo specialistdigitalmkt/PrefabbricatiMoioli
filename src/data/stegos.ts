@@ -195,7 +195,7 @@ export const hotspots: Hotspot[] = [
     titolo: 'Appoggio sulla trave',
     sommario: 'Dove l’elemento scarica sulla struttura.',
     descrizione:
-      'L’elemento appoggia sull’ala della trave. Le travi del sistema — a “T” e a “I” per gli impieghi centrali, a “L” per quelli laterali — prevedono appoggi speciali per la scomparsa delle mensole, così il nodo non sporge nell’ambiente sottostante.',
+      'L’elemento appoggia sull’ala della trave. Le travi del sistema (a “T” e a “I” per gli impieghi centrali, a “L” per quelli laterali) prevedono appoggi speciali per la scomparsa delle mensole, così il nodo non sporge nell’ambiente sottostante.',
     specs: ['LUNGHEZZA APPOGGIO — da catalogo', 'CARICO — da verifica geometra'],
   },
   {

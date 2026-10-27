@@ -45,6 +45,11 @@ const {
 
 const t = ui[lang];
 
+/* Le «Note per la revisione» (.ph-note) servivano a leggere la demo con il
+   cliente: online non si vedono. Restano nel sorgente e si riaccendono con
+   PUBLIC_NOTE_REVISIONE=1, per esempio su un'anteprima Vercel. */
+const conNote = import.meta.env.PUBLIC_NOTE_REVISIONE === '1';
+
 /* Il preload deve descrivere le stesse alternative dell'<img>, altrimenti il
    browser scarica due file diversi: quello precaricato e quello scelto dal
    srcset. Si ricostruisce quindi il srcset completo dal manifesto. */
@@ -188,7 +193,7 @@ const orgLd = {
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />}
   </head>
 
-  <body>
+  <body class:list={[{ 'con-note': conNote }]}>
     <LogoSprite />
 
     <a href="#main" class="skip">{t.skip}</a>
@@ -206,9 +211,6 @@ const orgLd = {
     }
 
     <div class="progress" aria-hidden="true"><i id="pbar"></i></div>
-    <div class="cursor" id="cur" aria-hidden="true"></div>
-    <div class="cursor-ring" id="curing" aria-hidden="true"></div>
-    <div class="demo-flag" aria-hidden="true">{t.demoFlag}</div>
 
     <Header suChiaro={headerSuChiaro} lang={lang} />
 
@@ -276,7 +278,7 @@ const orgLd = {
 
     <script>
       /* =====================================================================
-         Sistema condiviso: avanzamento, comparse, contatori, cursore.
+         Sistema condiviso: avanzamento, comparse, contatori, parallax.
          Tutto ciò che è puramente decorativo si spegne con reduced-motion.
          ===================================================================== */
       const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -452,45 +454,10 @@ const orgLd = {
         /* Qui stavano i bottoni magnetici e l'inclinazione 3D delle schede.
            Rimossi: sono due stilemi da vetrina d'agenzia che si riconoscono
            al primo passaggio del mouse e non dicono nulla su ciò che il sito
-           vende. Un bottone che scappa dal cursore non è precisione. */
-
-        /* --- Cursore custom -------------------------------------------- */
-        if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-          const cur = document.getElementById('cur')!;
-          const ring = document.getElementById('curing')!;
-          let cx = 0,
-            cy = 0,
-            rx = 0,
-            ry = 0;
-
-          addEventListener(
-            'mousemove',
-            (e) => {
-              cx = e.clientX;
-              cy = e.clientY;
-              cur.style.left = cx + 'px';
-              cur.style.top = cy + 'px';
-            },
-            { passive: true }
-          );
-
-          (function follow() {
-            rx += (cx - rx) * 0.16;
-            ry += (cy - ry) * 0.16;
-            ring.style.left = rx + 'px';
-            ring.style.top = ry + 'px';
-            requestAnimationFrame(follow);
-          })();
-
-          document
-            .querySelectorAll('a, button, .work-card, .sol-card, input, textarea')
-            .forEach((el) => {
-              el.addEventListener('mouseenter', () => ring.classList.add('on'));
-              el.addEventListener('mouseleave', () => ring.classList.remove('on'));
-            });
-        }
-      } else {
-        document.querySelectorAll('.cursor, .cursor-ring').forEach((el) => el.remove());
+           vende. Un bottone che scappa dal cursore non è precisione.
+           Per la stessa ragione è stato tolto il cursore personalizzato
+           (pallino e anello che inseguono il mouse): in più nascondeva il
+           puntatore di sistema a chi ne ha bisogno ingrandito. */
       }
     </script>
   </body>

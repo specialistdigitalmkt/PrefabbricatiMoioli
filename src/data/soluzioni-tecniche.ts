@@ -62,7 +62,7 @@ const tecnowing: SchedaTecnica = {
   identita: {
     titolo: 'Si compone come serve.',
     paragrafi: [
-      'Tecnowing non è una copertura sola: è un ritmo. Il tegolo alare si ripete, e fra un elemento e l’altro si decide di volta in volta cosa mettere — un interposto opaco dove serve chiusura, uno luminoso dove serve luce.',
+      'Tecnowing non è una copertura sola: è un ritmo. Il tegolo alare si ripete, e fra un elemento e l’altro si decide di volta in volta cosa mettere: un interposto opaco dove serve chiusura, uno luminoso dove serve luce.',
       'La forma a “V” dell’elemento non è un fatto estetico: convoglia l’acqua verso l’esterno e lascia il piano libero per i sistemi antincendio a pioggia.',
     ],
   },
@@ -303,7 +303,7 @@ const bacacier: SchedaTecnica = {
       titolo: 'Pilastro in c.a.v.',
       sommario: 'Il collegamento a terra.',
       descrizione:
-        'Pilastri in cemento armato vibrato con sistema armatubo. La maglia — quanti e quanto distanti — si dimensiona in funzione delle necessità dell’edificio.',
+        'Pilastri in cemento armato vibrato con sistema armatubo. La maglia, cioè quanti pilastri e a che distanza, si dimensiona in funzione delle necessità dell’edificio.',
       specs: ['SEZIONE PILASTRO — da catalogo', 'MAGLIA — a seconda della necessità'],
     },
   ],
@@ -326,7 +326,7 @@ const doppiaFalda: SchedaTecnica = {
     titolo: 'Non è vecchia: è risolta.',
     paragrafi: [
       'La doppia falda è la forma che tutti riconoscono come capannone, e c’è un motivo: funziona. La trave a doppia pendenza porta la copertura fino a quaranta metri di luce libera senza appoggi intermedi, e la pendenza del 10% smaltisce l’acqua senza che nessuno debba pensarci.',
-      'La semplicità è anche flessibilità: sopra la trave ci si mette quello che serve — tegoli “TT”, Stegos, lucernari in falda, shed semplice o doppio.',
+      'La semplicità è anche flessibilità: sopra la trave ci si mette quello che serve: tegoli “TT”, Stegos, lucernari in falda, shed semplice o doppio.',
     ],
   },
 

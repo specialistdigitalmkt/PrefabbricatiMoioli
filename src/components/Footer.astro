@@ -1,9 +1,9 @@
 ---
 /**
  * Piè di pagina.
- * Ospita il blocco documentazione: nella demo i file non sono allegati,
- * quindi le voci sono dichiarate come non ancora disponibili invece di
- * puntare a un download inesistente.
+ * Ospita il blocco documentazione: i file non sono ancora pubblicati,
+ * quindi il blocco rimanda alla richiesta invece di elencare download
+ * inesistenti.
  */
 import Logo from './Logo.astro';
 import { azienda, nav, download } from '../data/site';
@@ -24,8 +24,8 @@ const doc = lang === 'en' ? downloadEn : download;
    non regge la traduzione parola per parola. */
 const rigaImpresa =
   lang === 'en'
-    ? `${azienda.ragioneSociale} — precast reinforced concrete structures since ${azienda.fondazione}.`
-    : `${azienda.ragioneSociale} — ${azienda.descrizione} dal ${azienda.fondazione}.`;
+    ? `${azienda.ragioneSociale}: precast reinforced concrete structures since ${azienda.fondazione}.`
+    : `${azienda.ragioneSociale}: ${azienda.descrizione.toLowerCase()} dal ${azienda.fondazione}.`;
 
 const { indirizzo } = azienda;
 ---
@@ -56,26 +56,29 @@ const { indirizzo } = azienda;
 
       <div class="foot-col">
         <h2 class="foot-h">{doc.titolo}</h2>
-        <ul class="dl-list">
-          {
-            doc.voci.map((v) => (
-              <li>
-                <span class="dl-fmt">{v.formato}</span>
-                <span class="dl-label">{v.label}</span>
-                <span class="spec spec-dark">{t.footFileDaFornire}</span>
-              </li>
-            ))
-          }
-        </ul>
+        {/* Finché i file non ci sono, il blocco dice come averli invece di
+            elencare download che non partono. L'elenco (`download.voci`) è
+            pronto in site.ts per quando arriveranno. */}
         <p class="dl-note">{doc.nota}</p>
+        <a class="dl-cta" href={lang === 'en' ? '/en/contact' : '/contatti'}>
+          {t.footRichiediDoc}
+        </a>
+        {
+          lang === 'it' && (
+            <>
+              <h2 class="foot-h foot-h-2">Lavora con noi</h2>
+              <a class="dl-cta" href="/azienda/lavora-con-noi">Le posizioni aperte</a>
+            </>
+          )
+        }
       </div>
     </div>
 
     <div class="foot-bot">
       <span>
-        &copy; {new Date().getFullYear()} {azienda.ragioneSociale} — P.IVA {azienda.piva}
+        &copy; {new Date().getFullYear()} {azienda.ragioneSociale}, P.IVA {azienda.piva}
       </span>
-      <span class="foot-legal">{t.footLegale}</span>
+      <a class="foot-legal" href="/privacy">{t.footLegale}</a>
     </div>
   </div>
 </footer>
@@ -183,6 +186,28 @@ const { indirizzo } = azienda;
     color: rgba(255, 255, 255, 0.75);
   }
 
+  .dl-cta {
+    display: inline-block;
+    margin-top: 10px;
+    padding-block: 4px;
+    color: #fff;
+    text-decoration: underline;
+    text-decoration-color: var(--red-soft);
+    text-underline-offset: 4px;
+    transition: color 0.2s;
+  }
+  .dl-cta:hover {
+    color: var(--red-soft);
+  }
+  .foot-h-2 {
+    margin-top: 32px;
+  }
+  a.foot-legal {
+    transition: color 0.2s;
+  }
+  a.foot-legal:hover {
+    color: #fff;
+  }
   .dl-note {
     margin-top: 16px;
     font-size: 13px;

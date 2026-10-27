@@ -55,7 +55,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
   title={t.seoTitolo}
   description={t.seoDescrizione}
   lang={lang}
-  preloader={true}
   preloadImage="hero-home"
 >
   <!-- ==================== HERO ==================== -->
@@ -73,18 +72,32 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
     <div class="hero-grad"></div>
     <div class="hero-grid" aria-hidden="true"></div>
 
-    <div class="since" aria-hidden="true">
-      <div class="yr">{azienda.fondazione}</div>
-      <div class="lb">{t.dal} — {azienda.indirizzo.citta} ({azienda.indirizzo.provincia})</div>
-    </div>
 
     <div class="wrap">
       <p class="eyebrow">{azienda.nome}</p>
       {/* Il payoff arriva dai dati, non dal markup: è l'unico punto del sito
           in cui compare. */}
+      {/* Il payoff si legge due volte: «Dove la forma» è disegnata a filo,
+          come in tavola; «prende volume» si riempie e prende peso una
+          lettera alla volta. È il gioco tipografico dei post LinkedIn
+          (lettere sottili contro lettere piene) fatto con il carattere
+          variabile invece che con i caratteri Unicode. Le lettere sono
+          spezzate solo per l'animazione: lo screen reader legge la frase
+          intera dal testo nascosto. */}
       <h1 lang={(payoff as { lingua?: string }).lingua}>
-        <span class="ln"><span>{payoff.riga1}</span></span>
-        <span class="ln"><span><em>{payoff.riga2}</em></span></span>
+        <span class="sr-only">{payoff.riga1} {payoff.riga2}</span>
+        <span class="ln ln-forma" aria-hidden="true"><span>{payoff.riga1}</span></span>
+        <span class="ln ln-volume" aria-hidden="true">
+          <span>
+            {[...payoff.riga2].map((c, i) =>
+              c === ' ' ? (
+                ' '
+              ) : (
+                <b class:list={['lt', { 'lt-punto': c === '.' }]} style={`--i:${i}`}>{c}</b>
+              ),
+            )}
+          </span>
+        </span>
       </h1>
       <p class="lead">{t.heroLead}</p>
 
@@ -115,7 +128,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
       </div>
     </div>
 
-    <div class="scroll-cue" aria-hidden="true">{t.scorri}<i></i></div>
   </section>
 
   <!-- ==================== CLIENTI ==================== -->
@@ -130,7 +142,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
 
   <!-- ==================== AZIENDA ==================== -->
   <section class="block azienda" id="azienda">
-    <div class="sec-num" aria-hidden="true">01</div>
     <div class="wrap">
       <div class="az-grid">
         <div class="az-text reveal">
@@ -178,7 +189,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
 
   <!-- ==================== SOLUZIONI ==================== -->
   <section class="block soluzioni">
-    <div class="sec-num" aria-hidden="true">02</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.solEyebrow}</p>
@@ -193,7 +203,7 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
             <a
               href={s.href ?? hrefSoluzioni}
               class="sol-big"
-              aria-label={`${s.nome} — ${s.claim}`}
+              aria-label={`${s.nome}: ${s.claim}`}
             >
               <div class="sol-big-img">
                 {s.img && (
@@ -242,7 +252,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
 
   <!-- ==================== METODO ==================== -->
   <section class="block metodo on-dark" id="metodo">
-    <div class="sec-num" aria-hidden="true">03</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.mtEyebrow}</p>
@@ -273,7 +282,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
 
   <!-- ==================== PROGETTI ==================== -->
   <section class="block progetti">
-    <div class="sec-num" aria-hidden="true">04</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.pgEyebrow}</p>
@@ -437,25 +445,40 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
   .hero.go h1 .ln span {
     transform: translateY(0);
   }
-  .hero h1 em {
-    font-style: normal;
-    position: relative;
-    display: inline-block;
+  /* «Dove la forma»: solo il contorno, il disegno prima del getto. */
+  .hero h1 .ln-forma {
+    font-family: 'Space Grotesk Var', var(--brand);
+    font-weight: 400;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.92);
   }
-  .hero h1 em::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0.06em;
-    height: 0.1em;
-    background: var(--red);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.9s var(--ease) 0.75s;
+  /* «prende volume»: ogni lettera parte sottile e trasparente e arriva
+     piena e al peso massimo, in sequenza da sinistra. */
+  .hero h1 .ln-volume {
+    font-family: 'Space Grotesk Var', var(--brand);
+    padding-bottom: 0.04em;
   }
-  .hero.go h1 em::after {
-    transform: scaleX(1);
+  .hero h1 .lt {
+    font-weight: 300;
+    opacity: 0.35;
+    transition:
+      font-weight 0.9s var(--ease),
+      opacity 0.6s var(--ease);
+    transition-delay: calc(0.55s + var(--i) * 0.045s);
+  }
+  .hero.go h1 .lt {
+    font-weight: 700;
+    opacity: 1;
+  }
+  .hero h1 .lt-punto {
+    color: var(--red);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero h1 .lt {
+      font-weight: 700;
+      opacity: 1;
+      transition: none;
+    }
   }
 
   .hero .lead {
@@ -482,34 +505,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
   .hero.go .hero-cta {
     opacity: 1;
     transform: none;
-  }
-
-  .since {
-    position: absolute;
-    top: 150px;
-    right: var(--pad);
-    text-align: right;
-    z-index: 3;
-    opacity: 0;
-    transform: translateY(-14px);
-    transition: 1s var(--ease) 0.9s;
-  }
-  .hero.go .since {
-    opacity: 1;
-    transform: none;
-  }
-  .since .yr {
-    font-family: var(--brand);
-    font-weight: 700;
-    font-size: clamp(38px, 4.6vw, 64px);
-    color: rgba(255, 255, 255, 0.18);
-    line-height: 1;
-  }
-  .since .lb {
-    font-size: 12px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.65);
   }
 
   .hero-stats {
@@ -559,55 +554,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
     font-size: 12.5px;
     color: rgba(255, 255, 255, 0.62);
     margin-top: 6px;
-  }
-
-  .scroll-cue {
-    position: absolute;
-    bottom: 26px;
-    right: var(--pad);
-    z-index: 4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 12px;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    writing-mode: vertical-rl;
-    opacity: 0;
-    transition: 1s var(--ease) 1.3s;
-  }
-  .hero.go .scroll-cue {
-    opacity: 1;
-  }
-  .scroll-cue i {
-    width: 1px;
-    height: 54px;
-    background: rgba(255, 255, 255, 0.25);
-    position: relative;
-    overflow: hidden;
-  }
-  .scroll-cue i::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: -100%;
-    width: 100%;
-    height: 100%;
-    background: var(--red);
-    animation: cue 2.1s var(--ease-io) infinite;
-  }
-  @keyframes cue {
-    0% {
-      top: -100%;
-    }
-    55% {
-      top: 0;
-    }
-    100% {
-      top: 100%;
-    }
   }
 
   /* ==================== CLIENTI ==================== */
@@ -1160,10 +1106,6 @@ const hrefProgetto = (slug: string) => (en ? hrefProgetti : `/progetti/${slug}`)
     }
     .hero-stats {
       grid-template-columns: 1fr 1fr;
-    }
-    .since,
-    .scroll-cue {
-      display: none;
     }
   }
 

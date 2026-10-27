@@ -48,7 +48,7 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title={`${scheda.nome} — ${scheda.alias ?? t.sistemaGenerico} | Prefabbricati Moioli`}
+  title={`${scheda.nome} | ${scheda.alias ?? t.sistemaGenerico} | Prefabbricati Moioli`}
   description={scheda.meta}
   preloadImage={cover}
   jsonLd={jsonLd}
@@ -98,7 +98,6 @@ const jsonLd = {
 
   <!-- ==================== 2. DI COSA SI TRATTA ==================== -->
   <section class="block sg-id">
-    <div class="sec-num" aria-hidden="true">01</div>
     <div class="wrap">
       <div class="sg-id-grid">
         <div class="reveal">
@@ -129,7 +128,6 @@ const jsonLd = {
       selezionabili, tenere anche l'altro significherebbe due interfacce che
       dicono la stessa cosa. */}
   <section class="sg-sez on-dark" id="sezione">
-    <div class="sec-num" aria-hidden="true">02</div>
     <div class="wrap">
       <div class="sg-sez-head reveal">
         <p class="eyebrow">The model</p>
@@ -184,7 +182,6 @@ const jsonLd = {
 
   <!-- ==================== 4. DATI TECNICI ==================== -->
   <section class="block sg-dati-s">
-    <div class="sec-num" aria-hidden="true">03</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.datiTecnici}</p>
@@ -211,7 +208,6 @@ const jsonLd = {
 
   <!-- ==================== 5. IL SISTEMA ==================== -->
   <section class="block sg-sis on-dark">
-    <div class="sec-num" aria-hidden="true">04</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.ilSistema}</p>
@@ -237,7 +233,6 @@ const jsonLd = {
 
   <!-- ==================== 6. APPLICAZIONI ==================== -->
   <section class="block sg-app">
-    <div class="sec-num" aria-hidden="true">05</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{t.doveSiUsa}</p>
@@ -262,7 +257,6 @@ const jsonLd = {
   {
     galleria && galleria.galleria.length > 0 && (
       <section class="block sg-gal on-dark">
-        <div class="sec-num" aria-hidden="true">06</div>
         <div class="wrap">
           <div class="sec-head reveal">
             <p class="eyebrow">{t.realizzazioni}</p>

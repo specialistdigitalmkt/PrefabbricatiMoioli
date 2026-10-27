@@ -126,7 +126,7 @@ export const pagina = {
 
 /** Etichette dell'interfaccia della pagina. */
 export const ui = {
-  seoTitolo: 'Turnkey — From the foundations to the final detail | Prefabbricati Moioli',
+  seoTitolo: 'Turnkey | From the foundations to the final detail | Prefabbricati Moioli',
   seoDescrizione:
     'Turnkey construction by Prefabbricati Moioli: one contract from civil works to handover of the finished building.',
   home: 'Home',

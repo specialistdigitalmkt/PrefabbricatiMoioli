@@ -18,9 +18,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Picture from '../../components/Picture.astro';
 import Icon from '../../components/Icon.astro';
-import HotspotExplainer from '../../components/HotspotExplainer.astro';
-import StegosSection from '../../components/StegosSection.astro';
-import { pagina, hotspots } from '../../data/stegos';
+import ModelloInArrivo from '../../components/ModelloInArrivo.astro';
+import { pagina } from '../../data/stegos';
 import { soluzioni } from '../../data/soluzioni';
 
 const altre = soluzioni.filter((s) => s.slug !== 'stegos').slice(0, 3);
@@ -37,7 +36,7 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title="Stegos — Solaio e copertura in c.a. precompresso | Prefabbricati Moioli"
+  title="Stegos | Solaio e copertura in c.a. precompresso | Prefabbricati Moioli"
   description="Stegos: elemento di copertura e solaio in cemento armato precompresso progettato e sviluppato esclusivamente da Prefabbricati Moioli. Lucernario continuo centrale, altezza da 30 a 85 cm, modulo 250 cm."
   preloadImage="stegos-hero"
   jsonLd={jsonLd}
@@ -70,8 +69,8 @@ const jsonLd = {
       <p class="lead sg-lead">{pagina.lead}</p>
 
       <div class="sg-hero-cta">
-        <a href="#sezione" class="btn btn-red">
-          Esplora la sezione
+        <a href="#dati" class="btn btn-red">
+          Vedi i dati tecnici
           <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
         </a>
         <a href="/contatti" class="btn btn-light">Chiedi se è adatto al tuo progetto</a>
@@ -81,7 +80,6 @@ const jsonLd = {
 
   <!-- ==================== 2. DI COSA SI TRATTA ==================== -->
   <section class="block sg-id">
-    <div class="sec-num" aria-hidden="true">01</div>
     <div class="wrap">
       <div class="sg-id-grid">
         <div class="reveal">
@@ -110,22 +108,13 @@ const jsonLd = {
        Fascia intera, spaziature più larghe del resto della pagina: è qui che
        il prodotto si spiega. -->
   <section class="sg-sez on-dark" id="sezione">
-    <div class="sec-num" aria-hidden="true">02</div>
     <div class="wrap">
-      <div class="sg-sez-head reveal">
-        <p class="eyebrow">{pagina.sezione.eyebrow}</p>
-        <h2>{pagina.sezione.titolo}</h2>
-      </div>
-
-      <HotspotExplainer hotspots={hotspots} intro={pagina.sezione.intro}>
-        <StegosSection />
-      </HotspotExplainer>
+      <ModelloInArrivo nome="Stegos" />
     </div>
   </section>
 
   <!-- ==================== 4. DATI TECNICI ==================== -->
-  <section class="block sg-dati-s">
-    <div class="sec-num" aria-hidden="true">03</div>
+  <section class="block sg-dati-s" id="dati">
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.dati.eyebrow}</p>
@@ -152,7 +141,6 @@ const jsonLd = {
 
   <!-- ==================== 5. IL SISTEMA ==================== -->
   <section class="block sg-sis on-dark">
-    <div class="sec-num" aria-hidden="true">04</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.sistema.eyebrow}</p>
@@ -178,7 +166,6 @@ const jsonLd = {
 
   <!-- ==================== 6. IN COPERTURA ==================== -->
   <section class="block sg-cop">
-    <div class="sec-num" aria-hidden="true">05</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.copertura.eyebrow}</p>
@@ -221,7 +208,6 @@ const jsonLd = {
 
   <!-- ==================== 7. APPLICAZIONI ==================== -->
   <section class="block sg-app">
-    <div class="sec-num" aria-hidden="true">06</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.applicazioni.eyebrow}</p>
@@ -244,7 +230,6 @@ const jsonLd = {
 
   <!-- ==================== 8. GALLERY ==================== -->
   <section class="block sg-gal on-dark">
-    <div class="sec-num" aria-hidden="true">07</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.gallery.eyebrow}</p>

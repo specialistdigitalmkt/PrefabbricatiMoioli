@@ -46,3 +46,11 @@ cartella ultimi cataloghi template/
 .scratch/
 cataloghi v2 moioli/
 Linkedin/
+
+# Backup sito vecchio (contiene credenziali) e copia statica
+backup sito old moioli/
+sito-statico-old/
+
+# Materiale della ricerca di personale (annunci, grafiche LinkedIn): il testo
+# pubblicato sul sito sta in src/data/posizioni.ts
+assunzione/

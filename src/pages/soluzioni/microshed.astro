@@ -8,9 +8,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
 import Picture from '../../components/Picture.astro';
-import HotspotExplainer from '../../components/HotspotExplainer.astro';
-import ShedSection from '../../components/ShedSection.astro';
-import { pagina, hotspots } from '../../data/microshed';
+import ModelloInArrivo from '../../components/ModelloInArrivo.astro';
+import { pagina } from '../../data/microshed';
 import { soluzioni } from '../../data/soluzioni';
 import Icon from '../../components/Icon.astro';
 
@@ -28,7 +27,7 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title="microSHED — Copertura a shed prefabbricata | Prefabbricati Moioli"
+  title="microSHED | Copertura a shed prefabbricata | Prefabbricati Moioli"
   description="microSHED: copertura a shed in cemento armato precompresso. Luce naturale diffusa e costante sul piano di lavoro, senza abbagliamento. Prefabbricati Moioli, Bagnatica (BG)."
   preloadImage="shed-hero"
   jsonLd={jsonLd}
@@ -63,8 +62,8 @@ const jsonLd = {
       <p class="lead ts-lead">{pagina.lead}</p>
 
       <div class="ts-hero-cta">
-        <a href="#sezione" class="btn btn-red">
-          Vedi la sezione costruttiva <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
+        <a href="#tecnologia" class="btn btn-red">
+          Come funziona <span class="arr"><Icon nome="freccia-giu" dim={17} /></span>
         </a>
         <a href="/contatti" class="btn btn-light">Richiedi un preventivo</a>
       </div>
@@ -73,7 +72,6 @@ const jsonLd = {
 
   <!-- ==================== 2. DESCRIZIONE ==================== -->
   <section class="block ts-desc">
-    <div class="sec-num" aria-hidden="true">01</div>
     <div class="wrap">
       <div class="ts-desc-grid">
         <div class="reveal">
@@ -102,8 +100,7 @@ const jsonLd = {
   </section>
 
   <!-- ==================== 3. TECNOLOGIA ==================== -->
-  <section class="block ts-tech on-dark">
-    <div class="sec-num" aria-hidden="true">02</div>
+  <section class="block ts-tech on-dark" id="tecnologia">
     <!-- Lineart tecnico reale usato come tessitura di fondo: il fondo scuro
          dell'immagine si annulla in blend, restano le sole linee bianche. -->
     <div class="ts-tech-art" aria-hidden="true">
@@ -135,24 +132,15 @@ const jsonLd = {
     </div>
   </section>
 
-  <!-- ==================== 4. SEZIONE INTERATTIVA ==================== -->
+  <!-- ==================== 4. MODELLO 3D (in arrivo) ==================== -->
   <section class="block ts-exp on-dark" id="sezione">
-    <div class="sec-num" aria-hidden="true">03</div>
     <div class="wrap">
-      <div class="sec-head reveal">
-        <p class="eyebrow">{pagina.experience.eyebrow}</p>
-        <h2>{pagina.experience.titolo}</h2>
-      </div>
-
-      <HotspotExplainer hotspots={hotspots} intro={pagina.experience.intro}>
-        <ShedSection />
-      </HotspotExplainer>
+      <ModelloInArrivo nome="microSHED" />
     </div>
   </section>
 
   <!-- ==================== 5. VANTAGGI ==================== -->
   <section class="block ts-adv">
-    <div class="sec-num" aria-hidden="true">04</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.vantaggi.eyebrow}</p>
@@ -175,7 +163,6 @@ const jsonLd = {
 
   <!-- ==================== 6. GALLERY ==================== -->
   <section class="block ts-gal on-dark">
-    <div class="sec-num" aria-hidden="true">05</div>
     <div class="wrap">
       <div class="sec-head reveal">
         <p class="eyebrow">{pagina.gallery.eyebrow}</p>

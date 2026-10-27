@@ -33,12 +33,12 @@ export const tecnowing: SchedaTecnica = {
   eyebrow: 'Solutions · Roofing',
   claim: 'The “V” shape brings in the light and sheds the water.',
   meta: 'Tecnowing, the Moioli wing roof: wing units with solid or glazed infill panels, 250–264 cm module, fire resistance from R90′ to R180′.',
-  lead: 'A wing roofing system for industrial, commercial and logistics buildings. Between one wing unit and the next, solid or glazed panels alternate — continuous or north-light rooflights — chosen according to how the building will be used.',
+  lead: 'A wing roofing system for industrial, commercial and logistics buildings. Between one wing unit and the next, solid or glazed panels alternate (continuous or north-light rooflights), chosen according to how the building will be used.',
 
   identita: {
     titolo: 'It is assembled to suit.',
     paragrafi: [
-      'Tecnowing is not a single roof: it is a rhythm. The wing unit repeats, and between one element and the next you decide each time what to put there — a solid infill where you need closure, a glazed one where you need light.',
+      'Tecnowing is not a single roof: it is a rhythm. The wing unit repeats, and between one element and the next you decide each time what to put there: a solid infill where you need closure, a glazed one where you need light.',
       'The “V” shape of the element is not an aesthetic decision: it carries water outwards and leaves the plane clear for sprinkler systems.',
     ],
   },
@@ -204,6 +204,7 @@ export const ui = {
   home: 'Home',
   soluzioni: 'Solutions',
   esploraSezione: 'Explore the section',
+  vediDati: 'See the technical data',
   chiediAdatto: 'Ask whether it suits your project',
   diCosaSiTratta: 'What it is',
   laSezione: 'The section',
