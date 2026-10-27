@@ -10,7 +10,7 @@
  * Qui si tiene solo ciò che è redazionale: titoli, settori, dati di commessa.
  *
  * DATI DI COMMESSA
- * Compilati da commerciale e marketing nella pagina /raccolta-dati
+ * Compilati da commerciale e marketing nella pagina /raccolta-dati (chiusa a ottobre 2026)
  * (esportazione del 22-23/09/2026) e riportati qui così come inseriti, con
  * due sole normalizzazioni: sigla di provincia maiuscola e Tecnoshed scritto
  * microSHED. Le realizzazioni 13 e 15 sono state segnate «da togliere» e non

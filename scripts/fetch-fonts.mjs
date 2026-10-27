@@ -25,9 +25,6 @@ const FAMIGLIE = [
   { css: 'Space+Grotesk:wght@500;600;700', nome: 'Space Grotesk', slug: 'space-grotesk' },
   { css: 'IBM+Plex+Sans:wght@400;500;600;700', nome: 'IBM Plex Sans', slug: 'ibm-plex-sans' },
   { css: 'IBM+Plex+Mono:wght@400;500', nome: 'IBM Plex Mono', slug: 'ibm-plex-mono' },
-  /* Solo per la variante editoriale in valutazione: se la variante non viene
-     scelta, questa riga e i file corrispondenti vanno tolti. */
-  { css: 'Archivo:wght@500;600;700', nome: 'Archivo', slug: 'archivo' },
 ];
 
 /* Solo i sottoinsiemi che servono all'italiano. */

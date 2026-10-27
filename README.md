@@ -153,32 +153,10 @@ vantaggio — qui rende poco. Le uniche leve reali sono risoluzione, durata e
 qualità. Il file pesa 8,1 MB: è tanto, ed è il motivo per cui si carica solo
 dove serve davvero.
 
-**Temporanea: `/raccolta-dati`.** Pagina riservata al cliente per raccogliere
-i contenuti mancanti. Non è una pagina del sito: fuori da menu e sitemap,
-`noindex`, protetta da password. È fatta di due pezzi, da eliminare insieme
-quando la raccolta è chiusa:
-
-- `public/raccolta-dati/` — la pagina, HTML statico copiato in `dist/`;
-- `api/raccolta.js` — una Vercel Function a sé, fuori da Astro: il sito resta
-  statico e le intestazioni di `vercel.json` non cambiano. Salva una risposta
-  per voce in Vercel Blob (privato).
-
-Richiede nel progetto Vercel: uno store **Blob privato** collegato
-(`BLOB_STORE_ID`, oppure `BLOB_READ_WRITE_TOKEN` negli store più vecchi, creata da Vercel) e la variabile
-`RACCOLTA_PASSWORD`. Senza una delle due la pagina lo dice all'accesso.
-Disegni e foto non passano dal sito: vanno nella cartella Google Drive indicata
-in pagina. Prima di eliminarla, esportare le risposte dallo store.
-
-**Azienda** è una sezione a tre pagine con sottomenu. Le voci si definiscono in
+**Azienda** è una sezione a quattro pagine con sottomenu (l'ultima è Lavora con noi). Le voci si definiscono in
 `src/data/site.ts` (`nav`, campo `voci`): la testata costruisce da lì il
 pannello a comparsa su desktop e le voci rientrate nel menu mobile, e
 `SezioneNav.astro` la barra interna alla sezione.
-
-**Fuori perimetro, temporanea:** `/anteprima-editoriale` è una variante della
-home in valutazione, non una pagina del sito. Non è nel menu, non è nella
-sitemap ed è marcata `noindex`. **Va eliminata quando la direzione è decisa**,
-insieme ai file `public/fonts/archivo-*` e alla riga corrispondente in
-`scripts/fetch-fonts.mjs`.
 
 ---
 
